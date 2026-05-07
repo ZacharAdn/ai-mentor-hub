@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>i24 — צלילה לתוך מודלי סדרות זמן</title>
+<style>
+:root {
+  --bg-primary: #0f172a;
+  --bg-card: #1e293b;
+  --bg-card-hover: #273349;
+  --border: #334155;
+  --border-hover: #475569;
+  --text-primary: #e2e8f0;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --accent-purple: #818cf8;
+  --accent-violet: #c084fc;
+  --accent-pink: #f472b6;
+  --accent-indigo: #6366f1;
+  --accent-deep: #4f46e5;
+  --accent-bright: #8b5cf6;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Rubik', 'Heebo', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Language toggle */
+.lang-toggle {
+  position: fixed;
+  top: 1.2rem;
+  inset-inline-end: 1.5rem;
+  z-index: 1000;
+  display: flex;
+  background: rgba(30,41,59,0.9);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.lang-btn {
+  padding: 0.6rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.lang-btn:hover { color: var(--text-primary); }
+.lang-btn.active {
+  background: linear-gradient(135deg, var(--accent-indigo), var(--accent-bright));
+  color: #fff;
+}
+
+/* Hero */
+.hero {
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+  background: radial-gradient(ellipse at top, rgba(99,102,241,0.15) 0%, transparent 70%);
+}
+.hero h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+.hero .subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 720px;
+  margin: 0 auto 2rem;
+}
+.hero .meta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.tag {
+  background: rgba(99,102,241,0.15);
+  border: 1px solid rgba(99,102,241,0.4);
+  color: var(--accent-purple);
+  padding: 0.3rem 0.9rem;
+  border-radius: 99px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.tag.warn {
+  background: rgba(245,158,11,0.15);
+  border-color: rgba(245,158,11,0.4);
+  color: var(--warning);
+}
+
+/* Sections */
+section { padding: 3rem 2rem; max-width: 1100px; margin: 0 auto; }
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.section-num {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--accent-violet), var(--accent-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+}
+.section-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.section-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 400;
+  margin-inline-start: auto;
+}
+
+/* Card */
+.card {
+  background: var(--bg-card);
+  border-radius: 16px;
+  padding: 2rem;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+.card h3 {
+  color: var(--accent-pink);
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+}
+.card p { color: var(--text-secondary); margin-bottom: 0.7rem; }
+.card code {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.15rem 0.5rem;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-size: 0.9em;
+  color: var(--accent-purple);
+  direction: ltr;
+  unicode-bidi: embed;
+  display: inline-block;
+}
+.card pre {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  direction: ltr;
+  text-align: left;
+  margin: 1rem 0;
+}
+.card pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-primary);
+  display: block;
+}
+
+/* Question */
+.question {
+  background: linear-gradient(135deg, rgba(192,132,252,0.1), rgba(244,114,182,0.05));
+  border: 1px solid rgba(192,132,252,0.3);
+  border-inline-start: 4px solid var(--accent-violet);
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  margin: 1.2rem 0;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+.question strong { color: var(--accent-violet); }
+
+/* Choice cards */
+.choices {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+.choice {
+  background: var(--bg-card-hover);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text-secondary);
+}
+.choice:hover {
+  border-color: var(--accent-purple);
+  background: rgba(99,102,241,0.1);
+  color: var(--text-primary);
+}
+.choice .marker {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+.choice.selected {
+  border-color: var(--accent-pink);
+  background: rgba(244,114,182,0.1);
+  color: var(--text-primary);
+}
+.choice.selected .marker {
+  background: var(--accent-pink);
+  color: #fff;
+  border-color: var(--accent-pink);
+}
+.choice.correct {
+  border-color: var(--success);
+  background: rgba(34,197,94,0.1);
+}
+.choice.correct .marker { background: var(--success); color: #fff; border-color: var(--success); }
+.choice.incorrect {
+  border-color: var(--error);
+  background: rgba(239,68,68,0.08);
+  opacity: 0.7;
+}
+
+/* Buttons */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 1.2rem 0;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-indigo), var(--accent-bright));
+  color: #fff;
+  padding: 0.65rem 1.4rem;
+  border-radius: 10px;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(99,102,241,0.4); }
+.btn-secondary {
+  background: var(--bg-card-hover);
+  color: var(--text-secondary);
+  padding: 0.65rem 1.4rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-secondary:hover { border-color: var(--accent-purple); color: var(--text-primary); }
+.btn-hint {
+  background: rgba(245,158,11,0.15);
+  color: var(--warning);
+  border: 1px solid rgba(245,158,11,0.4);
+}
+.btn-hint:hover { background: rgba(245,158,11,0.25); }
+
+/* Hint + Reveal blocks */
+.reveal-block, .hint-block {
+  margin-top: 1rem;
+  border-radius: 12px;
+  padding: 1.2rem 1.5rem;
+  display: none;
+  animation: slideDown 0.3s ease-out;
+}
+.reveal-block.visible, .hint-block.visible { display: block; }
+.hint-block {
+  background: rgba(245,158,11,0.08);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-inline-start: 4px solid var(--warning);
+  color: var(--text-secondary);
+}
+.hint-block strong { color: var(--warning); }
+.reveal-block {
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.3);
+  border-inline-start: 4px solid var(--success);
+  color: var(--text-primary);
+}
+.reveal-block strong { color: var(--success); }
+.reveal-block.warn {
+  background: rgba(239,68,68,0.06);
+  border-color: rgba(239,68,68,0.3);
+  border-inline-start-color: var(--error);
+}
+.reveal-block.warn strong { color: var(--error); }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Project tie-in */
+.tie-in {
+  background: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.05));
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  margin-top: 1.2rem;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+.tie-in::before {
+  content: "🔗 ";
+  font-size: 1.1em;
+}
+
+/* Chart placeholder boxes */
+.chart-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.2rem 0;
+}
+.chart-box {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+.chart-box:hover { border-color: var(--accent-purple); }
+.chart-box.selected { border-color: var(--accent-pink); background: rgba(244,114,182,0.05); }
+.chart-box svg { width: 100%; height: 140px; }
+.chart-box .label {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.chart-box.selected .label { color: var(--accent-pink); }
+
+/* ACF / PACF triple */
+.acf-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.8rem;
+  margin: 1.2rem 0;
+}
+@media (max-width: 768px) {
+  .acf-row, .chart-row { grid-template-columns: 1fr; }
+}
+
+/* Slider */
+.slider-block {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.2rem;
+  margin: 1.2rem 0;
+}
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+input[type="range"] {
+  flex: 1;
+  min-width: 200px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-pink);
+  cursor: pointer;
+  box-shadow: 0 0 0 3px rgba(244,114,182,0.2);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--accent-pink); cursor: pointer; border: none;
+}
+.slider-value {
+  font-family: 'Monaco', monospace;
+  font-size: 1.1rem;
+  color: var(--accent-pink);
+  font-weight: 700;
+  min-width: 80px;
+  text-align: center;
+  background: rgba(244,114,182,0.1);
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+}
+.calc-out {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+@media (max-width: 600px) { .calc-out { grid-template-columns: 1fr; } }
+.calc-cell {
+  background: var(--bg-card);
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+.calc-cell .label { font-size: 0.8rem; color: var(--text-muted); }
+.calc-cell .value {
+  font-family: 'Monaco', monospace;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-purple);
+  margin-top: 0.3rem;
+}
+.calc-cell.error .value { color: var(--error); }
+.calc-cell.success .value { color: var(--success); }
+
+/* Walk-forward toggle */
+.toggle-row {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+}
+.toggle-btn {
+  flex: 1;
+  padding: 0.7rem;
+  border: 1px solid var(--border);
+  background: var(--bg-card-hover);
+  color: var(--text-secondary);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.toggle-btn.active {
+  border-color: var(--accent-pink);
+  background: rgba(244,114,182,0.1);
+  color: var(--accent-pink);
+}
+
+/* Trace step */
+.trace-step {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 0.8rem 0;
+  display: none;
+}
+.trace-step.visible { display: block; animation: slideDown 0.3s ease-out; }
+.trace-label {
+  color: var(--accent-purple);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Self-reflection */
+.reflection-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+.reflection-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.reflection-item label {
+  display: block;
+  color: var(--accent-pink);
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.reflection-item textarea {
+  width: 100%;
+  min-height: 80px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+  direction: rtl;
+}
+.reflection-item textarea:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+}
+
+/* Footer */
+footer {
+  padding: 3rem 2rem 4rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border-top: 1px solid var(--border);
+  margin-top: 4rem;
+}
+
+@media (max-width: 768px) {
+  .hero h1 { font-size: 2rem; }
+  .section-num { font-size: 2.2rem; }
+  .section-title { font-size: 1.4rem; }
+  section { padding: 2rem 1rem; }
+  .card { padding: 1.2rem; }
+  .lang-toggle { top: 0.8rem; inset-inline-end: 0.8rem; }
+  .lang-btn { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עברית</button>
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">English</button>
+</div>
+
+<section class="hero">
+  <h1 data-i18n="hero_title">i24 — צלילה לתוך מודלי סדרות זמן</h1>
+  <p class="subtitle" data-i18n="hero_subtitle">המדריך הזה לא מסביר לך מה עשית. הוא שואל אותך. תעני בעצמך, ואז גלי את התשובה. המטרה: שתצאי במפגש 3 עם מילים משלך לכל החלטה במודל.</p>
+  <div class="meta">
+    <span class="tag" data-i18n="tag_homework">משימה למפגש 3</span>
+    <span class="tag" data-i18n="tag_time">⏱ 60-90 דקות</span>
+    <span class="tag warn" data-i18n="tag_format">פורמט: גילוי עצמי</span>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: STATIONARITY ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">1</span>
+    <span class="section-title" data-i18n="s1_title">סטציונריות — הסדרה שלך</span>
+    <span class="section-subtitle" data-i18n="s1_sub">stationarity</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s1_p1">סדרת זמן <strong>סטציונרית</strong> = הממוצע, השונות, ומבנה הקורלציה <em>לא משתנים בזמן</em>. SARIMAX (וקרובי משפחה) <strong>מניחים</strong> סטציונריות.</p>
+    <div class="question" data-i18n="s1_q">
+      <strong>שאלה.</strong> איזו משתי הסדרות הבאות דומה לרייטינג היומי שלך (ממוצע יומי, מאי 2025 → אפריל 2026)?
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-box" id="s1-a" onclick="selectChart('s1','a')">
+        <svg viewBox="0 0 200 100">
+          <line x1="0" y1="50" x2="200" y2="50" stroke="#475569" stroke-dasharray="2,2"/>
+          <polyline fill="none" stroke="#22c55e" stroke-width="2" points="0,52 10,48 20,53 30,46 40,54 50,49 60,51 70,48 80,55 90,47 100,52 110,49 120,53 130,46 140,54 150,48 160,52 170,50 180,51 190,49 200,52"/>
+          <text x="5" y="15" fill="#94a3b8" font-size="9">A</text>
+        </svg>
+        <div class="label" data-i18n="s1_label_a">A — תנודות סביב ממוצע קבוע</div>
+      </div>
+      <div class="chart-box" id="s1-b" onclick="selectChart('s1','b')">
+        <svg viewBox="0 0 200 100">
+          <line x1="0" y1="50" x2="200" y2="50" stroke="#475569" stroke-dasharray="2,2"/>
+          <polyline fill="none" stroke="#f472b6" stroke-width="2" points="0,70 10,68 20,72 30,65 40,70 50,62 60,67 70,60 80,65 90,55 100,60 110,53 120,57 130,50 140,55 150,48 160,40 170,28 180,20 190,15 200,12"/>
+          <text x="5" y="15" fill="#94a3b8" font-size="9">B</text>
+        </svg>
+        <div class="label" data-i18n="s1_label_b">B — מטפס לאורך זמן</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary btn-hint" onclick="toggle('s1-hint')" data-i18n="btn_hint">💡 רמז</button>
+      <button class="btn-primary" onclick="toggle('s1-reveal')" data-i18n="btn_reveal">גלי תשובה</button>
+    </div>
+    <div class="hint-block" id="s1-hint">
+      <strong data-i18n="hint_label">רמז:</strong> <span data-i18n="s1_hint">תסתכלי על הממוצע הנע (rolling mean). האם הוא נשאר אופקי לאורך הציר, או שהוא זוחל?</span>
+    </div>
+    <div class="reveal-block" id="s1-reveal">
+      <strong data-i18n="reveal_label">תשובה:</strong>
+      <p data-i18n="s1_reveal">B — הסדרה שלך לא סטציונרית. שני סיבות שמתחבאות בדאטה: (1) <strong>הפאנל הנושם</strong> — אחוז הבתים שיכולים לקלוט עלה מ-65% ל-90% לאורך התקופה, מה שמייצר drift כלפי מעלה. (2) <strong>אירועי Q1 2026</strong> — שאגת הארי + מתקפה איראנית הקפיצו את הרייטינג בעוצמה שלא היתה באימון. ADF test על הסדרה היומית שלך יחזיר p-value ‎>‎ 0.05 — לא סטציונרי.</p>
+    </div>
+    <div class="tie-in" data-i18n="s1_tie">
+      <strong>פרויקט שלך:</strong> SARIMAX שלך מניח סטציונריות. הסדרה שלך לא סטציונרית. נחזור לזה בסעיף 3 (differencing).
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: ACF/PACF ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">2</span>
+    <span class="section-title" data-i18n="s2_title">ACF / PACF — מאיפה (1,0,1) ?</span>
+    <span class="section-subtitle" data-i18n="s2_sub">autocorrelation</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s2_p1">המודל שלך <code>SARIMAX(1,0,1)(1,1,1,7)</code> אומר: <strong>AR(1)</strong> רגרסיבי + <strong>MA(1)</strong> ממוצע נע + עונתיות שבועית. אבל מאיפה הגיעו ה-(1) וה-(1)?</p>
+    <p data-i18n="s2_p2"><strong>ACF</strong> = קורלציה של הסדרה עם עצמה ב-lag k.<br><strong>PACF</strong> = אותו דבר אבל אחרי ניטרול ה-lag-ים שביניהם. <em>PACF נחתך אחרי p (AR), ACF נחתך אחרי q (MA).</em></p>
+    <div class="question" data-i18n="s2_q">
+      <strong>שאלה.</strong> איזו תצורת ACF/PACF מצדיקה את הבחירה <code>order=(1,0,1)</code>?
+    </div>
+
+    <div class="acf-row">
+      <div class="chart-box" id="s2-a" onclick="selectChart('s2','a')">
+        <svg viewBox="0 0 160 110">
+          <line x1="20" y1="55" x2="155" y2="55" stroke="#475569"/>
+          <text x="5" y="15" fill="#94a3b8" font-size="9">PACF</text>
+          <line x1="30" y1="55" x2="30" y2="20" stroke="#818cf8" stroke-width="3"/>
+          <line x1="45" y1="55" x2="45" y2="50" stroke="#818cf8" stroke-width="3"/>
+          <line x1="60" y1="55" x2="60" y2="58" stroke="#818cf8" stroke-width="3"/>
+          <line x1="75" y1="55" x2="75" y2="53" stroke="#818cf8" stroke-width="3"/>
+          <line x1="90" y1="55" x2="90" y2="56" stroke="#818cf8" stroke-width="3"/>
+          <line x1="105" y1="55" x2="105" y2="54" stroke="#818cf8" stroke-width="3"/>
+          <line x1="120" y1="55" x2="120" y2="55" stroke="#818cf8" stroke-width="3"/>
+          <line x1="20" y1="100" x2="155" y2="100" stroke="#475569"/>
+          <text x="5" y="78" fill="#94a3b8" font-size="9">ACF</text>
+          <line x1="30" y1="100" x2="30" y2="68" stroke="#f472b6" stroke-width="3"/>
+          <line x1="45" y1="100" x2="45" y2="76" stroke="#f472b6" stroke-width="3"/>
+          <line x1="60" y1="100" x2="60" y2="84" stroke="#f472b6" stroke-width="3"/>
+          <line x1="75" y1="100" x2="75" y2="90" stroke="#f472b6" stroke-width="3"/>
+          <line x1="90" y1="100" x2="90" y2="94" stroke="#f472b6" stroke-width="3"/>
+          <line x1="105" y1="100" x2="105" y2="97" stroke="#f472b6" stroke-width="3"/>
+          <line x1="120" y1="100" x2="120" y2="98" stroke="#f472b6" stroke-width="3"/>
+        </svg>
+        <div class="label" data-i18n="s2_label_a">A — PACF נחתך ב-1, ACF דועך לאט</div>
+      </div>
+      <div class="chart-box" id="s2-b" onclick="selectChart('s2','b')">
+        <svg viewBox="0 0 160 110">
+          <line x1="20" y1="55" x2="155" y2="55" stroke="#475569"/>
+          <text x="5" y="15" fill="#94a3b8" font-size="9">PACF</text>
+          <line x1="30" y1="55" x2="30" y2="22" stroke="#818cf8" stroke-width="3"/>
+          <line x1="45" y1="55" x2="45" y2="38" stroke="#818cf8" stroke-width="3"/>
+          <line x1="60" y1="55" x2="60" y2="46" stroke="#818cf8" stroke-width="3"/>
+          <line x1="75" y1="55" x2="75" y2="51" stroke="#818cf8" stroke-width="3"/>
+          <line x1="90" y1="55" x2="90" y2="53" stroke="#818cf8" stroke-width="3"/>
+          <line x1="105" y1="55" x2="105" y2="54" stroke="#818cf8" stroke-width="3"/>
+          <line x1="120" y1="55" x2="120" y2="55" stroke="#818cf8" stroke-width="3"/>
+          <line x1="20" y1="100" x2="155" y2="100" stroke="#475569"/>
+          <text x="5" y="78" fill="#94a3b8" font-size="9">ACF</text>
+          <line x1="30" y1="100" x2="30" y2="68" stroke="#f472b6" stroke-width="3"/>
+          <line x1="45" y1="100" x2="45" y2="98" stroke="#f472b6" stroke-width="3"/>
+          <line x1="60" y1="100" x2="60" y2="100" stroke="#f472b6" stroke-width="3"/>
+          <line x1="75" y1="100" x2="75" y2="100" stroke="#f472b6" stroke-width="3"/>
+          <line x1="90" y1="100" x2="90" y2="100" stroke="#f472b6" stroke-width="3"/>
+          <line x1="105" y1="100" x2="105" y2="100" stroke="#f472b6" stroke-width="3"/>
+          <line x1="120" y1="100" x2="120" y2="100" stroke="#f472b6" stroke-width="3"/>
+        </svg>
+        <div class="label" data-i18n="s2_label_b">B — שניהם נחתכים מהר אחרי lag 1</div>
+      </div>
+      <div class="chart-box" id="s2-c" onclick="selectChart('s2','c')">
+        <svg viewBox="0 0 160 110">
+          <line x1="20" y1="55" x2="155" y2="55" stroke="#475569"/>
+          <text x="5" y="15" fill="#94a3b8" font-size="9">PACF</text>
+          <line x1="30" y1="55" x2="30" y2="32" stroke="#818cf8" stroke-width="3"/>
+          <line x1="45" y1="55" x2="45" y2="42" stroke="#818cf8" stroke-width="3"/>
+          <line x1="60" y1="55" x2="60" y2="48" stroke="#818cf8" stroke-width="3"/>
+          <line x1="75" y1="55" x2="75" y2="38" stroke="#818cf8" stroke-width="3"/>
+          <line x1="90" y1="55" x2="90" y2="46" stroke="#818cf8" stroke-width="3"/>
+          <line x1="105" y1="55" x2="105" y2="50" stroke="#818cf8" stroke-width="3"/>
+          <line x1="120" y1="55" x2="120" y2="44" stroke="#818cf8" stroke-width="3"/>
+          <line x1="20" y1="100" x2="155" y2="100" stroke="#475569"/>
+          <text x="5" y="78" fill="#94a3b8" font-size="9">ACF</text>
+          <line x1="30" y1="100" x2="30" y2="65" stroke="#f472b6" stroke-width="3"/>
+          <line x1="45" y1="100" x2="45" y2="70" stroke="#f472b6" stroke-width="3"/>
+          <line x1="60" y1="100" x2="60" y2="76" stroke="#f472b6" stroke-width="3"/>
+          <line x1="75" y1="100" x2="75" y2="68" stroke="#f472b6" stroke-width="3"/>
+          <line x1="90" y1="100" x2="90" y2="74" stroke="#f472b6" stroke-width="3"/>
+          <line x1="105" y1="100" x2="105" y2="80" stroke="#f472b6" stroke-width="3"/>
+          <line x1="120" y1="100" x2="120" y2="72" stroke="#f472b6" stroke-width="3"/>
+        </svg>
+        <div class="label" data-i18n="s2_label_c">C — שניהם דועכים לאט</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary btn-hint" onclick="toggle('s2-hint')" data-i18n="btn_hint">💡 רמז</button>
+      <button class="btn-primary" onclick="toggle('s2-reveal')" data-i18n="btn_reveal">גלי תשובה</button>
+    </div>
+    <div class="hint-block" id="s2-hint">
+      <strong data-i18n="hint_label">רמז:</strong> <span data-i18n="s2_hint">A = AR(1) טהור. B = ARMA(1,1). C = AR(2) או יותר. אנחנו מחפשים את (1,0,1).</span>
+    </div>
+    <div class="reveal-block warn" id="s2-reveal">
+      <strong data-i18n="reveal_label">תשובה — אבל:</strong>
+      <p data-i18n="s2_reveal">B מתאים ל-ARMA(1,1) — שניהם נחתכים מהר. <em>אבל השאלה האמיתית</em>: האם את ציירת ACF/PACF על הסדרה שלך לפני שהגדרת <code>(1,0,1)</code>? או ש-Claude/Codex בחרו את ההיפר-פרמטרים? אם לא — זה בסדר, אבל זה אחד הדברים שנעשה במפגש 3 ביחד.</p>
+    </div>
+    <div class="tie-in" data-i18n="s2_tie">
+      <strong>פרויקט שלך:</strong> אם תפתחי במחברת <code>plot_acf(daily['rating'])</code> ו-<code>plot_pacf(daily['rating'])</code>, מה תראי? נסי לפני המפגש.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: DIFFERENCING ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">3</span>
+    <span class="section-title" data-i18n="s3_title">למה d=0 ?</span>
+    <span class="section-subtitle" data-i18n="s3_sub">differencing</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s3_p1">הקוד שלך:</p>
+    <pre><code>SARIMAX(y_train, exog=X_train,
+    order=(1, <span style="color:#f472b6">0</span>, 1),
+    seasonal_order=(1, 1, 1, 7),
+    enforce_stationarity=<span style="color:#ef4444">False</span>)</code></pre>
+    <p data-i18n="s3_p2">ה-<strong>d=0</strong> אומר שאין differencing רגיל. ה-<code>enforce_stationarity=False</code> אומר ש-statsmodels לא בודק שהסדרה סטציונרית.</p>
+    <div class="question" data-i18n="s3_q">
+      <strong>שאלה.</strong> סקציה 1 הראתה שהסדרה לא סטציונרית. אז למה d=0?
+    </div>
+
+    <div class="choices">
+      <div class="choice" onclick="selectChoice('s3', this, 'a')">
+        <div class="marker">A</div>
+        <div data-i18n="s3_ca">הסדרה כן סטציונרית — סקציה 1 טעתה</div>
+      </div>
+      <div class="choice" onclick="selectChoice('s3', this, 'b')">
+        <div class="marker">B</div>
+        <div data-i18n="s3_cb">D=1 (seasonal differencing) מספיק כדי לטפל ב-trend</div>
+      </div>
+      <div class="choice" onclick="selectChoice('s3', this, 'c')">
+        <div class="marker">C</div>
+        <div data-i18n="s3_cc">פסחתי על הבדיקה כי הקוד נכנס לבעיות עם d=1</div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary btn-hint" onclick="toggle('s3-hint')" data-i18n="btn_hint">💡 רמז</button>
+      <button class="btn-primary" onclick="toggle('s3-reveal')" data-i18n="btn_reveal">גלי תשובה</button>
+    </div>
+    <div class="hint-block" id="s3-hint">
+      <strong data-i18n="hint_label">רמז:</strong> <span data-i18n="s3_hint">D=1 מטפל ב-seasonal trend (השוואה לאותו יום בשבוע הקודם). אבל ה-trend שלך הוא לינארי כללי לאורך כל הזמן (פאנל נושם), לא רק שבועי.</span>
+    </div>
+    <div class="reveal-block" id="s3-reveal">
+      <strong data-i18n="reveal_label">התשובה הכנה:</strong>
+      <p data-i18n="s3_reveal">לא חד-משמעית, אבל סביר ש-(C) או שילוב של (B+C). <strong>D=1 לא מספיק</strong> כי ה-trend שלך הוא לינארי גלובלי (פאנל נושם 65→90%), לא רק שבועי. <strong>Enforce=False</strong> = המודל ירוץ גם אם הסדרה לא סטציונרית, אבל ההערכות שלו יהיו פחות אמינות. <em>זה לא בהכרח טעות</em> — לפעמים זאת בחירה מודעת. השאלה: היתה בחירה?</p>
+    </div>
+    <div class="tie-in" data-i18n="s3_tie">
+      <strong>פרויקט שלך:</strong> ניסוי למפגש 3 — הריצי את אותו SARIMAX עם <code>order=(1,1,1)</code> (d=1) והשווי MAE. נראה איך הוא מטפל ב-trend הליניארי.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: COEFFICIENT UNDER-ESTIMATION ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">4</span>
+    <span class="section-title" data-i18n="s4_title">המקדם 0.62 — וההפתעה ב-Q1 2026</span>
+    <span class="section-subtitle" data-i18n="s4_sub">coefficient under-estimation</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s4_p1">SARIMAX שלך למד מקדם של <code>security ≈ +0.62</code> לאירועים ביטחוניים. הוא למד את זה מאירועי <strong>2025</strong> (חיסול נסראללה, חיסול סינוואר, מבצע עם כלביא — שכולם הקפיצו רייטינג ב-~0.6).</p>
+    <p data-i18n="s4_p2">ב-test set שלך (Q1 2026), האירועים האמיתיים: <strong>שאגת הארי</strong> (28/02) ו-<strong>מתקפה איראנית</strong> (מרץ). המגניטוטה? +3 ויותר.</p>
+    <div class="question" data-i18n="s4_q">
+      <strong>שאלה אינטראקטיבית.</strong> תמשכי את ה-slider ותגלי מה השגיאה הצפויה לכל יום-אירוע, כפונקציה של המקדם שהמודל למד.
+    </div>
+
+    <div class="slider-block">
+      <div class="slider-row">
+        <span data-i18n="s4_slider_label">המקדם שהמודל למד:</span>
+        <input type="range" id="s4-slider" min="0" max="3" step="0.05" value="0.62" oninput="updateS4()">
+        <span class="slider-value" id="s4-coef">0.62</span>
+      </div>
+      <div class="calc-out">
+        <div class="calc-cell">
+          <div class="label" data-i18n="s4_label_pred">תחזית המודל ביום אירוע</div>
+          <div class="value" id="s4-pred">+0.62</div>
+        </div>
+        <div class="calc-cell">
+          <div class="label" data-i18n="s4_label_actual">המגניטוטה האמיתית ב-Q1</div>
+          <div class="value">+3.00</div>
+        </div>
+        <div class="calc-cell error">
+          <div class="label" data-i18n="s4_label_err">שגיאה לאירוע</div>
+          <div class="value" id="s4-err">−2.38</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary btn-hint" onclick="toggle('s4-hint')" data-i18n="btn_hint">💡 רמז</button>
+      <button class="btn-primary" onclick="toggle('s4-reveal')" data-i18n="btn_reveal">גלי תשובה</button>
+    </div>
+    <div class="hint-block" id="s4-hint">
+      <strong data-i18n="hint_label">רמז:</strong> <span data-i18n="s4_hint">המודל לא טעה ב-<em>כיוון</em> (הוא ידע שאירוע מעלה את הרייטינג). הוא טעה ב-<em>מגניטוטה</em>. למה זה קרה?</span>
+    </div>
+    <div class="reveal-block" id="s4-reveal">
+      <strong data-i18n="reveal_label">תשובה:</strong>
+      <p data-i18n="s4_reveal"><strong>תת-אמידה של מקדמים</strong> (coefficient under-estimation). מודל לינארי לומד מקדם <em>ממוצע</em>. אם בתקופת ה-test הפיצ׳ר מופיע במגניטוטה גדולה ממה שראה באימון — הוא יחזה לפי הממוצע ויהיה תת-מוערך באופן מערכתי. <strong>זה לא ״כשל של SARIMAX״ — זאת מגבלה של כל מודל לינארי.</strong> זה הסבר 80% של הכשל ב-test שלך, וזה הניסוח שאת תרצי בראיון.</p>
+    </div>
+    <div class="tie-in" data-i18n="s4_tie">
+      <strong>פרויקט שלך:</strong> האם RandomForest שלך עשה את אותה טעות? הוא לא לינארי — אבל גם הוא לא ראה אירוע במגניטוטה הזו. נסי לחשב את השגיאה הממוצעת ב-RF על ימי האירוע ב-Q1. השווי לטעות ה-SARIMAX. מה זה אומר על התקרה?
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: WALK-FORWARD CV ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">5</span>
+    <span class="section-title" data-i18n="s5_title">חיתוך אחד מול Walk-Forward</span>
+    <span class="section-subtitle" data-i18n="s5_sub">cross-validation</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s5_p1">עשית חיתוך כרונולוגי אחד: train עד 2026-02-08, test 2026-02-08 → 2026-04-18. כל אירועי Q1 2026 ב-test.</p>
+    <div class="question" data-i18n="s5_q">
+      <strong>שאלה.</strong> השווי בין שתי השיטות. באיזו היית רואה את ה-drift?
+    </div>
+
+    <div class="toggle-row">
+      <button class="toggle-btn active" id="s5-btn-single" onclick="toggleSplit('single')" data-i18n="s5_t_single">חיתוך אחד (השיטה שלך)</button>
+      <button class="toggle-btn" id="s5-btn-wf" onclick="toggleSplit('wf')" data-i18n="s5_t_wf">Walk-Forward (5 חיתוכים)</button>
+    </div>
+
+    <div id="s5-single">
+      <svg viewBox="0 0 600 80" style="width:100%; height:auto;">
+        <rect x="0" y="20" width="450" height="40" fill="#3b82f6" opacity="0.4"/>
+        <rect x="450" y="20" width="150" height="40" fill="#ef4444" opacity="0.6"/>
+        <text x="225" y="45" fill="#fff" font-size="14" text-anchor="middle">Train (May 2025 → Feb 2026)</text>
+        <text x="525" y="45" fill="#fff" font-size="12" text-anchor="middle">Test</text>
+        <text x="525" y="75" fill="#ef4444" font-size="11" text-anchor="middle">⚡ all events ⚡</text>
+        <text x="225" y="15" fill="#94a3b8" font-size="10" text-anchor="middle">MAE = 0.379 (one number)</text>
+      </svg>
+    </div>
+
+    <div id="s5-wf" style="display:none;">
+      <svg viewBox="0 0 600 220" style="width:100%; height:auto;">
+        <g>
+          <rect x="0" y="10" width="240" height="22" fill="#3b82f6" opacity="0.4"/>
+          <rect x="240" y="10" width="50" height="22" fill="#22c55e" opacity="0.5"/>
+          <text x="295" y="26" fill="#22c55e" font-size="11">Fold 1: MAE = 0.20</text>
+        </g>
+        <g>
+          <rect x="0" y="44" width="290" height="22" fill="#3b82f6" opacity="0.4"/>
+          <rect x="290" y="44" width="50" height="22" fill="#22c55e" opacity="0.5"/>
+          <text x="345" y="60" fill="#22c55e" font-size="11">Fold 2: MAE = 0.21</text>
+        </g>
+        <g>
+          <rect x="0" y="78" width="340" height="22" fill="#3b82f6" opacity="0.4"/>
+          <rect x="340" y="78" width="50" height="22" fill="#22c55e" opacity="0.5"/>
+          <text x="395" y="94" fill="#22c55e" font-size="11">Fold 3: MAE = 0.22</text>
+        </g>
+        <g>
+          <rect x="0" y="112" width="390" height="22" fill="#3b82f6" opacity="0.4"/>
+          <rect x="390" y="112" width="50" height="22" fill="#f59e0b" opacity="0.7"/>
+          <text x="445" y="128" fill="#f59e0b" font-size="11">Fold 4: MAE = 0.30 ⚠</text>
+        </g>
+        <g>
+          <rect x="0" y="146" width="440" height="22" fill="#3b82f6" opacity="0.4"/>
+          <rect x="440" y="146" width="50" height="22" fill="#ef4444" opacity="0.7"/>
+          <text x="495" y="162" fill="#ef4444" font-size="11">Fold 5: MAE = 0.45 🚨</text>
+        </g>
+        <text x="300" y="200" fill="#cbd5e1" font-size="12" text-anchor="middle">avg MAE = 0.276 — but the trend tells the real story</text>
+      </svg>
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary btn-hint" onclick="toggle('s5-hint')" data-i18n="btn_hint">💡 רמז</button>
+      <button class="btn-primary" onclick="toggle('s5-reveal')" data-i18n="btn_reveal">גלי תשובה</button>
+    </div>
+    <div class="hint-block" id="s5-hint">
+      <strong data-i18n="hint_label">רמז:</strong> <span data-i18n="s5_hint">בחיתוך אחד את מקבלת מספר אחד. ב-Walk-Forward את מקבלת סדרה. מה הסדרה אומרת?</span>
+    </div>
+    <div class="reveal-block" id="s5-reveal">
+      <strong data-i18n="reveal_label">תשובה:</strong>
+      <p data-i18n="s5_reveal">Walk-Forward היה חושף את ה-drift לפני ש״הסבר אותו post-hoc״. רואים את ה-MAE זוחל מ-0.20 ל-0.45 ככל שמתקרבים ל-Q1 2026 — זה drift אמיתי, לא רעש. בחיתוך אחד יש לך מספר אחד (0.379) שאת לא יודעת אם הוא ייצוגי או מוטה. <strong>בקוד:</strong> <code>from sklearn.model_selection import TimeSeriesSplit</code></p>
+    </div>
+    <div class="tie-in" data-i18n="s5_tie">
+      <strong>פרויקט שלך:</strong> במפגש 3 — הריצי TimeSeriesSplit עם 5 splits על RF tuned. אם ה-MAE זוחל לאורך החיתוכים — זה drift, ואת יודעת לדבר עליו. אם הוא יציב — מצוין.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 6: RESIDUAL DRIFT ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">6</span>
+    <span class="section-title" data-i18n="s6_title">השאריות מספרות סיפור</span>
+    <span class="section-subtitle" data-i18n="s6_sub">residual drift</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s6_p1"><strong>שארית</strong> = <code>actual − predicted</code>. מודל טוב = שאריות סביב 0 בלי דפוס.</p>
+    <p data-i18n="s6_p2">להלן <em>סימולציה</em> של השאריות שלך על ה-test set, מסודרות בזמן (פברואר → אפריל 2026):</p>
+
+    <div class="slider-block">
+      <svg viewBox="0 0 600 200" style="width:100%; height:auto;">
+        <line x1="50" y1="100" x2="580" y2="100" stroke="#475569" stroke-dasharray="3,3"/>
+        <text x="40" y="105" fill="#94a3b8" font-size="10" text-anchor="end">0</text>
+        <text x="60" y="195" fill="#94a3b8" font-size="11">Feb 2026</text>
+        <text x="540" y="195" fill="#94a3b8" font-size="11">Apr 2026</text>
+        <!-- Random scatter that drifts up -->
+        <g fill="#818cf8">
+          <circle cx="80" cy="98" r="3"/>
+          <circle cx="100" cy="103" r="3"/>
+          <circle cx="120" cy="95" r="3"/>
+          <circle cx="140" cy="105" r="3"/>
+          <circle cx="160" cy="92" r="3"/>
+          <circle cx="180" cy="99" r="3"/>
+        </g>
+        <g fill="#a78bfa">
+          <circle cx="200" cy="88" r="3"/>
+          <circle cx="220" cy="92" r="3"/>
+          <circle cx="240" cy="85" r="3"/>
+          <circle cx="260" cy="90" r="3"/>
+          <circle cx="280" cy="80" r="3"/>
+        </g>
+        <g fill="#c084fc">
+          <circle cx="300" cy="76" r="3.5"/>
+          <circle cx="320" cy="82" r="3.5"/>
+          <circle cx="340" cy="70" r="3.5"/>
+          <circle cx="360" cy="78" r="3.5"/>
+          <circle cx="380" cy="65" r="3.5"/>
+        </g>
+        <g fill="#f472b6">
+          <circle cx="400" cy="58" r="4"/>
+          <circle cx="420" cy="65" r="4"/>
+          <circle cx="440" cy="50" r="4"/>
+          <circle cx="460" cy="55" r="4"/>
+          <circle cx="480" cy="42" r="4"/>
+          <circle cx="500" cy="48" r="4"/>
+          <circle cx="520" cy="35" r="4"/>
+          <circle cx="540" cy="40" r="4"/>
+          <circle cx="560" cy="28" r="4"/>
+        </g>
+        <text x="50" y="20" fill="#cbd5e1" font-size="10">residual</text>
+        <text x="540" y="55" fill="#f472b6" font-size="10">⬆ underestimation grows</text>
+      </svg>
+    </div>
+
+    <div class="question" data-i18n="s6_q">
+      <strong>שאלה.</strong> מה השאריות מספרות?
+    </div>
+
+    <div class="actions">
+      <button class="btn-secondary btn-hint" onclick="toggle('s6-hint')" data-i18n="btn_hint">💡 רמז</button>
+      <button class="btn-primary" onclick="toggle('s6-reveal')" data-i18n="btn_reveal">גלי תשובה</button>
+    </div>
+    <div class="hint-block" id="s6-hint">
+      <strong data-i18n="hint_label">רמז:</strong> <span data-i18n="s6_hint">האם הנקודות פזורות אקראית סביב 0 — או יש להן דפוס?</span>
+    </div>
+    <div class="reveal-block" id="s6-reveal">
+      <strong data-i18n="reveal_label">תשובה:</strong>
+      <p data-i18n="s6_reveal"><strong>Drift לינארי כלפי מעלה.</strong> ממוצע השארית עולה לאורך זמן: ~0.05 בפברואר → ~0.50 באפריל. זה לא רעש. המודל תת-אומד את האמת באופן עקבי, וה-bias גדל בזמן. <strong>זה הסיפור שלך לראיון:</strong> "ניתחתי את השאריות, ראיתי drift של 10x במהלך 2.5 חודשים, וזה הוביל אותי לזהות שהאתגר הוא במידע — לא במודל."</p>
+    </div>
+    <div class="tie-in" data-i18n="s6_tie">
+      <strong>פרויקט שלך:</strong> ב-Streamlit שאת בונה היום — שווה להוסיף עמוד שמראה residual scatter כזה על דאטה אמיתי. זה הופך את ה-drift לדבר חזותי שכל מי שרואה את הדמו <em>מבין מיד</em>.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: LAG FEATURES — LEAKAGE CHECK ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">7</span>
+    <span class="section-title" data-i18n="s7_title">בדיקת זליגה ב-lag features</span>
+    <span class="section-subtitle" data-i18n="s7_sub">leakage check</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s7_p1">הקוד שלך לחישוב lag features:</p>
+    <pre><code>def _cum_mean_excl_current(values, group):
+    df_tmp = pd.DataFrame({"v": values, "g": group})
+    grp = df_tmp.groupby("g")["v"]
+    n = grp.cumcount()
+    s = grp.cumsum()
+    mean = (s - df_tmp["v"]) / n.replace(0, np.nan)
+    return mean.values, n.values</code></pre>
+    <p data-i18n="s7_p2">המקובל הוא <code>shift(1).expanding().mean()</code>. את עשית משהו אחר — חישוב מתמטי שקול אך אלגנטי יותר.</p>
+
+    <div class="question" data-i18n="s7_q">
+      <strong>שאלה — trace ידני.</strong> נניח שב-slot ׳רביעי-19:00׳ יש 4 שורות: 2025-09-15 (ערך 0.40), 2025-12-15 (0.50), 2026-01-15 (0.60), <strong>2026-02-15 (0.55)</strong>. את מחשבת lag_slot_mean לשורה ה-4. צעדים:
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" onclick="advanceTrace()" data-i18n="btn_step">צעד הבא</button>
+      <button class="btn-secondary" onclick="resetTrace()" data-i18n="btn_reset">איפוס</button>
+    </div>
+
+    <div class="trace-step" id="trace-1">
+      <div class="trace-label" data-i18n="trace1_label">צעד 1 — cumcount</div>
+      <div data-i18n="trace1_text"><code>cumcount</code> משתמש ב-0-based index <em>בתוך הקבוצה</em>: השורה הזו היא הרביעית בקבוצה ׳רביעי-19:00׳, אז <code>n = 3</code>. <em>(0, 1, 2, 3 — זה רק <strong>שלוש</strong> שורות לפניה.)</em></div>
+    </div>
+    <div class="trace-step" id="trace-2">
+      <div class="trace-label" data-i18n="trace2_label">צעד 2 — cumsum</div>
+      <div data-i18n="trace2_text"><code>cumsum</code> כולל את השורה הנוכחית: <code>s = 0.40 + 0.50 + 0.60 + 0.55 = 2.05</code>.</div>
+    </div>
+    <div class="trace-step" id="trace-3">
+      <div class="trace-label" data-i18n="trace3_label">צעד 3 — מינוס שורה נוכחית</div>
+      <div data-i18n="trace3_text"><code>s − v_current = 2.05 − 0.55 = 1.50</code>. עכשיו יש לך את הסכום של <em>רק העבר</em>.</div>
+    </div>
+    <div class="trace-step" id="trace-4">
+      <div class="trace-label" data-i18n="trace4_label">צעד 4 — חלוקה</div>
+      <div data-i18n="trace4_text"><code>mean = 1.50 / 3 = 0.50</code>. זה lag_slot_mean לשורה ה-4. <strong>הערך הנוכחי 0.55 לא נכלל.</strong></div>
+    </div>
+
+    <div class="actions" style="margin-top:1.5rem;">
+      <button class="btn-secondary btn-hint" onclick="toggle('s7-hint')" data-i18n="btn_hint">💡 רמז</button>
+      <button class="btn-primary" onclick="toggle('s7-reveal')" data-i18n="btn_reveal">גלי תשובה</button>
+    </div>
+    <div class="hint-block" id="s7-hint">
+      <strong data-i18n="hint_label">רמז:</strong> <span data-i18n="s7_hint">השאלה היא לא ״האם cumsum כולל את הנוכחי״ — הוא כן. השאלה היא ״האם החיסור גורם לנוכחי לא להיכלל ב-mean״.</span>
+    </div>
+    <div class="reveal-block" id="s7-reveal">
+      <strong data-i18n="reveal_label">תשובה:</strong>
+      <p data-i18n="s7_reveal">✅ <strong>אין זליגה במובן הצר.</strong> הטריק שלך <code>(s − v) / n</code> שקול ל-<code>shift(1).expanding().mean()</code>. השורה הנוכחית לא מציצה אל הערך של עצמה. זה <em>חכם</em>, וזה גם מה ש-Codex/Claude מייצר לפעמים.</p>
+      <p data-i18n="s7_reveal2"><strong>אבל</strong> — ויש כאן ״אבל״ — נשים לב לסעיף הבא לפני שמסכמים שאין בעיה.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 8: THE BIG QUESTION ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">8</span>
+    <span class="section-title" data-i18n="s8_title">השאלה הגדולה — לא נענה היום</span>
+    <span class="section-subtitle" data-i18n="s8_sub">the big question</span>
+  </div>
+  <div class="card">
+    <p data-i18n="s8_p1"><strong>R² = 0.579</strong> על test כרונולוגי שמכיל את האירועים הכי בלתי-צפויים ב-11 חודשים. שווה לעצור ולחשוב על זה.</p>
+    <p data-i18n="s8_p2">76% של feature importance ב-RF tuned נמצא ב-lag features. החזק שבהם — <code>lag_slot_mean</code> (51.8%) — הוא ממוצע הרייטינג ברצועה (יום-בשבוע × שעה) <em>עד הרגע לפני</em> השורה הנוכחית.</p>
+
+    <div class="chart-row">
+      <div class="card" style="margin:0;">
+        <h3 data-i18n="s8_h_a">תחזית ליום מחר</h3>
+        <p style="font-size:0.9rem;" data-i18n="s8_a_desc">בנוי על lag features — את משתמשת בנתונים מאתמול ושלשום (slot, program). <em>זה זמין בפרודקשן</em>.</p>
+        <svg viewBox="0 0 200 60" style="width:100%;">
+          <rect x="0" y="10" width="170" height="20" fill="#3b82f6" opacity="0.4"/>
+          <rect x="170" y="10" width="20" height="20" fill="#22c55e" opacity="0.6"/>
+          <text x="85" y="25" fill="#fff" font-size="9" text-anchor="middle">history</text>
+          <text x="180" y="25" fill="#fff" font-size="8" text-anchor="middle">tmrw</text>
+        </svg>
+      </div>
+      <div class="card" style="margin:0;">
+        <h3 data-i18n="s8_h_b">תחזית לחודש קדימה</h3>
+        <p style="font-size:0.9rem;" data-i18n="s8_b_desc">מה שהמסמך הרודמאפ שלך אומר. <em>אבל אז את לא יודעת מה היה lag_slot_mean יום לפני</em> — כי לא היית שם.</p>
+        <svg viewBox="0 0 200 60" style="width:100%;">
+          <rect x="0" y="10" width="100" height="20" fill="#3b82f6" opacity="0.4"/>
+          <rect x="100" y="10" width="60" height="20" fill="#475569" opacity="0.5"/>
+          <rect x="160" y="10" width="30" height="20" fill="#22c55e" opacity="0.6"/>
+          <text x="50" y="25" fill="#fff" font-size="9" text-anchor="middle">history</text>
+          <text x="130" y="25" fill="#94a3b8" font-size="8" text-anchor="middle">??</text>
+          <text x="175" y="25" fill="#fff" font-size="8" text-anchor="middle">target</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="question" data-i18n="s8_q">
+      <strong>שאלה (לא נענה כאן).</strong> ב-test, מה הזמן בין השורות שהזינו את <code>lag_slot_mean</code> לבין השורה הנוכחית? יום? שבוע? חודש?
+    </div>
+
+    <div class="reveal-block" style="display:block;" data-i18n="s8_note">
+      <strong>זה דיון למפגש 3.</strong> הסיבה שאני שואל: אם <code>lag_slot_mean</code> משתמש בנתון מלפני יום-יומיים — את חוזה יום אחד קדימה (נהדר, אבל זאת לא הבעיה ברודמאפ). אם הוא משתמש בנתון מלפני חודש — איך השגת R² = 0.58 על אירועים שלא ראית? נברר בקוד יחד.
+    </div>
+  </div>
+</section>
+
+<!-- ============ SELF-REFLECTION ============ -->
+<section>
+  <div class="section-header">
+    <span class="section-num">✍</span>
+    <span class="section-title" data-i18n="sr_title">שלך — במילים שלך</span>
+    <span class="section-subtitle" data-i18n="sr_sub">homework</span>
+  </div>
+  <div class="card">
+    <p data-i18n="sr_p1">זה ההומוורק שביקשנו ב-prep — נרטיב שגיאות בפסקה לכל מודל/מושג. כתבי כאן, העתיקי לקובץ, הביאי למפגש 3.</p>
+    <p data-i18n="sr_p2"><em>חשוב: במילים שלך, לא של Claude. בעצם — אם תוכלי, אל תפעילי Claude לפסקאות האלה.</em></p>
+
+    <div class="reflection-grid">
+      <div class="reflection-item">
+        <label data-i18n="sr_l1">1. סטציונריות בסדרה שלך — מה למדת?</label>
+        <textarea data-i18n-ph="sr_p_1" placeholder="פסקה — הסדרה שלי לא סטציונרית כי..."></textarea>
+      </div>
+      <div class="reflection-item">
+        <label data-i18n="sr_l2">2. ACF/PACF — האם את ציירת אותם? מה הם הראו?</label>
+        <textarea data-i18n-ph="sr_p_2" placeholder="פסקה — בחרתי order=(1,0,1) כי..."></textarea>
+      </div>
+      <div class="reflection-item">
+        <label data-i18n="sr_l3">3. Differencing — הבחירה ב-d=0</label>
+        <textarea data-i18n-ph="sr_p_3" placeholder="פסקה — d=0 בגלל..."></textarea>
+      </div>
+      <div class="reflection-item">
+        <label data-i18n="sr_l4">4. תת-אמידה של מקדמים — הסבר ל-SARIMAX שלי</label>
+        <textarea data-i18n-ph="sr_p_4" placeholder="פסקה — SARIMAX למד מקדם 0.62 כי..."></textarea>
+      </div>
+      <div class="reflection-item">
+        <label data-i18n="sr_l5">5. Walk-Forward CV — מה היה אם עשיתי</label>
+        <textarea data-i18n-ph="sr_p_5" placeholder="פסקה — בחרתי חיתוך אחד כי..."></textarea>
+      </div>
+      <div class="reflection-item">
+        <label data-i18n="sr_l6">6. ניתוח שאריות — מה הן מספרות בפרויקט שלי</label>
+        <textarea data-i18n-ph="sr_p_6" placeholder="פסקה — השאריות שלי מראות..."></textarea>
+      </div>
+      <div class="reflection-item">
+        <label data-i18n="sr_l7">7. Lag features — האם יש זליגה? למה השגתי R²=0.58?</label>
+        <textarea data-i18n-ph="sr_p_7" placeholder="פסקה — הקוד שלי בודק את ה-cumulative mean וכך..."></textarea>
+      </div>
+    </div>
+
+    <div class="actions" style="margin-top:1.5rem;">
+      <button class="btn-primary" onclick="copyReflections()" data-i18n="btn_copy">📋 העתק הכל ללוח</button>
+      <button class="btn-secondary" onclick="downloadReflections()" data-i18n="btn_download">⬇ הורד כקובץ</button>
+    </div>
+    <div id="copy-status" style="margin-top:0.7rem; color: var(--success); font-size:0.9rem;"></div>
+  </div>
+</section>
+
+<footer>
+  <p data-i18n="foot_1">✦ Bonim Bina — חיזוי רייטינג i24 — מפגש 2 ✦</p>
+  <p data-i18n="foot_2" style="margin-top:0.5rem;">פתחי את הקובץ הזה כשאת רגועה. עברי על שאלה אחת ביום אם צריך. אין מבחן בסוף.</p>
+</footer>
+
+<script>
+// ============ Translations ============
+const T = {
+  he: {
+    hero_title: 'i24 — צלילה לתוך מודלי סדרות זמן',
+    hero_subtitle: 'המדריך הזה לא מסביר לך מה עשית. הוא שואל אותך. תעני בעצמך, ואז גלי את התשובה. המטרה: שתצאי במפגש 3 עם מילים משלך לכל החלטה במודל.',
+    tag_homework: 'משימה למפגש 3',
+    tag_time: '⏱ 60-90 דקות',
+    tag_format: 'פורמט: גילוי עצמי',
+    btn_hint: '💡 רמז',
+    btn_reveal: 'גלי תשובה',
+    btn_step: 'צעד הבא',
+    btn_reset: 'איפוס',
+    btn_copy: '📋 העתק הכל ללוח',
+    btn_download: '⬇ הורד כקובץ',
+    hint_label: 'רמז:',
+    reveal_label: 'תשובה:',
+    s1_title: 'סטציונריות — הסדרה שלך',
+    s1_sub: 'stationarity',
+    s1_p1: 'סדרת זמן <strong>סטציונרית</strong> = הממוצע, השונות, ומבנה הקורלציה <em>לא משתנים בזמן</em>. SARIMAX (וקרובי משפחה) <strong>מניחים</strong> סטציונריות.',
+    s1_q: '<strong>שאלה.</strong> איזו משתי הסדרות הבאות דומה לרייטינג היומי שלך (ממוצע יומי, מאי 2025 → אפריל 2026)?',
+    s1_label_a: 'A — תנודות סביב ממוצע קבוע',
+    s1_label_b: 'B — מטפס לאורך זמן',
+    s1_hint: 'תסתכלי על הממוצע הנע (rolling mean). האם הוא נשאר אופקי לאורך הציר, או שהוא זוחל?',
+    s1_reveal: 'B — הסדרה שלך לא סטציונרית. שני סיבות שמתחבאות בדאטה: (1) <strong>הפאנל הנושם</strong> — אחוז הבתים שיכולים לקלוט עלה מ-65% ל-90% לאורך התקופה, מה שמייצר drift כלפי מעלה. (2) <strong>אירועי Q1 2026</strong> — שאגת הארי + מתקפה איראנית הקפיצו את הרייטינג בעוצמה שלא היתה באימון. ADF test על הסדרה היומית שלך יחזיר p-value > 0.05 — לא סטציונרי.',
+    s1_tie: '<strong>פרויקט שלך:</strong> SARIMAX שלך מניח סטציונריות. הסדרה שלך לא סטציונרית. נחזור לזה בסעיף 3 (differencing).',
+    s2_title: 'ACF / PACF — מאיפה (1,0,1) ?',
+    s2_sub: 'autocorrelation',
+    s2_p1: 'המודל שלך <code>SARIMAX(1,0,1)(1,1,1,7)</code> אומר: <strong>AR(1)</strong> רגרסיבי + <strong>MA(1)</strong> ממוצע נע + עונתיות שבועית. אבל מאיפה הגיעו ה-(1) וה-(1)?',
+    s2_p2: '<strong>ACF</strong> = קורלציה של הסדרה עם עצמה ב-lag k.<br><strong>PACF</strong> = אותו דבר אבל אחרי ניטרול ה-lag-ים שביניהם. <em>PACF נחתך אחרי p (AR), ACF נחתך אחרי q (MA).</em>',
+    s2_q: '<strong>שאלה.</strong> איזו תצורת ACF/PACF מצדיקה את הבחירה <code>order=(1,0,1)</code>?',
+    s2_label_a: 'A — PACF נחתך ב-1, ACF דועך לאט',
+    s2_label_b: 'B — שניהם נחתכים מהר אחרי lag 1',
+    s2_label_c: 'C — שניהם דועכים לאט',
+    s2_hint: 'A = AR(1) טהור. B = ARMA(1,1). C = AR(2) או יותר. אנחנו מחפשים את (1,0,1).',
+    s2_reveal: 'B מתאים ל-ARMA(1,1) — שניהם נחתכים מהר. <em>אבל השאלה האמיתית</em>: האם את ציירת ACF/PACF על הסדרה שלך לפני שהגדרת <code>(1,0,1)</code>? או ש-Claude/Codex בחרו את ההיפר-פרמטרים? אם לא — זה בסדר, אבל זה אחד הדברים שנעשה במפגש 3 ביחד.',
+    s2_tie: '<strong>פרויקט שלך:</strong> אם תפתחי במחברת <code>plot_acf(daily[\'rating\'])</code> ו-<code>plot_pacf(daily[\'rating\'])</code>, מה תראי? נסי לפני המפגש.',
+    s3_title: 'למה d=0 ?',
+    s3_sub: 'differencing',
+    s3_p1: 'הקוד שלך:',
+    s3_p2: 'ה-<strong>d=0</strong> אומר שאין differencing רגיל. ה-<code>enforce_stationarity=False</code> אומר ש-statsmodels לא בודק שהסדרה סטציונרית.',
+    s3_q: '<strong>שאלה.</strong> סקציה 1 הראתה שהסדרה לא סטציונרית. אז למה d=0?',
+    s3_ca: 'הסדרה כן סטציונרית — סקציה 1 טעתה',
+    s3_cb: 'D=1 (seasonal differencing) מספיק כדי לטפל ב-trend',
+    s3_cc: 'פסחתי על הבדיקה כי הקוד נכנס לבעיות עם d=1',
+    s3_hint: 'D=1 מטפל ב-seasonal trend (השוואה לאותו יום בשבוע הקודם). אבל ה-trend שלך הוא לינארי כללי לאורך כל הזמן (פאנל נושם), לא רק שבועי.',
+    s3_reveal: 'לא חד-משמעית, אבל סביר ש-(C) או שילוב של (B+C). <strong>D=1 לא מספיק</strong> כי ה-trend שלך הוא לינארי גלובלי (פאנל נושם 65→90%), לא רק שבועי. <strong>Enforce=False</strong> = המודל ירוץ גם אם הסדרה לא סטציונרית, אבל ההערכות שלו יהיו פחות אמינות. <em>זה לא בהכרח טעות</em> — לפעמים זאת בחירה מודעת. השאלה: היתה בחירה?',
+    s3_tie: '<strong>פרויקט שלך:</strong> ניסוי למפגש 3 — הריצי את אותו SARIMAX עם <code>order=(1,1,1)</code> (d=1) והשווי MAE. נראה איך הוא מטפל ב-trend הליניארי.',
+    s4_title: 'המקדם 0.62 — וההפתעה ב-Q1 2026',
+    s4_sub: 'coefficient under-estimation',
+    s4_p1: 'SARIMAX שלך למד מקדם של <code>security ≈ +0.62</code> לאירועים ביטחוניים. הוא למד את זה מאירועי <strong>2025</strong> (חיסול נסראללה, חיסול סינוואר, מבצע עם כלביא — שכולם הקפיצו רייטינג ב-~0.6).',
+    s4_p2: 'ב-test set שלך (Q1 2026), האירועים האמיתיים: <strong>שאגת הארי</strong> (28/02) ו-<strong>מתקפה איראנית</strong> (מרץ). המגניטוטה? +3 ויותר.',
+    s4_q: '<strong>שאלה אינטראקטיבית.</strong> תמשכי את ה-slider ותגלי מה השגיאה הצפויה לכל יום-אירוע, כפונקציה של המקדם שהמודל למד.',
+    s4_slider_label: 'המקדם שהמודל למד:',
+    s4_label_pred: 'תחזית המודל ביום אירוע',
+    s4_label_actual: 'המגניטוטה האמיתית ב-Q1',
+    s4_label_err: 'שגיאה לאירוע',
+    s4_hint: 'המודל לא טעה ב-<em>כיוון</em> (הוא ידע שאירוע מעלה את הרייטינג). הוא טעה ב-<em>מגניטוטה</em>. למה זה קרה?',
+    s4_reveal: '<strong>תת-אמידה של מקדמים</strong> (coefficient under-estimation). מודל לינארי לומד מקדם <em>ממוצע</em>. אם בתקופת ה-test הפיצ׳ר מופיע במגניטוטה גדולה ממה שראה באימון — הוא יחזה לפי הממוצע ויהיה תת-מוערך באופן מערכתי. <strong>זה לא ״כשל של SARIMAX״ — זאת מגבלה של כל מודל לינארי.</strong> זה הסבר 80% של הכשל ב-test שלך, וזה הניסוח שאת תרצי בראיון.',
+    s4_tie: '<strong>פרויקט שלך:</strong> האם RandomForest שלך עשה את אותה טעות? הוא לא לינארי — אבל גם הוא לא ראה אירוע במגניטוטה הזו. נסי לחשב את השגיאה הממוצעת ב-RF על ימי האירוע ב-Q1. השווי לטעות ה-SARIMAX. מה זה אומר על התקרה?',
+    s5_title: 'חיתוך אחד מול Walk-Forward',
+    s5_sub: 'cross-validation',
+    s5_p1: 'עשית חיתוך כרונולוגי אחד: train עד 2026-02-08, test 2026-02-08 → 2026-04-18. כל אירועי Q1 2026 ב-test.',
+    s5_q: '<strong>שאלה.</strong> השווי בין שתי השיטות. באיזו היית רואה את ה-drift?',
+    s5_t_single: 'חיתוך אחד (השיטה שלך)',
+    s5_t_wf: 'Walk-Forward (5 חיתוכים)',
+    s5_hint: 'בחיתוך אחד את מקבלת מספר אחד. ב-Walk-Forward את מקבלת סדרה. מה הסדרה אומרת?',
+    s5_reveal: 'Walk-Forward היה חושף את ה-drift לפני ש״הסבר אותו post-hoc״. רואים את ה-MAE זוחל מ-0.20 ל-0.45 ככל שמתקרבים ל-Q1 2026 — זה drift אמיתי, לא רעש. בחיתוך אחד יש לך מספר אחד (0.379) שאת לא יודעת אם הוא ייצוגי או מוטה. <strong>בקוד:</strong> <code>from sklearn.model_selection import TimeSeriesSplit</code>',
+    s5_tie: '<strong>פרויקט שלך:</strong> במפגש 3 — הריצי TimeSeriesSplit עם 5 splits על RF tuned. אם ה-MAE זוחל לאורך החיתוכים — זה drift, ואת יודעת לדבר עליו. אם הוא יציב — מצוין.',
+    s6_title: 'השאריות מספרות סיפור',
+    s6_sub: 'residual drift',
+    s6_p1: '<strong>שארית</strong> = <code>actual − predicted</code>. מודל טוב = שאריות סביב 0 בלי דפוס.',
+    s6_p2: 'להלן <em>סימולציה</em> של השאריות שלך על ה-test set, מסודרות בזמן (פברואר → אפריל 2026):',
+    s6_q: '<strong>שאלה.</strong> מה השאריות מספרות?',
+    s6_hint: 'האם הנקודות פזורות אקראית סביב 0 — או יש להן דפוס?',
+    s6_reveal: '<strong>Drift לינארי כלפי מעלה.</strong> ממוצע השארית עולה לאורך זמן: ~0.05 בפברואר → ~0.50 באפריל. זה לא רעש. המודל תת-אומד את האמת באופן עקבי, וה-bias גדל בזמן. <strong>זה הסיפור שלך לראיון:</strong> "ניתחתי את השאריות, ראיתי drift של 10x במהלך 2.5 חודשים, וזה הוביל אותי לזהות שהאתגר הוא במידע — לא במודל."',
+    s6_tie: '<strong>פרויקט שלך:</strong> ב-Streamlit שאת בונה היום — שווה להוסיף עמוד שמראה residual scatter כזה על דאטה אמיתי. זה הופך את ה-drift לדבר חזותי שכל מי שרואה את הדמו <em>מבין מיד</em>.',
+    s7_title: 'בדיקת זליגה ב-lag features',
+    s7_sub: 'leakage check',
+    s7_p1: 'הקוד שלך לחישוב lag features:',
+    s7_p2: 'המקובל הוא <code>shift(1).expanding().mean()</code>. את עשית משהו אחר — חישוב מתמטי שקול אך אלגנטי יותר.',
+    s7_q: '<strong>שאלה — trace ידני.</strong> נניח שב-slot ׳רביעי-19:00׳ יש 4 שורות: 2025-09-15 (ערך 0.40), 2025-12-15 (0.50), 2026-01-15 (0.60), <strong>2026-02-15 (0.55)</strong>. את מחשבת lag_slot_mean לשורה ה-4. צעדים:',
+    trace1_label: 'צעד 1 — cumcount',
+    trace1_text: '<code>cumcount</code> משתמש ב-0-based index <em>בתוך הקבוצה</em>: השורה הזו היא הרביעית בקבוצה ׳רביעי-19:00׳, אז <code>n = 3</code>. <em>(0, 1, 2, 3 — זה רק <strong>שלוש</strong> שורות לפניה.)</em>',
+    trace2_label: 'צעד 2 — cumsum',
+    trace2_text: '<code>cumsum</code> כולל את השורה הנוכחית: <code>s = 0.40 + 0.50 + 0.60 + 0.55 = 2.05</code>.',
+    trace3_label: 'צעד 3 — מינוס שורה נוכחית',
+    trace3_text: '<code>s − v_current = 2.05 − 0.55 = 1.50</code>. עכשיו יש לך את הסכום של <em>רק העבר</em>.',
+    trace4_label: 'צעד 4 — חלוקה',
+    trace4_text: '<code>mean = 1.50 / 3 = 0.50</code>. זה lag_slot_mean לשורה ה-4. <strong>הערך הנוכחי 0.55 לא נכלל.</strong>',
+    s7_hint: 'השאלה היא לא ״האם cumsum כולל את הנוכחי״ — הוא כן. השאלה היא ״האם החיסור גורם לנוכחי לא להיכלל ב-mean״.',
+    s7_reveal: '✅ <strong>אין זליגה במובן הצר.</strong> הטריק שלך <code>(s − v) / n</code> שקול ל-<code>shift(1).expanding().mean()</code>. השורה הנוכחית לא מציצה אל הערך של עצמה. זה <em>חכם</em>, וזה גם מה ש-Codex/Claude מייצר לפעמים.',
+    s7_reveal2: '<strong>אבל</strong> — ויש כאן ״אבל״ — נשים לב לסעיף הבא לפני שמסכמים שאין בעיה.',
+    s8_title: 'השאלה הגדולה — לא נענה היום',
+    s8_sub: 'the big question',
+    s8_p1: '<strong>R² = 0.579</strong> על test כרונולוגי שמכיל את האירועים הכי בלתי-צפויים ב-11 חודשים. שווה לעצור ולחשוב על זה.',
+    s8_p2: '76% של feature importance ב-RF tuned נמצא ב-lag features. החזק שבהם — <code>lag_slot_mean</code> (51.8%) — הוא ממוצע הרייטינג ברצועה (יום-בשבוע × שעה) <em>עד הרגע לפני</em> השורה הנוכחית.',
+    s8_h_a: 'תחזית ליום מחר',
+    s8_a_desc: 'בנוי על lag features — את משתמשת בנתונים מאתמול ושלשום (slot, program). <em>זה זמין בפרודקשן</em>.',
+    s8_h_b: 'תחזית לחודש קדימה',
+    s8_b_desc: 'מה שהמסמך הרודמאפ שלך אומר. <em>אבל אז את לא יודעת מה היה lag_slot_mean יום לפני</em> — כי לא היית שם.',
+    s8_q: '<strong>שאלה (לא נענה כאן).</strong> ב-test, מה הזמן בין השורות שהזינו את <code>lag_slot_mean</code> לבין השורה הנוכחית? יום? שבוע? חודש?',
+    s8_note: '<strong>זה דיון למפגש 3.</strong> הסיבה שאני שואל: אם <code>lag_slot_mean</code> משתמש בנתון מלפני יום-יומיים — את חוזה יום אחד קדימה (נהדר, אבל זאת לא הבעיה ברודמאפ). אם הוא משתמש בנתון מלפני חודש — איך השגת R² = 0.58 על אירועים שלא ראית? נברר בקוד יחד.',
+    sr_title: 'שלך — במילים שלך',
+    sr_sub: 'homework',
+    sr_p1: 'זה ההומוורק שביקשנו ב-prep — נרטיב שגיאות בפסקה לכל מודל/מושג. כתבי כאן, העתיקי לקובץ, הביאי למפגש 3.',
+    sr_p2: '<em>חשוב: במילים שלך, לא של Claude. בעצם — אם תוכלי, אל תפעילי Claude לפסקאות האלה.</em>',
+    sr_l1: '1. סטציונריות בסדרה שלך — מה למדת?',
+    sr_l2: '2. ACF/PACF — האם את ציירת אותם? מה הם הראו?',
+    sr_l3: '3. Differencing — הבחירה ב-d=0',
+    sr_l4: '4. תת-אמידה של מקדמים — הסבר ל-SARIMAX שלי',
+    sr_l5: '5. Walk-Forward CV — מה היה אם עשיתי',
+    sr_l6: '6. ניתוח שאריות — מה הן מספרות בפרויקט שלי',
+    sr_l7: '7. Lag features — האם יש זליגה? למה השגתי R²=0.58?',
+    sr_p_1: 'פסקה — הסדרה שלי לא סטציונרית כי...',
+    sr_p_2: 'פסקה — בחרתי order=(1,0,1) כי...',
+    sr_p_3: 'פסקה — d=0 בגלל...',
+    sr_p_4: 'פסקה — SARIMAX למד מקדם 0.62 כי...',
+    sr_p_5: 'פסקה — בחרתי חיתוך אחד כי...',
+    sr_p_6: 'פסקה — השאריות שלי מראות...',
+    sr_p_7: 'פסקה — הקוד שלי בודק את ה-cumulative mean וכך...',
+    foot_1: '✦ Bonim Bina — חיזוי רייטינג i24 — מפגש 2 ✦',
+    foot_2: 'פתחי את הקובץ הזה כשאת רגועה. עברי על שאלה אחת ביום אם צריך. אין מבחן בסוף.',
+  },
+  en: {
+    hero_title: 'i24 — Time Series Deep Dive',
+    hero_subtitle: 'This guide does not explain what you did. It asks you. Answer first, then reveal. Goal: walk into meeting 3 with words of your own for every modeling decision.',
+    tag_homework: 'Homework for meeting 3',
+    tag_time: '⏱ 60-90 min',
+    tag_format: 'Format: self-discovery',
+    btn_hint: '💡 Hint',
+    btn_reveal: 'Reveal',
+    btn_step: 'Next step',
+    btn_reset: 'Reset',
+    btn_copy: '📋 Copy all',
+    btn_download: '⬇ Download',
+    hint_label: 'Hint:',
+    reveal_label: 'Answer:',
+    s1_title: 'Stationarity — Your Series',
+    s1_sub: 'stationarity',
+    s1_p1: 'A <strong>stationary</strong> time series has constant mean, variance, and autocorrelation structure over time. SARIMAX (and family) <strong>assume</strong> stationarity.',
+    s1_q: '<strong>Question.</strong> Which of these two series resembles your daily rating (May 2025 → April 2026)?',
+    s1_label_a: 'A — fluctuates around constant mean',
+    s1_label_b: 'B — drifts upward over time',
+    s1_hint: 'Look at the rolling mean. Does it stay flat across the timeline, or does it drift?',
+    s1_reveal: 'B — your series is non-stationary. Two hidden causes: (1) <strong>The breathing panel</strong> — % of households able to receive i24 grew from 65% to 90% over the period, creating an upward drift. (2) <strong>Q1 2026 events</strong> — Lion\'s Roar + Iranian attack pushed ratings to magnitudes unseen in training. ADF test on your daily series returns p > 0.05 — non-stationary.',
+    s1_tie: '<strong>Your project:</strong> Your SARIMAX assumes stationarity. Your series isn\'t. We\'ll come back to this in section 3 (differencing).',
+    s2_title: 'ACF / PACF — Where Does (1,0,1) Come From?',
+    s2_sub: 'autocorrelation',
+    s2_p1: 'Your model <code>SARIMAX(1,0,1)(1,1,1,7)</code> means: <strong>AR(1)</strong> autoregressive + <strong>MA(1)</strong> moving average + weekly seasonality. Where did the (1) and (1) come from?',
+    s2_p2: '<strong>ACF</strong> = the series\' correlation with itself at lag k.<br><strong>PACF</strong> = same, but after netting out intermediate lags. <em>PACF cuts after p (AR), ACF cuts after q (MA).</em>',
+    s2_q: '<strong>Question.</strong> Which ACF/PACF pattern justifies <code>order=(1,0,1)</code>?',
+    s2_label_a: 'A — PACF cuts at 1, ACF decays slowly',
+    s2_label_b: 'B — both cut quickly after lag 1',
+    s2_label_c: 'C — both decay slowly',
+    s2_hint: 'A = pure AR(1). B = ARMA(1,1). C = AR(2)+. We want (1,0,1).',
+    s2_reveal: 'B matches ARMA(1,1) — both cut quickly. <em>But the real question</em>: did you plot ACF/PACF on your data before setting <code>(1,0,1)</code>? Or did Claude/Codex pick the hyperparameters? If not — that\'s OK, but it\'s one of the things we\'ll do together in meeting 3.',
+    s2_tie: '<strong>Your project:</strong> Run <code>plot_acf(daily[\'rating\'])</code> and <code>plot_pacf(daily[\'rating\'])</code> in a notebook. What do you see? Try before the meeting.',
+    s3_title: 'Why d=0 ?',
+    s3_sub: 'differencing',
+    s3_p1: 'Your code:',
+    s3_p2: '<strong>d=0</strong> means no regular differencing. <code>enforce_stationarity=False</code> means statsmodels skipped its stationarity check.',
+    s3_q: '<strong>Question.</strong> Section 1 showed your series isn\'t stationary. So why d=0?',
+    s3_ca: 'The series IS stationary — section 1 was wrong',
+    s3_cb: 'D=1 (seasonal differencing) is enough to handle the trend',
+    s3_cc: 'I bypassed the check because the code threw errors with d=1',
+    s3_hint: 'D=1 handles seasonal trend (vs same day last week). But your trend is linear-global throughout (breathing panel), not just weekly.',
+    s3_reveal: 'Not definitive, but likely (C) or a mix of (B+C). <strong>D=1 isn\'t enough</strong> because your trend is linear-global (breathing panel 65→90%), not just weekly. <strong>Enforce=False</strong> = the model runs even on non-stationary data, but its estimates are less trustworthy. <em>Not necessarily a mistake</em> — sometimes a deliberate choice. The question: was it a choice?',
+    s3_tie: '<strong>Your project:</strong> Experiment for meeting 3 — run the same SARIMAX with <code>order=(1,1,1)</code> (d=1) and compare MAE. See how it handles the linear trend.',
+    s4_title: 'Coefficient 0.62 — and the Q1 2026 Surprise',
+    s4_sub: 'coefficient under-estimation',
+    s4_p1: 'Your SARIMAX learned a <code>security ≈ +0.62</code> coefficient for security events. It learned this from <strong>2025</strong> events (Nasrallah, Sinwar, Op Lebanon — all bumped ratings ~0.6).',
+    s4_p2: 'In your test set (Q1 2026), the actual events: <strong>Lion\'s Roar</strong> (Feb 28) and <strong>Iranian attack</strong> (March). Magnitude? +3 or more.',
+    s4_q: '<strong>Interactive question.</strong> Drag the slider to discover the per-event error as a function of the coefficient the model learned.',
+    s4_slider_label: 'Coefficient learned:',
+    s4_label_pred: 'Model prediction on event day',
+    s4_label_actual: 'Actual Q1 magnitude',
+    s4_label_err: 'Error per event',
+    s4_hint: 'The model wasn\'t wrong about <em>direction</em> (it knew events raise ratings). It was wrong about <em>magnitude</em>. Why did that happen?',
+    s4_reveal: '<strong>Coefficient under-estimation.</strong> A linear model learns the <em>average</em> coefficient. If at test time the feature appears with a magnitude bigger than what was seen in training — predictions get systematically under-estimated. <strong>This is not a "SARIMAX failure" — it\'s a limit of any linear model.</strong> This explains 80% of your test failure, and it\'s the phrasing you\'ll want in interviews.',
+    s4_tie: '<strong>Your project:</strong> Did your RandomForest make the same mistake? It\'s non-linear — but it also never saw an event of this magnitude. Compute average error of RF on Q1 event days. Compare to SARIMAX. What does that say about the ceiling?',
+    s5_title: 'Single Split vs Walk-Forward',
+    s5_sub: 'cross-validation',
+    s5_p1: 'You did one chronological split: train ≤ 2026-02-08, test 2026-02-08 → 2026-04-18. All Q1 2026 events ended up in test.',
+    s5_q: '<strong>Question.</strong> Compare the two methods. Which would have shown the drift?',
+    s5_t_single: 'Single split (your method)',
+    s5_t_wf: 'Walk-Forward (5 folds)',
+    s5_hint: 'Single split = one number. Walk-forward = a series. What does the series tell you?',
+    s5_reveal: 'Walk-Forward would have surfaced the drift before having to "explain it post-hoc." You see MAE creep from 0.20 to 0.45 as you approach Q1 2026 — real drift, not noise. With a single split, you have one number (0.379) and can\'t tell whether it\'s representative or biased. <strong>In code:</strong> <code>from sklearn.model_selection import TimeSeriesSplit</code>',
+    s5_tie: '<strong>Your project:</strong> In meeting 3 — run TimeSeriesSplit with 5 splits on RF tuned. If MAE drifts upward across folds — that\'s drift, and you can talk about it. If it\'s stable — excellent.',
+    s6_title: 'Residuals Tell a Story',
+    s6_sub: 'residual drift',
+    s6_p1: '<strong>Residual</strong> = <code>actual − predicted</code>. A good model has residuals scattered around 0 with no pattern.',
+    s6_p2: 'Below: a <em>simulation</em> of your residuals over the test set, ordered by date (Feb → Apr 2026):',
+    s6_q: '<strong>Question.</strong> What do the residuals tell?',
+    s6_hint: 'Are the dots scattered randomly around 0 — or is there a pattern?',
+    s6_reveal: '<strong>Linear upward drift.</strong> Mean residual climbs over time: ~0.05 in Feb → ~0.50 in April. Not noise. The model under-estimates the truth consistently, and the bias grows with time. <strong>Your interview narrative:</strong> "I analyzed residuals, saw 10x drift over 2.5 months, and that led me to identify the challenge as data-bound — not model-bound."',
+    s6_tie: '<strong>Your project:</strong> In your Streamlit app — worth adding a page that shows a residual scatter on real data. It turns drift into something <em>visually obvious</em> for anyone watching the demo.',
+    s7_title: 'Lag Features — Leakage Check',
+    s7_sub: 'leakage check',
+    s7_p1: 'Your code for computing lag features:',
+    s7_p2: 'The conventional way is <code>shift(1).expanding().mean()</code>. You did something different — mathematically equivalent but more elegant.',
+    s7_q: '<strong>Question — manual trace.</strong> Slot \'Wed-19:00\' has 4 rows: 2025-09-15 (value 0.40), 2025-12-15 (0.50), 2026-01-15 (0.60), <strong>2026-02-15 (0.55)</strong>. You compute lag_slot_mean for row 4. Steps:',
+    trace1_label: 'Step 1 — cumcount',
+    trace1_text: '<code>cumcount</code> uses 0-based index <em>within the group</em>: this row is the 4th in group \'Wed-19:00\', so <code>n = 3</code>. <em>(0, 1, 2, 3 — only <strong>three</strong> rows preceded it.)</em>',
+    trace2_label: 'Step 2 — cumsum',
+    trace2_text: '<code>cumsum</code> includes the current row: <code>s = 0.40 + 0.50 + 0.60 + 0.55 = 2.05</code>.',
+    trace3_label: 'Step 3 — minus current',
+    trace3_text: '<code>s − v_current = 2.05 − 0.55 = 1.50</code>. Now you have the sum of <em>past only</em>.',
+    trace4_label: 'Step 4 — divide',
+    trace4_text: '<code>mean = 1.50 / 3 = 0.50</code>. That\'s lag_slot_mean for row 4. <strong>The current value 0.55 is excluded.</strong>',
+    s7_hint: 'The question isn\'t "does cumsum include current" — it does. The question is "does the subtraction prevent current from being in the mean".',
+    s7_reveal: '✅ <strong>No leakage in the strict sense.</strong> Your trick <code>(s − v) / n</code> is equivalent to <code>shift(1).expanding().mean()</code>. The current row doesn\'t peek at its own value. Smart — and also what Codex/Claude generates sometimes.',
+    s7_reveal2: '<strong>But</strong> — there\'s a "but" — pay attention to the next section before concluding there\'s no problem.',
+    s8_title: 'The Big Question — No Answer Today',
+    s8_sub: 'the big question',
+    s8_p1: '<strong>R² = 0.579</strong> on a chronological test set containing the most unpredictable events in 11 months. Worth pausing on.',
+    s8_p2: '76% of feature importance in RF tuned is in lag features. The strongest — <code>lag_slot_mean</code> (51.8%) — is the average rating in slot (day-of-week × hour) <em>up to the moment before</em> the current row.',
+    s8_h_a: 'Predict tomorrow',
+    s8_a_desc: 'Built on lag features — you use yesterday\'s and last week\'s data (slot, program). <em>Available in production</em>.',
+    s8_h_b: 'Predict 1 month ahead',
+    s8_b_desc: 'What your roadmap doc says. <em>But then you don\'t know what lag_slot_mean was the day before</em> — you weren\'t there.',
+    s8_q: '<strong>Question (no answer here).</strong> In test, what\'s the time gap between rows feeding <code>lag_slot_mean</code> and the current row? Day? Week? Month?',
+    s8_note: '<strong>Discussion for meeting 3.</strong> Why I\'m asking: if <code>lag_slot_mean</code> uses data from 1-2 days ago — you\'re forecasting 1 day ahead (great, but that\'s not the roadmap problem). If it uses data from a month ago — how did you get R² = 0.58 on events you didn\'t see? We\'ll trace it in code together.',
+    sr_title: 'Yours — In Your Words',
+    sr_sub: 'homework',
+    sr_p1: 'This is the homework we set in prep — error narrative, one paragraph per model/concept. Write here, copy to a file, bring to meeting 3.',
+    sr_p2: '<em>Important: in your words, not Claude\'s. If you can — don\'t use Claude for these paragraphs.</em>',
+    sr_l1: '1. Stationarity in your series — what did you learn?',
+    sr_l2: '2. ACF/PACF — did you plot them? What did they show?',
+    sr_l3: '3. Differencing — the d=0 choice',
+    sr_l4: '4. Coefficient under-estimation — explanation for my SARIMAX',
+    sr_l5: '5. Walk-Forward CV — what if I had done it',
+    sr_l6: '6. Residual analysis — what they tell in my project',
+    sr_l7: '7. Lag features — is there leakage? Why did I get R²=0.58?',
+    sr_p_1: 'Paragraph — my series isn\'t stationary because...',
+    sr_p_2: 'Paragraph — I chose order=(1,0,1) because...',
+    sr_p_3: 'Paragraph — d=0 because...',
+    sr_p_4: 'Paragraph — SARIMAX learned coefficient 0.62 because...',
+    sr_p_5: 'Paragraph — I chose single split because...',
+    sr_p_6: 'Paragraph — my residuals show...',
+    sr_p_7: 'Paragraph — my code checks the cumulative mean and so...',
+    foot_1: '✦ Bonim Bina — i24 Rating Prediction — Meeting 2 ✦',
+    foot_2: 'Open this file when calm. One question per day if needed. No test at the end.',
+  }
+};
+
+let currentLang = 'he';
+
+function setLang(lang) {
+  currentLang = lang;
+  const html = document.documentElement;
+  html.lang = lang;
+  html.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-he').classList.toggle('active', lang === 'he');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (T[lang][key]) el.innerHTML = T[lang][key];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    const key = el.getAttribute('data-i18n-ph');
+    if (T[lang][key]) el.placeholder = T[lang][key];
+  });
+}
+
+// ============ Toggle hint/reveal blocks ============
+function toggle(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('visible');
+}
+
+// ============ Chart selection (sections 1, 2) ============
+function selectChart(section, choice) {
+  document.querySelectorAll(`[id^="${section}-"]`).forEach(el => {
+    if (el.id.startsWith(section + '-') && el.classList.contains('chart-box')) {
+      el.classList.remove('selected');
+    }
+  });
+  const el = document.getElementById(`${section}-${choice}`);
+  if (el) el.classList.add('selected');
+}
+
+// ============ Choice selection (section 3) ============
+function selectChoice(section, btn, choice) {
+  document.querySelectorAll(`.choices .choice`).forEach(el => {
+    if (el.parentElement.parentElement.querySelector(`.section-num`)?.textContent === '3') {
+      el.classList.remove('selected');
+    }
+  });
+  btn.classList.add('selected');
+}
+
+// ============ Section 4 slider ============
+function updateS4() {
+  const c = parseFloat(document.getElementById('s4-slider').value);
+  document.getElementById('s4-coef').textContent = c.toFixed(2);
+  document.getElementById('s4-pred').textContent = '+' + c.toFixed(2);
+  const err = c - 3.0;
+  const errEl = document.getElementById('s4-err');
+  errEl.textContent = (err >= 0 ? '+' : '') + err.toFixed(2);
+}
+
+// ============ Section 5 split toggle ============
+function toggleSplit(which) {
+  document.getElementById('s5-single').style.display = which === 'single' ? 'block' : 'none';
+  document.getElementById('s5-wf').style.display = which === 'wf' ? 'block' : 'none';
+  document.getElementById('s5-btn-single').classList.toggle('active', which === 'single');
+  document.getElementById('s5-btn-wf').classList.toggle('active', which === 'wf');
+}
+
+// ============ Section 7 trace step ============
+let traceStep = 0;
+function advanceTrace() {
+  traceStep++;
+  if (traceStep > 4) traceStep = 4;
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('trace-' + i).classList.toggle('visible', i <= traceStep);
+  }
+}
+function resetTrace() {
+  traceStep = 0;
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('trace-' + i).classList.remove('visible');
+  }
+}
+
+// ============ Self-reflection export ============
+function getReflectionsText() {
+  const labels = ['sr_l1','sr_l2','sr_l3','sr_l4','sr_l5','sr_l6','sr_l7'];
+  const items = document.querySelectorAll('.reflection-item');
+  let out = currentLang === 'he' ? '# נרטיב שגיאות — אורית — מפגש 2 → 3\n\n' : '# Error Narrative — Orit — Meeting 2 → 3\n\n';
+  items.forEach((item, i) => {
+    const label = T[currentLang][labels[i]] || '';
+    const ta = item.querySelector('textarea');
+    const text = ta && ta.value.trim() ? ta.value.trim() : '(empty)';
+    out += `## ${label}\n\n${text}\n\n`;
+  });
+  return out;
+}
+
+function copyReflections() {
+  const text = getReflectionsText();
+  navigator.clipboard.writeText(text).then(() => {
+    const status = document.getElementById('copy-status');
+    status.textContent = currentLang === 'he' ? '✓ הועתק ללוח' : '✓ Copied to clipboard';
+    setTimeout(() => { status.textContent = ''; }, 2500);
+  }).catch(() => {
+    document.getElementById('copy-status').textContent = currentLang === 'he' ? '✗ ההעתקה נכשלה' : '✗ Copy failed';
+  });
+}
+
+function downloadReflections() {
+  const text = getReflectionsText();
+  const blob = new Blob([text], {type: 'text/markdown;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'orit-error-narrative.md';
+  a.click();
+}
+
+// init
+setLang('he');
+</script>
+
+</body>
+</html>
