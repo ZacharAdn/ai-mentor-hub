@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדריך הקמת סביבת פיתוח — שירותים מבוססי מיקום, הטכניון</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; color: #1a1a2e; line-height: 1.8;
+        }
+        .top-nav {
+            background: rgba(26, 26, 46, 0.95); backdrop-filter: blur(10px);
+            padding: 15px 30px; display: flex; justify-content: space-between;
+            align-items: center; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav-logo {
+            color: white; font-weight: 700; font-size: 1.2rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .nav-logo span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white; padding: 60px 20px; text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.8rem; font-weight: 700; margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p { font-size: 1.2rem; color: #a0a0b8; max-width: 700px; margin: 0 auto; }
+        .hero .badge {
+            display: inline-block; background: rgba(102, 126, 234, 0.2);
+            color: #667eea; padding: 8px 16px; border-radius: 20px;
+            font-size: 0.9rem; margin-top: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .prerequisites {
+            background: white; border-radius: 20px; padding: 30px;
+            margin-bottom: 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        .prerequisites h2 {
+            font-size: 1.5rem; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .prerequisites ul {
+            list-style: none; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .prerequisites li {
+            display: flex; align-items: center; gap: 12px; padding: 15px;
+            background: #f8f9ff; border-radius: 12px; font-weight: 500;
+        }
+        .prerequisites li .icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; color: white; font-size: 1.2rem; flex-shrink: 0;
+        }
+        .step {
+            background: white; border-radius: 20px; margin-bottom: 30px;
+            overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .step:hover { transform: translateY(-5px); }
+        .step-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white; padding: 25px 30px;
+            display: flex; align-items: center; gap: 20px;
+        }
+        .step-number {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 1.5rem; font-weight: 700; flex-shrink: 0;
+        }
+        .step-title-container h2 { font-size: 1.4rem; font-weight: 600; }
+        .step-title-container .duration { font-size: 0.9rem; color: #a0a0b8; margin-top: 5px; }
+        .step-content { padding: 30px; }
+        .step-description {
+            font-size: 1.1rem; color: #666; margin-bottom: 25px; padding: 20px;
+            background: #f8f9ff; border-radius: 12px; border-right: 4px solid #667eea;
+        }
+        .gif-container {
+            margin: 25px 0; border-radius: 12px; overflow: hidden;
+            border: 2px solid #e0e0e0; background: #f5f5f5;
+        }
+        .gif-container img { width: 100%; display: block; }
+        .gif-label {
+            background: #1a1a2e; color: white; padding: 12px 20px;
+            font-size: 0.9rem; font-weight: 500;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .gif-label::before {
+            content: "צפו"; background: #667eea; padding: 3px 10px;
+            border-radius: 4px; font-size: 0.75rem; font-weight: 700;
+        }
+        .gif-placeholder {
+            background: repeating-linear-gradient(45deg, #f0f2ff, #f0f2ff 10px, #e8eaff 10px, #e8eaff 20px);
+            padding: 50px 20px; text-align: center; color: #667eea;
+            font-weight: 500; min-height: 200px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .instructions { margin-top: 25px; }
+        .instructions h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: #1a1a2e; }
+        .instruction-list { list-style: none; counter-reset: instruction; }
+        .instruction-list li {
+            counter-increment: instruction; padding: 15px 60px 15px 15px;
+            margin-bottom: 10px; background: #fafbff; border-radius: 12px;
+            position: relative; border: 1px solid #e8e8f0; transition: all 0.2s ease;
+        }
+        .instruction-list li:hover { background: #f0f2ff; border-color: #667eea; }
+        .instruction-list li::before {
+            content: counter(instruction); position: absolute; right: 15px; top: 22px;
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.9rem;
+        }
+        .code-block {
+            background: #1a1a2e; color: #7ee787; padding: 15px 20px;
+            border-radius: 8px; font-family: 'Courier New', monospace;
+            margin: 15px 0; overflow-x: auto; position: relative;
+            direction: ltr; text-align: left;
+        }
+        .code-block::before {
+            content: "פקודה"; position: absolute; top: -10px; left: 15px;
+            background: #667eea; color: white; font-size: 0.7rem;
+            padding: 3px 10px; border-radius: 4px;
+            font-family: 'Heebo', sans-serif; font-weight: 600;
+        }
+        .code-block code { display: block; white-space: pre; }
+        .platform-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+        .platform-tab {
+            background: #e8eaff; color: #667eea; padding: 6px 14px;
+            border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+        }
+        .tip, .warning {
+            padding: 20px; border-radius: 12px 0 0 12px; margin: 20px 0;
+        }
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-right: 4px solid #4caf50;
+        }
+        .warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-right: 4px solid #ff9800;
+        }
+        .tip-title { font-weight: 600; color: #2e7d32; margin-bottom: 8px; }
+        .warning-title { font-weight: 600; color: #e65100; margin-bottom: 8px; }
+        .success-banner {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white; padding: 30px; border-radius: 20px;
+            text-align: center; margin: 30px 0;
+        }
+        .success-banner h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        footer { text-align: center; padding: 40px 20px; color: white; }
+        footer a { color: white; text-decoration: none; font-weight: 500; }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .step-header { flex-direction: column; text-align: center; }
+            .instruction-list li { padding-right: 50px; }
+            .top-nav { flex-direction: column; gap: 15px; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-logo">
+            <span>טכניון</span> · הקמת סביבת פיתוח לקורס שירותים מבוססי מיקום
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>הקמת סביבת פיתוח</h1>
+        <p>מדריך מלא להקמת סביבת העבודה לקורס: GitHub, Antigravity, Git, ו-Claude Code. כל הצעדים מסודרים — לעקוב לפי הסדר.</p>
+        <div class="badge">זמן משוער: 30–45 דקות</div>
+    </div>
+
+    <div class="container">
+        <div class="prerequisites">
+            <h2>לפני שמתחילים</h2>
+            <ul>
+                <li><div class="icon">💻</div><span>מחשב נייד (Mac / Windows / Linux)</span></li>
+                <li><div class="icon">🌐</div><span>חיבור אינטרנט יציב</span></li>
+                <li><div class="icon">📧</div><span>חשבון מייל פעיל</span></li>
+                <li><div class="icon">📨</div><span>הזמנה לארגון GitHub של הקורס (נשלח במייל)</span></li>
+            </ul>
+        </div>
+
+        <!-- ============ STEP 1: GitHub ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title-container">
+                    <h2>חשבון GitHub + הצטרפות לארגון של הקורס</h2>
+                    <div class="duration">כ-5 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    GitHub זה המקום שבו הקוד שלכם יחיה. הצוות שלכם מקבל repo (תיקיית פרויקט) משלו תחת הארגון של הקורס — לשם תדחפו את הקוד לאורך כל הסמסטר.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>גשו ל-<strong><a href="https://github.com/signup" target="_blank">github.com/signup</a></strong> (אם אין חשבון). השתמשו במייל אישי או באוניברסיטאי.</li>
+                        <li>בחרו <strong>username מקצועי</strong> — זה נשאר איתכם הרבה שנים, אז להימנע מ-<code>cool_dude_2003</code>.</li>
+                        <li>אשרו את המייל שיגיע מ-GitHub.</li>
+                        <li>פתחו את ההזמנה שאלי שלח במייל — היא נראית: <em>"@safraeli has invited you to join @Technion-LBS-Course"</em>. לחצו על הלינק ואשרו.</li>
+                        <li>וודאו שאתם רואים את <strong><a href="https://github.com/Technion-LBS-Course" target="_blank">github.com/Technion-LBS-Course</a></strong> — אמור להופיע לכם ה-repo של הזוג.</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ חשוב</div>
+                    אל תפתחו repo חדש בחשבון האישי שלכם. ה-repo כבר קיים בארגון. אתם רק מצטרפים אליו.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 2: Antigravity ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title-container">
+                    <h2>התקנת Antigravity (סביבת הפיתוח)</h2>
+                    <div class="duration">כ-7 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Antigravity היא סביבת הפיתוח החינמית של Google — מבוססת VS Code, עם סוכן AI מובנה (Claude) שעוזר לכתוב ולנפות קוד. כך תיראה לכם הסביבה אחרי ההתקנה:
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">Antigravity — מסך הפתיחה אחרי התקנה</div>
+                    <img src="gifs/antigravity_install.gif" alt="התקנת Antigravity" loading="lazy"
+                         onerror="this.outerHTML='<div class=&quot;gif-placeholder&quot;>📹 GIF בהכנה — לחילוץ מההקלטה של מפגש 3 באריאל</div>'">
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>גשו ל-<strong><a href="https://antigravity.google/download" target="_blank">antigravity.google/download</a></strong></li>
+                        <li>בחרו את הגרסה למערכת ההפעלה שלכם (Mac / Windows / Linux) ולחצו <strong>Download</strong>.</li>
+                        <li>פתחו את קובץ ההתקנה מתיקיית ההורדות. <em>Windows:</em> Next-Next-Next. <em>Mac:</em> גוררים את האייקון לתיקיית Applications.</li>
+                        <li>פתחו את Antigravity. תקבלו מסך כחול עם לוגו ה-A — סימן שזה עובד.</li>
+                        <li>התחברו עם חשבון Google (יש שתי חינמיות לסטודנטים — לא לדאוג).</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 ההכרה עם הפאנלים</div>
+                    בצד שמאל יש 4 אייקונים: <strong>Explorer</strong> (קבצים) · <strong>Source Control</strong> (Git GUI) · <strong>Terminal</strong> (תחתון, פותחים עם <code>Ctrl+`</code>) · <strong>Agent</strong> (הסוכן, פותחים עם <code>Cmd/Ctrl+L</code>).
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 3: Git ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title-container">
+                    <h2>התקנת Git</h2>
+                    <div class="duration">כ-5 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Git זה התוכנה שמנהלת גרסאות של הקוד שלכם. <strong>Git ≠ GitHub:</strong> Git רץ על המחשב, GitHub זה שרת ענן. שניהם עובדים ביחד.
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">התקנת Git — Windows installer</div>
+                    <img src="gifs/git_install.gif" alt="התקנת Git" loading="lazy"
+                         onerror="this.outerHTML='<div class=&quot;gif-placeholder&quot;>📹 GIF בהכנה — לחילוץ מההקלטה של מפגש 3 באריאל</div>'">
+                </div>
+
+                <div class="instructions">
+                    <h3>בחרו את מערכת ההפעלה שלכם:</h3>
+                </div>
+
+                <div class="platform-tabs"><div class="platform-tab">🍎 Mac</div></div>
+                <ol class="instruction-list">
+                    <li>פתחו טרמינל (Spotlight → Terminal). הקלידו:
+                        <div class="code-block"><code>xcode-select --install</code></div>
+                    </li>
+                    <li>ייפתח דיאלוג של Apple — לחצו <strong>Install</strong> וחכו לסיום (3-5 דק').</li>
+                </ol>
+
+                <div class="platform-tabs" style="margin-top: 25px;"><div class="platform-tab">🪟 Windows</div></div>
+                <ol class="instruction-list">
+                    <li>גשו ל-<strong><a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a></strong> — ההורדה תתחיל אוטומטית.</li>
+                    <li>פתחו את קובץ ההתקנה והריצו אותו.</li>
+                    <li><strong>Next-Next-Next</strong> — ברירות המחדל בסדר. <strong>חשוב:</strong> במסך "Adjusting your PATH" — בחרו <em>"Git from the command line and also from 3rd-party software"</em>.</li>
+                    <li>סיימו את ההתקנה.</li>
+                </ol>
+
+                <div class="platform-tabs" style="margin-top: 25px;"><div class="platform-tab">🐧 Linux</div></div>
+                <ol class="instruction-list">
+                    <li>פתחו טרמינל. Ubuntu/Debian: <code>sudo apt install git</code>. Fedora: <code>sudo dnf install git</code></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ============ STEP 4: Verify ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title-container">
+                    <h2>אימות — האם Git באמת מותקן?</h2>
+                    <div class="duration">כ-1 דקה</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    אסור לדלג. נהיה בלי Git על המחשב, גם אם נדמה שמותקן — וכל ה-flow ייפול בשלב הבא. בודקים עכשיו.
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-placeholder">📹 ייצולם בלייב במפגש</div>
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את Antigravity (אם עוד לא פתוח).</li>
+                        <li>פתחו את הטרמינל הפנימי — <code>Ctrl+`</code> (התווית מעל ה-Tab).</li>
+                        <li>הקלידו:
+                            <div class="code-block"><code>git --version</code></div>
+                        </li>
+                        <li>צריך לקבל משהו כמו <code>git version 2.43.0</code> (המספר עשוי להשתנות).</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ אם קיבלתם <code>command not found</code></div>
+                    סימן ש-Git לא מותקן או לא ב-PATH. <strong>Mac:</strong> חזרו לשלב 3, וודאו ש-<code>xcode-select --install</code> הסתיים. <strong>Windows:</strong> סגרו את Antigravity, פתחו אותו מחדש — אם עדיין לא עובד, restart למחשב כדי שה-PATH יתעדכן.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 5: Git config ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title-container">
+                    <h2>קונפיגורציית Git — שם ומייל</h2>
+                    <div class="duration">כ-2 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    כל commit שאתם תעשו יישא את השם והמייל שלכם. בלי הקינפוג הזה, Git לא יודע מי אתם וה-commits לא ייוחסו לחשבון שלכם בגרף התרומות ב-GitHub.
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">git config — הזנת שם ומייל בטרמינל של Antigravity</div>
+                    <img src="gifs/git_config.gif" alt="git config" loading="lazy"
+                         onerror="this.outerHTML='<div class=&quot;gif-placeholder&quot;>📹 GIF בהכנה — לחילוץ מההקלטה של מפגש 3 באריאל</div>'">
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>בטרמינל הפנימי של Antigravity, הקלידו (החליפו "השם שלך" בשם שלכם):
+                            <div class="code-block"><code>git config --global user.name "השם שלך"</code></div>
+                        </li>
+                        <li>אחר כך, הקלידו (החליפו במייל שאיתו נרשמתם ל-GitHub):
+                            <div class="code-block"><code>git config --global user.email "your-email@example.com"</code></div>
+                        </li>
+                        <li>בדיקה — שתי השורות תופיעו ב:
+                            <div class="code-block"><code>git config --global --list</code></div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 למה <code>--global</code>?</div>
+                    <code>--global</code> אומר ל-Git להחיל את ההגדרה על כל ה-repos במחשב — פעם אחת לכל החיים, לא צריך לחזור על זה לכל פרויקט.
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ חשוב</div>
+                    המייל חייב להיות זהה למייל שאיתו נרשמתם ל-GitHub. אם הוא שונה — ה-commits לא ייוחסו לכם בגרף התרומות.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 6: First commit ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title-container">
+                    <h2>Clone ה-repo + הקומיט הראשון</h2>
+                    <div class="duration">כ-10 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    כל מה שעשיתם עד עכשיו היה הכנה. עכשיו: מורידים את ה-repo של הזוג, מוסיפים אליו תוכן, ודוחפים בחזרה ל-GitHub. <strong>הכל דרך ה-GUI של Antigravity — לא טרמינל.</strong>
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-placeholder">📹 ייצולם בלייב במפגש</div>
+                </div>
+
+                <div class="instructions">
+                    <h3>Clone — להוריד עותק:</h3>
+                    <ol class="instruction-list">
+                        <li>ב-GitHub, היכנסו ל-repo של הזוג שלכם תחת <strong>Technion-LBS-Course</strong>. לחצו על הכפתור הירוק <code>Code</code> → העתיקו את ה-HTTPS URL.</li>
+                        <li>ב-Antigravity: <code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Git: Clone"</strong> → הדביקו את ה-URL.</li>
+                        <li>בחרו תיקיית יעד במחשב (Desktop / Documents — מה שנוח).</li>
+                        <li>כשהורדה הסתיימה, לחצו <strong>Open Folder</strong>. התיקייה תיטען ב-Explorer.</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ Clone — לא Publish!</div>
+                    אם Antigravity מציע <em>"Publish to GitHub"</em> — <strong>אל תלחצו.</strong> זה יוצר repo חדש בחשבון הפרטי שלכם במקום לדחוף ל-repo של הקורס. רק Clone.
+                </div>
+
+                <div class="instructions" style="margin-top: 30px;">
+                    <h3>עריכה + commit + push דרך ה-GUI:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את <code>README.md</code> ב-Editor. הוסיפו שורה: שם הפרויקט + משפט תיאור.</li>
+                        <li>שמרו (<code>Cmd/Ctrl + S</code>).</li>
+                        <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל). תראו את README תחת <strong>Changes</strong>.</li>
+                        <li>לחצו על <strong>+</strong> ליד הקובץ — Stage.</li>
+                        <li>בשדה הטקסט למעלה — כתבו הודעת commit, או לחצו <strong>✨</strong> ל-AI שיכתוב לכם.</li>
+                        <li>לחצו <strong>✓ Commit</strong>.</li>
+                        <li>לחצו <strong>🔄 Sync Changes</strong> — זה Push + Pull.</li>
+                        <li>רעננו את דף ה-GitHub בדפדפן — הקובץ אמור להופיע ✅</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 בפעם הראשונה — Device Flow</div>
+                    בלחיצה הראשונה על Sync, Antigravity יבקש מכם להזין קוד בן 8 ספרות בדפדפן. הקוד מופיע בחלונית קטנה <strong>בפינה השמאלית-תחתונה של Antigravity</strong> — לא לפספס. אם החלונית לא נראית, לחפש שם.
+                </div>
+            </div>
+        </div>
+
+        <div class="success-banner">
+            <h3>🎉 סיימתם!</h3>
+            <p>הסביבה שלכם מוכנה: GitHub חשבון + ארגון, Antigravity + Git מותקנים ומקונפגים, ו-repo משוייך שעובד מקצה לקצה. עכשיו אפשר להתחיל לעבוד עם Claude כסוכן.</p>
+        </div>
+
+        <div class="prerequisites" style="margin-top: 30px;">
+            <h2>נתקעתם? כאן עוזרים:</h2>
+            <ul>
+                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachar.adn@gmail.com">zachar.adn@gmail.com</a></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>קורס שירותים מבוססי מיקום — מדע הנתונים · 016833 · הטכניון · סמסטר ב' תשפ"ו</p>
+    </footer>
+</body>
+</html>
