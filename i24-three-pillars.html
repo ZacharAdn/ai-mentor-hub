@@ -578,7 +578,7 @@
       <div class="section-subtitle" data-i18n="s1_sub">data fundamentals + time-series specifics</div>
     </div>
   </div>
-  <p class="section-intro" data-i18n="s1_intro">כל מודל מתחיל בהבנת הדאטה. בלי הבנה זו, אפילו המודל הטוב ביותר ייכשל. הנה שישה קונספטים מרכזיים שמכריעים את הפרויקט שלך — לחצי על כל אחד להעמיק.</p>
+  <p class="section-intro" data-i18n="s1_intro">כל מודל מתחיל בהבנת הדאטה. בלי הבנה זו, אפילו המודל הטוב ביותר ייכשל. הנה שמונה קונספטים מרכזיים שמכריעים את הפרויקט שלך — לחצי על כל אחד להעמיק.</p>
 
   <div class="cards two-col">
     <details class="card">
@@ -650,6 +650,30 @@
         <p data-i18n="d6_p1"><strong>הרעיון:</strong> תכונות סטטיסטיות (mean, variance, autocorrelation) משתנות לאורך זמן. רוב מודלי TS קלאסיים דורשים סטציונריות — אחרת המקדמים שלהם פשוט שגויים.</p>
         <p data-i18n="d6_p2"><strong>אצלך בדאטה:</strong> כל הדאטה זז בגלל הפאנל. ה-mean של רייטינג בחודשים הראשונים שונה משמעותית מהאחרונים.</p>
         <p data-i18n="d6_p3"><strong>מתי זה חשוב:</strong> זאת בדיוק הסיבה ש-SARIMAX שלך (MAE=0.379) נכשל. ה-<code>d=0</code> שב-config שלך אומר "אל תעשה differencing" — וזה היה צריך להיות <code>d=1</code> כדי לטפל בטרנד הפאנל. בנוסף, <code>enforce_stationarity=False</code> הוא דגל אדום.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d7_name">פיצ׳רים אנדוגניים</span>
+        <span class="card-subtag" data-i18n="d7_sub">endogenous features — derived from the series itself</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d7_p1"><strong>הרעיון:</strong> פיצ׳רים שנגזרים <em>מהסדרה עצמה</em>. הסדרה "מזינה את עצמה". כוללים: lag features (ערכי עבר), rolling mean/std (ממוצעים נעים), differences (הפרשים), expanding windows.</p>
+        <p data-i18n="d7_p2"><strong>אצלך בדאטה:</strong> כל ה-<code>lag_*</code> שלך: <code>lag_slot_mean</code> (52%), <code>lag_status_slot_mean</code> (14%), <code>lag_program_mean</code> (6%), <code>lag_program_n</code> (4%). יחד <strong>76% מ-feature importance</strong>.</p>
+        <p data-i18n="d7_p3"><strong>למה זה חשוב:</strong> זה היה הכוח של RF/HistGB שלך. הם זיהו אוטומטית שהעבר של אותה רצועה הוא הסיגנל הכי חזק. <strong>הסיכון:</strong> בלי טיפול זהיר ב-leakage, lag features הם המקור הראשון של זיוף. את הוצאת את הפיצ׳רים שנמדדים אחרי השידור (<code>נתח</code>, <code>צופים 4+</code>) — זה היה נכון.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d8_name">פיצ׳רים אקסוגניים</span>
+        <span class="card-subtag" data-i18n="d8_sub">exogenous features — external signals (the "X" in SARIMAX)</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d8_p1"><strong>הרעיון:</strong> פיצ׳רים שמגיעים <em>מחוץ</em> לסדרה. ה-<strong>"X" ב-SARIMAX = eXogenous</strong>. כוללים: חגים, מתחרים, אירועים מדיניים, מזג אוויר, נתוני שיווק — כל מה שמשפיע על ה-target אבל לא נגזר ממנו.</p>
+        <p data-i18n="d8_p2"><strong>אצלך בדאטה:</strong> <code>reception_pct</code> (פאנל), <code>is_holiday</code>, <code>is_security</code>, <code>event_tag</code>, <code>day_of_week</code>, <code>is_friday</code>. יחד 24% מ-importance.</p>
+        <p data-i18n="d8_p3"><strong>למה זה חשוב — וזה התובנה הגדולה:</strong> זאת הדרך היחידה שלך לתת למודל מידע שהוא לא יכול לגזור מהסדרה עצמה. <strong>התקרה שלך = מגבלת exogenous.</strong> האירוע של 28/02 דורש signal exogenous שלא היה לך (Twitter live, חדשות בזמן אמת). DL/LSTM/Transformer לא יעזרו — הם לא מייצרים signal חדש, רק מנצלים את מה שיש. <strong>אם תרצי קפיצת-מדרגה — לא מודל חדש, פיצ׳ר אקסוגני חדש.</strong></p>
       </div>
     </details>
   </div>
@@ -1219,6 +1243,10 @@
       d5_sub: 'volatility / heteroscedasticity',
       d6_name: 'חוסר סטציונריות',
       d6_sub: 'non-stationarity',
+      d7_name: 'פיצ׳רים אנדוגניים',
+      d7_sub: 'endogenous features — derived from the series itself',
+      d8_name: 'פיצ׳רים אקסוגניים',
+      d8_sub: 'exogenous features — external signals (the "X" in SARIMAX)',
       s2_title: 'אלגוריתמים',
       s2_sub: 'מפת אבולוציה — שלוש משפחות',
       s2_intro: 'מפת האבולוציה של אלגוריתמים לחיזוי. שלוש משפחות, 22 אלגוריתמים. את הרצת מ-3 השכבות (SARIMAX, RF, MLP) — בא לי שתביני איפה כל אחד יושב ולמה הוא הצליח או נכשל אצלך.',
@@ -1279,7 +1307,7 @@
       nav_hw: 'Next',
       s1_title: 'Data',
       s1_sub: 'fundamentals + time-series specifics',
-      s1_intro: 'Every model starts with understanding the data. Without it, even the best model will fail. Six core concepts decide your project — click each to dive deeper.',
+      s1_intro: 'Every model starts with understanding the data. Without it, even the best model will fail. Eight core concepts decide your project — click each to dive deeper.',
       d1_name: 'Correlations',
       d1_sub: 'correlations',
       d2_name: 'Distributions',
@@ -1292,6 +1320,10 @@
       d5_sub: 'volatility / heteroscedasticity',
       d6_name: 'Non-stationarity',
       d6_sub: 'non-stationarity',
+      d7_name: 'Endogenous Features',
+      d7_sub: 'endogenous features — derived from the series itself',
+      d8_name: 'Exogenous Features',
+      d8_sub: 'exogenous features — external signals (the "X" in SARIMAX)',
       s2_title: 'Algorithms',
       s2_sub: 'evolution map — three families',
       s2_intro: 'The evolution map of forecasting algorithms. Three families, 22 algorithms. You ran models from all 3 layers (SARIMAX, RF, MLP) — let\'s see where each sits and why it succeeded or failed for your data.',
