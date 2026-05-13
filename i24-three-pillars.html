@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>i24 — שלושת העמודים | Three Pillars</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg-primary: #0f172a;
+      --bg-card: #1e293b;
+      --bg-card-hover: #233246;
+      --border: #334155;
+      --border-hover: #475569;
+      --text-primary: #e2e8f0;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent-purple: #818cf8;
+      --accent-violet: #c084fc;
+      --accent-pink: #f472b6;
+      --accent-indigo: #6366f1;
+      --accent-bright: #8b5cf6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --info: #3b82f6;
+      --you-glow: #fbbf24;
+    }
+
+    body {
+      font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* Language Toggle */
+    .lang-toggle {
+      position: fixed;
+      top: 1.2rem;
+      right: 1.5rem;
+      z-index: 1000;
+      display: flex;
+      background: rgba(30, 41, 59, 0.9);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    html[dir="rtl"] .lang-toggle {
+      right: auto;
+      left: 1.5rem;
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.6rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lang-btn:hover { color: var(--text-primary); }
+    .lang-btn.active {
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-bright));
+      color: white;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #fff, #c084fc);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+    .hero .pillars-mini {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      margin-top: 2rem;
+    }
+    .pillar-mini {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 1rem 1.5rem;
+      backdrop-filter: blur(8px);
+      min-width: 180px;
+    }
+    .pillar-mini .num {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-violet);
+      display: block;
+    }
+    .pillar-mini .label {
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-top: 0.3rem;
+    }
+
+    /* Section nav (sticky) */
+    .section-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.8rem 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .nav-link:hover {
+      color: var(--text-primary);
+      background: var(--bg-card);
+    }
+
+    /* Sections */
+    section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 2rem 2rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+    html[dir="rtl"] .section-header { flex-direction: row; }
+    .section-num {
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-bright));
+      color: white;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+    .section-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent-violet);
+    }
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-style: italic;
+    }
+    .section-intro {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
+      max-width: 800px;
+    }
+
+    .family-header {
+      margin: 2.5rem 0 1rem;
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+      border-right: 4px solid var(--accent-pink);
+    }
+    html[dir="ltr"] .family-header {
+      border-right: none;
+      border-left: 4px solid var(--accent-pink);
+    }
+    .family-header h3 {
+      font-size: 1.4rem;
+      color: var(--accent-pink);
+      font-weight: 700;
+    }
+    .family-header .family-tag {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.2rem;
+    }
+
+    /* Cards */
+    .cards {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .cards.two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    details.card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      transition: all 0.2s;
+      overflow: hidden;
+    }
+    details.card:hover { border-color: var(--border-hover); }
+    details.card[open] {
+      border-color: var(--accent-purple);
+      background: var(--bg-card-hover);
+    }
+    details.card[open].you {
+      border-color: var(--you-glow);
+      box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.15);
+    }
+    details.card.you {
+      border-left: 3px solid var(--you-glow);
+    }
+    html[dir="rtl"] details.card.you {
+      border-left: none;
+      border-right: 3px solid var(--you-glow);
+    }
+
+    summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 1rem 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::before {
+      content: '+';
+      color: var(--accent-purple);
+      font-size: 1.4rem;
+      font-weight: 600;
+      width: 1.2rem;
+      transition: transform 0.2s;
+    }
+    details[open] summary::before {
+      content: '−';
+      color: var(--accent-pink);
+    }
+    .card-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-primary);
+    }
+    .card-subtag {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-style: italic;
+    }
+    .card-meta {
+      margin-right: auto;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    html[dir="rtl"] .card-meta { margin-right: 0; margin-left: auto; }
+    .meta-pill {
+      padding: 0.2rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .meta-pill.you {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--you-glow);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+    .meta-pill.winner {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    .meta-pill.loser {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--error);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .meta-pill.neutral {
+      background: rgba(148, 163, 184, 0.15);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .card-body {
+      padding: 0 1.3rem 1.3rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+    .card-body p { margin-bottom: 0.6rem; }
+    .card-body strong { color: var(--text-primary); }
+    .card-body code {
+      background: rgba(99, 102, 241, 0.15);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      color: var(--accent-purple);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9em;
+    }
+    .field-label {
+      color: var(--accent-violet);
+      font-weight: 700;
+      margin-left: 0.4rem;
+    }
+    html[dir="rtl"] .field-label { margin-left: 0; margin-right: 0.4rem; }
+
+    /* Map / Evolution visual */
+    .evolution-map {
+      background: linear-gradient(135deg, rgba(124, 58, 237, 0.08), rgba(99, 102, 241, 0.08));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .map-title {
+      color: var(--accent-violet);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .map-hint {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 1rem;
+    }
+    .map-families {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 900px) {
+      .map-families { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .map-family {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1rem;
+      border: 1px solid var(--border);
+    }
+    .map-family-title {
+      color: var(--accent-pink);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+    .map-algo {
+      background: rgba(15, 23, 42, 0.5);
+      padding: 0.4rem 0.7rem;
+      border-radius: 8px;
+      margin: 0.3rem 0;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      border-left: 2px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    html[dir="rtl"] .map-algo {
+      border-left: none;
+      border-right: 2px solid var(--border);
+    }
+    .map-algo:hover {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--text-primary);
+      border-color: var(--accent-purple);
+    }
+    .map-algo.you {
+      border-color: var(--you-glow);
+      color: var(--text-primary);
+    }
+    .map-algo .mae {
+      float: left;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+    html[dir="rtl"] .map-algo .mae { float: right; }
+    .map-algo.winner .mae { color: var(--success); }
+    .map-algo.loser .mae { color: var(--error); }
+
+    /* Monolith section */
+    .monolith-section {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(245, 158, 11, 0.05));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+    .monolith-section h3 {
+      color: var(--accent-violet);
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    .mono-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 720px) {
+      .mono-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .mono-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 1.2rem;
+      border: 1px solid var(--border);
+    }
+    .mono-card h4 {
+      color: var(--accent-pink);
+      margin-bottom: 0.8rem;
+      font-size: 1.05rem;
+    }
+    .mono-card.now { border-left: 3px solid var(--warning); }
+    .mono-card.next { border-left: 3px solid var(--success); }
+    html[dir="rtl"] .mono-card.now { border-left: none; border-right: 3px solid var(--warning); }
+    html[dir="rtl"] .mono-card.next { border-left: none; border-right: 3px solid var(--success); }
+    .mono-card ul { padding-right: 1.2rem; padding-left: 0; }
+    html[dir="ltr"] .mono-card ul { padding-left: 1.2rem; padding-right: 0; }
+    .mono-card li { margin-bottom: 0.3rem; color: var(--text-secondary); }
+
+    /* Homework */
+    .homework {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.06), rgba(99, 102, 241, 0.06));
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      margin: 3rem auto;
+      max-width: 1100px;
+    }
+    .homework h2 {
+      color: var(--accent-violet);
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+    .homework-list {
+      display: grid;
+      gap: 0.8rem;
+      grid-template-columns: 1fr;
+      margin-top: 1rem;
+    }
+    .hw-item {
+      background: var(--bg-card);
+      padding: 1rem 1.3rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+    .hw-item .hw-num {
+      color: var(--accent-pink);
+      font-weight: 800;
+      margin-left: 0.6rem;
+    }
+    html[dir="rtl"] .hw-item .hw-num { margin-left: 0; margin-right: 0.6rem; }
+    .hw-item strong { color: var(--text-primary); }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem 4rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+      margin-top: 3rem;
+    }
+    footer a {
+      color: var(--accent-purple);
+      text-decoration: none;
+    }
+    footer a:hover { text-decoration: underline; }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .hero { padding: 3.5rem 1rem 2.5rem; }
+      .hero h1 { font-size: 2rem; }
+      .hero .subtitle { font-size: 1rem; }
+      section { padding: 3rem 1rem 1.5rem; }
+      .section-title { font-size: 1.5rem; }
+      .lang-toggle { top: 0.8rem; left: 0.8rem; right: 0.8rem; }
+      .lang-btn { padding: 0.45rem 0.8rem; font-size: 0.8rem; }
+      summary { padding: 0.9rem 1rem; }
+      .card-body { padding: 0 1rem 1rem; }
+    }
+
+    /* Special highlight for HER models in the body */
+    .your-model {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.08), transparent);
+      border-right: 3px solid var(--you-glow);
+      padding: 0.7rem 1rem;
+      border-radius: 6px;
+      margin: 0.6rem 0;
+    }
+    html[dir="ltr"] .your-model {
+      border-right: none;
+      border-left: 3px solid var(--you-glow);
+    }
+    .your-model .your-label {
+      color: var(--you-glow);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עב</button>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <h1 data-i18n="hero_title">i24 — שלושת העמודים</h1>
+  <p class="subtitle" data-i18n="hero_sub">מדריך אינטראקטיבי לפרויקט שלך — איפה את על המפה, ומה היה צריך להיות מעבר לפינה.</p>
+  <div class="pillars-mini">
+    <div class="pillar-mini">
+      <span class="num">1</span>
+      <div class="label" data-i18n="p1_label">דאטה</div>
+    </div>
+    <div class="pillar-mini">
+      <span class="num">2</span>
+      <div class="label" data-i18n="p2_label">אלגוריתמים</div>
+    </div>
+    <div class="pillar-mini">
+      <span class="num">3</span>
+      <div class="label" data-i18n="p3_label">אדריכלות תכנה</div>
+    </div>
+  </div>
+</header>
+
+<!-- Nav -->
+<nav class="section-nav">
+  <a class="nav-link" href="#data" data-i18n="nav_data">דאטה</a>
+  <a class="nav-link" href="#algorithms" data-i18n="nav_algos">אלגוריתמים</a>
+  <a class="nav-link" href="#architecture" data-i18n="nav_arch">אדריכלות</a>
+  <a class="nav-link" href="#homework" data-i18n="nav_hw">המשך</a>
+</nav>
+
+<!-- SECTION 1: DATA -->
+<section id="data">
+  <div class="section-header">
+    <span class="section-num">1</span>
+    <div>
+      <div class="section-title" data-i18n="s1_title">דאטה</div>
+      <div class="section-subtitle" data-i18n="s1_sub">data fundamentals + time-series specifics</div>
+    </div>
+  </div>
+  <p class="section-intro" data-i18n="s1_intro">כל מודל מתחיל בהבנת הדאטה. בלי הבנה זו, אפילו המודל הטוב ביותר ייכשל. הנה שישה קונספטים מרכזיים שמכריעים את הפרויקט שלך — לחצי על כל אחד להעמיק.</p>
+
+  <div class="cards two-col">
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d1_name">קורלציות</span>
+        <span class="card-subtag" data-i18n="d1_sub">correlations</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d1_p1"><strong>הרעיון:</strong> מדד היחס הלינארי בין שני משתנים, בטווח <code>-1</code> עד <code>+1</code>. ערך גבוה לא אומר סיבתיות.</p>
+        <p data-i18n="d1_p2"><strong>אצלך בדאטה:</strong> <code>rating ~ lag_slot_mean</code> נותן קורלציה גבוהה. זאת הסיבה ש-76% מ-importance של RF מגיע מ-lag features. <code>rating ~ is_friday</code> נותן קורלציה שלילית מתונה — סיבה לפיצ׳ר day-of-week.</p>
+        <p data-i18n="d1_p3"><strong>מתי זה חשוב:</strong> ה-correlation heatmap שב-<code>EDA_REPORT.md</code> שלך זה מפת הניווט הראשונה. הוא מספר לך אילו פיצ׳רים יהיו דומיננטיים לפני שאמנת מודל אחד.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d2_name">התפלגויות</span>
+        <span class="card-subtag" data-i18n="d2_sub">distributions</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d2_p1"><strong>הרעיון:</strong> איך הערכים מתפרסים. צורת ההתפלגות (נורמלית, אסימטרית, רב-מודאלית) קובעת אילו מודלים יעבדו טוב.</p>
+        <p data-i18n="d2_p2"><strong>אצלך בדאטה:</strong> רייטינג <code>mean=0.44</code>, <code>max=5.58</code>. זאת התפלגות <strong>right-skewed</strong> — רוב התוכניות בערכים נמוכים, יש זנב ארוך של אירועים-קיצון.</p>
+        <p data-i18n="d2_p3"><strong>מתי זה חשוב:</strong> מודלים שמניחים נורמליות (OLS, Ridge פשוט) ייכשלו על הזנב. עצים (RF, GB) יתמודדו טוב יותר אבל עדיין יתקשו על הקיצונות — לכן שאגת הארי הוא MAE=0.77 אצל ה-HistGB שלך.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d3_name">עונתיות</span>
+        <span class="card-subtag" data-i18n="d3_sub">seasonality</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d3_p1"><strong>הרעיון:</strong> דפוסים שחוזרים בתדירות קבועה. עונתיות יכולה להיות שבועית, חודשית, שנתית — כולן יכולות לחיות יחד באותו דאטה.</p>
+        <p data-i18n="d3_p2"><strong>אצלך בדאטה:</strong> <strong>ימי שישי שונים</strong> — ערוץ 14 לא משדר, אין שידורים חוזרים, הקהל אחר. את זיהית את זה בעצמך — תובנה דומיינית טהורה ש-AI לא היה מגלה.</p>
+        <p data-i18n="d3_p3"><strong>מתי זה חשוב:</strong> בלי פיצ׳ר <code>day_of_week</code> או <code>is_friday</code>, המודל ממצע על ימי שישי וייתן רייטינג שגוי. זה גם הסיבה למה מודלים סטטיסטיים שלא תופסים פיצ׳רים אקסוגניים נכשלים אצלך.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d4_name">טרנד</span>
+        <span class="card-subtag" data-i18n="d4_sub">trend</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d4_p1"><strong>הרעיון:</strong> מגמה לאורך זמן. לא חייב להיות לינארי — יכול להיות מקפיץ, אקספוננציאלי, פיסות-לינאריות.</p>
+        <p data-i18n="d4_p2"><strong>אצלך בדאטה:</strong> <strong>רמפת הפאנל 65%→90%</strong> reception לאורך 11 חודשים. זה לא קשור לאיכות התוכניות — זה ערוץ 15 שצובר נוכחות בפאנל המדידה. כל הרייטינגים שלך זזים למעלה לאורך זמן.</p>
+        <p data-i18n="d4_p3"><strong>מתי זה חשוב:</strong> את כיסית את זה עם <code>reception_pct</code>. בלי הפיצ׳ר הזה, המודל היה מבלבל בין "טרנד מבנה" של פאנל ל"שיפור" של תוכניות. זאת תובנה דומיינית קריטית.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d5_name">תנודתיות</span>
+        <span class="card-subtag" data-i18n="d5_sub">volatility / heteroscedasticity</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d5_p1"><strong>הרעיון:</strong> השונות משתנה לאורך זמן. במציאות, סטיית התקן לא קבועה — באירועי חירום היא מתפוצצת.</p>
+        <p data-i18n="d5_p2"><strong>אצלך בדאטה:</strong> <strong>28/02 — מבצע שאגת הארי</strong>. רייטינג של תוכניות חדשות קפץ מ-1 ל-5. השונות באירוע גדולה פי 4-5 מהשונות בשגרה.</p>
+        <p data-i18n="d5_p3"><strong>מתי זה חשוב:</strong> ב-<code>utils/predict.py</code> שלך, ה-CI רחב יותר באירועים (<code>if is_security: p80_half = max(p80_half, 0.6)</code>). זה band-aid, לא פתרון אמיתי — אבל הוא משקף את המציאות. הפתרון האמיתי דורש פיצ׳ר real-time (חדשות, Twitter) שיאמר "מחר יש אירוע".</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name" data-i18n="d6_name">חוסר סטציונריות</span>
+        <span class="card-subtag" data-i18n="d6_sub">non-stationarity</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="d6_p1"><strong>הרעיון:</strong> תכונות סטטיסטיות (mean, variance, autocorrelation) משתנות לאורך זמן. רוב מודלי TS קלאסיים דורשים סטציונריות — אחרת המקדמים שלהם פשוט שגויים.</p>
+        <p data-i18n="d6_p2"><strong>אצלך בדאטה:</strong> כל הדאטה זז בגלל הפאנל. ה-mean של רייטינג בחודשים הראשונים שונה משמעותית מהאחרונים.</p>
+        <p data-i18n="d6_p3"><strong>מתי זה חשוב:</strong> זאת בדיוק הסיבה ש-SARIMAX שלך (MAE=0.379) נכשל. ה-<code>d=0</code> שב-config שלך אומר "אל תעשה differencing" — וזה היה צריך להיות <code>d=1</code> כדי לטפל בטרנד הפאנל. בנוסף, <code>enforce_stationarity=False</code> הוא דגל אדום.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- SECTION 2: ALGORITHMS -->
+<section id="algorithms">
+  <div class="section-header">
+    <span class="section-num">2</span>
+    <div>
+      <div class="section-title" data-i18n="s2_title">אלגוריתמים</div>
+      <div class="section-subtitle" data-i18n="s2_sub">evolution map — three families</div>
+    </div>
+  </div>
+  <p class="section-intro" data-i18n="s2_intro">מפת האבולוציה של אלגוריתמים לחיזוי. שלוש משפחות, 22 אלגוריתמים. את הרצת מ-3 השכבות (SARIMAX, RF, MLP) — בא לי שתביני איפה כל אחד יושב ולמה הוא הצליח או נכשל אצלך.</p>
+
+  <!-- Evolution map visual -->
+  <div class="evolution-map">
+    <div class="map-title" data-i18n="map_title">מפת המודלים — מבט-על</div>
+    <div class="map-hint" data-i18n="map_hint">המודלים שאת הרצת מסומנים בצהוב. ירוק = המנצח. אדום = נכשל. לחצי על כרטיס למטה לפרטים.</div>
+    <div class="map-families">
+      <div class="map-family">
+        <div class="map-family-title" data-i18n="map_fa">סטטיסטיים</div>
+        <div class="map-algo">AR</div>
+        <div class="map-algo">MA</div>
+        <div class="map-algo">ARMA</div>
+        <div class="map-algo">ARIMA</div>
+        <div class="map-algo you loser">SARIMAX <span class="mae">0.379</span></div>
+        <div class="map-algo">Prophet</div>
+        <div class="map-algo you loser">Additive OLS <span class="mae">0.397</span></div>
+      </div>
+      <div class="map-family">
+        <div class="map-family-title" data-i18n="map_fb">ML טבלאי</div>
+        <div class="map-algo you">Ridge <span class="mae">0.372</span></div>
+        <div class="map-algo you">Lasso <span class="mae">0.288</span></div>
+        <div class="map-algo you">ElasticNet <span class="mae">0.292</span></div>
+        <div class="map-algo you">Decision Tree <span class="mae">0.294</span></div>
+        <div class="map-algo you">Random Forest <span class="mae">0.280</span></div>
+        <div class="map-algo you">Gradient Boosting <span class="mae">0.270</span></div>
+        <div class="map-algo you">XGBoost <span class="mae">0.280</span></div>
+        <div class="map-algo you">LightGBM <span class="mae">0.265</span></div>
+        <div class="map-algo you winner">HistGradientBoosting <span class="mae">0.263</span></div>
+        <div class="map-algo you">CatBoost <span class="mae">0.271</span></div>
+        <div class="map-algo you">Stacking <span class="mae">0.272</span></div>
+      </div>
+      <div class="map-family">
+        <div class="map-family-title" data-i18n="map_fc">Deep Learning</div>
+        <div class="map-algo you loser">MLP <span class="mae">0.328</span></div>
+        <div class="map-algo">RNN</div>
+        <div class="map-algo">LSTM</div>
+        <div class="map-algo">Transformer</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Family A: Statistical -->
+  <div class="family-header">
+    <h3 data-i18n="fa_title">משפחה A: סטטיסטיים</h3>
+    <div class="family-tag" data-i18n="fa_tag">single series — requires stationarity — limited exogenous support</div>
+  </div>
+
+  <div class="cards two-col">
+    <details class="card">
+      <summary>
+        <span class="card-name">AR</span>
+        <span class="card-subtag" data-i18n="ar_sub">autoregressive</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="ar_p1"><strong>הרעיון:</strong> <code>value_t = c + φ₁·value_{t-1} + φ₂·value_{t-2} + ...</code>. ערך נוכחי = שילוב לינארי של ערכים מהעבר. ה-<code>p</code> הוא כמה מהעבר.</p>
+        <p data-i18n="ar_p2"><strong>אצלך:</strong> לא הרצת ישירות, אבל זה הבסיס של כל המודלים הסטטיסטיים שכן הרצת.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">MA</span>
+        <span class="card-subtag" data-i18n="ma_sub">moving average</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="ma_p1"><strong>הרעיון:</strong> חשוב — זה <em>לא</em> ממוצע נע של ערכים, זה ממוצע של <strong>שגיאות</strong> מהעבר. <code>value_t = μ + ε_t + θ₁·ε_{t-1} + ...</code></p>
+        <p data-i18n="ma_p2"><strong>אצלך:</strong> חלק מ-SARIMAX שלך (<code>SARIMAX(1,0,1)...</code> — ה-1 השני זה <code>q</code> של MA).</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">ARMA</span>
+        <span class="card-subtag" data-i18n="arma_sub">autoregressive + MA</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="arma_p1"><strong>הרעיון:</strong> AR + MA. עדיין דורש סטציונריות. שני פרמטרים: <code>(p, q)</code>.</p>
+        <p data-i18n="arma_p2"><strong>אצלך:</strong> לא רץ נפרד, אבל זה הליבה של SARIMAX (בלי ה-S וה-X וה-I).</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">ARIMA</span>
+        <span class="card-subtag" data-i18n="arima_sub">integrated ARMA</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="arima_p1"><strong>הרעיון:</strong> ARMA + differencing (ה-"I", Integration). לוקח <code>value_t - value_{t-1}</code> כדי להפוך סדרה עם טרנד לסטציונרית. שלושה פרמטרים: <code>(p, d, q)</code>.</p>
+        <p data-i18n="arima_p2"><strong>אצלך:</strong> לא הרצת ישירות. <strong>אבל זה היה צריך להיות הצעד הבא</strong> אחרי שראית שהפאנל יוצר טרנד — <code>d=1</code> היה מנקה את הטרנד.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">SARIMAX</span>
+        <span class="card-subtag" data-i18n="sarimax_sub">seasonal ARIMA + exogenous</span>
+        <span class="card-meta">
+          <span class="meta-pill you" data-i18n="pill_you_ran">הרצת</span>
+          <span class="meta-pill loser">MAE 0.379</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="sarimax_p1"><strong>הרעיון:</strong> ARIMA + עונתיות (S) + פיצ׳רים חיצוניים (X = exogenous). ההכללה המקסימלית של המשפחה הסטטיסטית. <code>(p,d,q)(P,D,Q,s)</code>.</p>
+        <div class="your-model">
+          <span class="your-label" data-i18n="your_label">אצלך</span>
+          <p data-i18n="sarimax_you1"><strong>קונפיג:</strong> <code>SARIMAX(1,0,1)(1,1,1,7) + holiday + security + reception_pct</code>. MAE יומי 0.379. <strong>גרוע מ-naive (0.199 יומי).</strong></p>
+          <p data-i18n="sarimax_you2"><strong>למה נכשל:</strong> שני דברים. (1) <code>d=0</code> + <code>enforce_stationarity=False</code> = התעלמות מהטרנד של הפאנל. (2) SARIMAX מסתמך על סדרה אחת + כמה exog — לא יודע לנצל את 19 הפיצ׳רים המהונדסים שלך. הוא במשפחה הלא-נכונה לבעיה שלך.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">Prophet</span>
+        <span class="card-subtag" data-i18n="prophet_sub">Facebook's automated additive model</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="prophet_p1"><strong>הרעיון:</strong> <code>y(t) = g(t) + s(t) + h(t) + ε</code>. סכום של trend (piecewise linear), seasonality (Fourier series), holidays (אירועים). יודע לטפל אוטומטית בטרנד ולכן <em>לא</em> דורש סטציונריות.</p>
+        <p data-i18n="prophet_p2"><strong>אצלך:</strong> <strong>לא הרצת Prophet אמיתי.</strong> מה שאת קראת לו "Prophet-style" הוא משהו אחר — ראי הכרטיס הבא.</p>
+        <p data-i18n="prophet_p3"><strong>היה עוזר?</strong> כנראה שלא. גם Prophet סובל מאותה מגבלה — אומנם מטפל אוטומטית בטרנד, אבל לא מנצל את ה-lag features המסובכים שלך. הוא טוב לסדרות זמן "נקיות" עם טרנד+עונתיות בלבד.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">Additive OLS</span>
+        <span class="card-subtag" data-i18n="additive_sub">what you called "Prophet-style" — actually OLS with sin/cos</span>
+        <span class="card-meta">
+          <span class="meta-pill you" data-i18n="pill_you_ran2">הרצת</span>
+          <span class="meta-pill loser">MAE 0.397</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="additive_p1"><strong>הרעיון:</strong> רגרסיה לינארית (OLS) עם פיצ׳רים מתוכננים: <code>sin(2π·t/7)</code>, <code>cos(2π·t/7)</code> לעונתיות שבועית, ו-trend לינארי, ועוד.</p>
+        <div class="your-model">
+          <span class="your-label" data-i18n="your_label2">אצלך</span>
+          <p data-i18n="additive_you1"><strong>חשוב מאוד להבהיר:</strong> מה שב-<code>MODEL_REPORT_TS.md</code> שלך נקרא "Additive (Prophet-style)" <em>אינו</em> Prophet האמיתי של פייסבוק. זה רגרסיה לינארית רגילה עם פיצ׳רי sin/cos. שני מודלים שונים לחלוטין — אחד נשמע כמו השני אבל מתחת למכסה המנוע זה רגרסיה.</p>
+          <p data-i18n="additive_you2"><strong>למה נכשל (MAE 0.397):</strong> אותה סיבה כמו SARIMAX — OLS לינארי לא יודע לנצל את 19 הפיצ׳רים שלך, וזה לא מטפל בנון-לינאריות שבדאטה.</p>
+          <p data-i18n="additive_you3"><strong>ל-interview:</strong> אם שואלים אותך אם השתמשת ב-Prophet — <strong>תגידי "לא"</strong>. תגידי שעשית additive regression. זה יראה שאת יודעת להבדיל בין מודלים בעלי שם דומה.</p>
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <!-- Family B: ML Tabular -->
+  <div class="family-header">
+    <h3 data-i18n="fb_title">משפחה B: ML טבלאי</h3>
+    <div class="family-tag" data-i18n="fb_tag">features-based — no stationarity needed — your sweet spot</div>
+  </div>
+
+  <div class="cards two-col">
+    <details class="card you">
+      <summary>
+        <span class="card-name">Ridge</span>
+        <span class="card-subtag" data-i18n="ridge_sub">linear + L2 regularization</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.372</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="ridge_p1"><strong>הרעיון:</strong> רגרסיה לינארית עם penalty על מקדמים גדולים (<code>||β||²</code>). מקטין מקדמים אבל לא מאפס אותם.</p>
+        <p data-i18n="ridge_p2"><strong>אצלך:</strong> נכשל בצפוי — הקשרים בדאטה שלך לא לינאריים (שעה×יום×סטטוס יוצר אינטראקציות). Ridge sanity-check, לא candidate.</p>
+        <p data-i18n="ridge_p3"><strong>הכלל לראיון:</strong> אם Ridge ינצח עצים — יש לך data leakage. בדקי שוב.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">Lasso</span>
+        <span class="card-subtag" data-i18n="lasso_sub">linear + L1 regularization</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.288</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="lasso_p1"><strong>הרעיון:</strong> רגרסיה לינארית עם penalty <code>||β||₁</code>. בניגוד ל-Ridge — <strong>מאפס</strong> מקדמים של פיצ׳רים מיותרים. אוטומטית עושה feature selection.</p>
+        <p data-i18n="lasso_p2"><strong>אצלך:</strong> ניצח את Ridge ב-0.084 (24% טוב יותר). למה: אחרי one-hot על 6 קטגוריות יש ~50 features, רובם רעש. Lasso למד שרק ~10 חשובים.</p>
+        <p data-i18n="lasso_p3"><strong>השיעור:</strong> בדאטה עם הרבה קטגוריאליים אחרי one-hot, L1 כמעט תמיד גובר על L2.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">ElasticNet</span>
+        <span class="card-subtag" data-i18n="enet_sub">L1 + L2 compromise</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.292</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="enet_p1"><strong>הרעיון:</strong> משלב את היתרונות של Lasso ו-Ridge.</p>
+        <p data-i18n="enet_p2"><strong>אצלך:</strong> כמו Lasso, אבל R² קצת יותר טוב. מתאים כש-features מתואמים (כמו <code>lag_slot_mean</code> ו-<code>lag_status_slot_mean</code> שמשותפים גנטית). L1 לבד "בורר" שרירותית, ElasticNet מתפשר.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">Decision Tree</span>
+        <span class="card-subtag" data-i18n="dt_sub">single tree</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.294</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="dt_p1"><strong>הרעיון:</strong> פיצולים על פיצ׳רים. בכל צומת בודק את הפיצ׳ר הטוב ביותר לפיצול. <code>max_depth</code> שולט בעומק.</p>
+        <p data-i18n="dt_p2"><strong>אצלך:</strong> MAE 0.294 — בערך כמו Lasso. עץ בודד high-variance — שינוי קטן בדאטה ישנה את הפיצולים דרמטית.</p>
+        <p data-i18n="dt_p3"><strong>השיעור:</strong> ההפרש בין 0.294 (עץ בודד) → 0.280 (RF) → 0.263 (HistGB) זה bias-variance tradeoff בפעולה. Ensemble מוסיף 4-10% — לא מהפיכה, אבל יציב.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">Random Forest</span>
+        <span class="card-subtag" data-i18n="rf_sub">bagging of trees</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.280</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="rf_p1"><strong>הרעיון:</strong> בונה הרבה עצים <em>במקביל</em>, כל עץ על תת-קבוצה אקראית של שורות ושל features. החיזוי הוא ממוצע של כל העצים. מפחית variance.</p>
+        <div class="your-model">
+          <span class="your-label" data-i18n="your_label3">אצלך</span>
+          <p data-i18n="rf_you1"><strong>RF tuned (V2):</strong> MAE=0.280, R²=0.566. 400 עצים, <code>max_features="sqrt"</code>, <code>min_samples_leaf=5</code>. היה <strong>המוביל של V2</strong>.</p>
+          <p data-i18n="rf_you2"><strong>למה עבד:</strong> 76% מ-importance הוא lag features. RF זיהה אותם אוטומטית מבלי שתגידי לו. זה הכוח של trees — אינטראקציות לא-לינאריות בלי הנדסה ידנית.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">Gradient Boosting</span>
+        <span class="card-subtag" data-i18n="gb_sub">sequential trees, sklearn classic</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.270</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="gb_p1"><strong>הרעיון:</strong> בניגוד ל-RF (במקביל), Boosting בונה עצים <em>ברצף</em>. כל עץ מתקן את השגיאות של הקודם. במתמטיקה: לומד את ה-gradient של ה-loss.</p>
+        <p data-i18n="gb_p2"><strong>אצלך:</strong> MAE=0.270, R²=0.579. <strong>טוב אבל איטי</strong> — 13.5 שניות לאמן. פי 12 איטי יותר מ-HistGradientBoosting (1.1 שניה).</p>
+        <p data-i18n="gb_p3"><strong>השיעור:</strong> זאת הגרסה ה"מקורית" של הרעיון. שווה להזכיר בראיון כדי להראות שאת מכירה את הציר ההיסטורי: <code>GB → XGBoost → LightGBM/HistGB</code>.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">XGBoost</span>
+        <span class="card-subtag" data-i18n="xgb_sub">boosting + L1/L2 regularization</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.280</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="xgb_p1"><strong>הרעיון:</strong> "אגדת קאגל". Boosting עם רגולריזציה L1+L2 על העלים, second-order optimization, וטריקים נוספים. עובד עם הערכים המקוריים (לא binning).</p>
+        <p data-i18n="xgb_p2"><strong>אצלך:</strong> MAE=0.280 — <strong>שווה ל-RF, נחות מ-LightGBM/HistGB</strong>. למה? ערכים רציפים ב-<code>lag_slot_mean</code> (יכול להיות 0.234, 0.235, 0.236...) יוצרים הרבה נקודות-פיצול אפשריות — וזה מזמין overfitting על noise.</p>
+        <p data-i18n="xgb_p3"><strong>השיעור לראיון:</strong> אגדת קאגל לא תמיד תזכה. תלוי בגודל ובסוג הדאטה. אצלך — דאטה קטן + features רציפים → histogram-based ניצח.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">LightGBM</span>
+        <span class="card-subtag" data-i18n="lgb_sub">histogram-based, leaf-wise growth (Microsoft, 2017)</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.265</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="lgb_p1"><strong>הרעיון:</strong> כמו HistGB — מחלק ערכים ל-bins. בנוסף משתמש ב-<strong>leaf-wise growth</strong> — תמיד מפצל את העלה הכי מבטיח, לא ברמות עומק שוות.</p>
+        <p data-i18n="lgb_p2"><strong>אצלך:</strong> MAE=0.265. שני מיד אחרי HistGB. ההפרש הוא 0.002 — <strong>רעש סטטיסטי</strong>.</p>
+        <p data-i18n="lgb_p3"><strong>השיעור:</strong> LightGBM ו-HistGradientBoosting הם אותה משפחה (histogram-based GBDT). ההבדל הוא טכני-מימוש, לא קונספטואלי. בקאגל LGB בדרך-כלל מנצח; אצלך ההפרש שולי.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">HistGradientBoosting</span>
+        <span class="card-subtag" data-i18n="hgb_sub">sklearn's histogram-based GBDT</span>
+        <span class="card-meta">
+          <span class="meta-pill you">המנצח</span>
+          <span class="meta-pill winner">MAE 0.263</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="hgb_p1"><strong>הרעיון:</strong> Boosting + binning. לפני האימון, מחלק את הערכים של כל פיצ׳ר ל-256 דליים קבועים. ערך 0.234 ו-0.235 יושבים באותו דלי.</p>
+        <p data-i18n="hgb_p2"><strong>מה זה נותן:</strong> במקום לבדוק 8,000 נקודות-פיצול אפשריות לכל עץ — בודק 256. <strong>פי 30 מהיר יותר</strong>. ויותר חשוב: <strong>רגולריזציה מובנית</strong> — המודל לא נותן לעצמו לפצל על הבדל זעיר בין 0.234 ל-0.235 שכנראה רעש.</p>
+        <div class="your-model">
+          <span class="your-label" data-i18n="your_label4">אצלך — המנצח</span>
+          <p data-i18n="hgb_you1"><strong>MAE=0.263, R²=0.603.</strong> שיפור 37.7% מעל naive, 6% מעל RF tuned. אומן ב-1.1 שנ' (מהיר פי 12 מ-vanilla GB).</p>
+          <p data-i18n="hgb_you2"><strong>למה ניצח אצלך ספציפית:</strong> ה-binning הוא רגולריזציה אוטומטית. בדאטה קטן (~8K שורות) זה זהב — מונע overfitting אוטומטית. ניצח את XGBoost שעובד עם ערכים מקוריים ולכן רגיש יותר לרעש.</p>
+          <p data-i18n="hgb_you3"><strong>לראיון — אם שואלים "למה HistGB ולא LightGBM?":</strong> "אין סיבה טכנית מהותית. ההפרש 0.002 הוא רעש סטטיסטי. שניהם histogram-based GBDT, אותה משפחה." זה היושר האינטלקטואלי שיעמיד אותך מעל מועמדים שמנסים להמציא סיבות.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">CatBoost</span>
+        <span class="card-subtag" data-i18n="cat_sub">boosting with built-in categorical handling (Yandex)</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.271</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="cat_p1"><strong>הרעיון:</strong> Boosting עם target encoding אוטומטי לקטגוריאליים. <strong>לא דורש</strong> one-hot ידני.</p>
+        <p data-i18n="cat_p2"><strong>אצלך:</strong> MAE=0.271. טוב, אבל לא ניצח. למה? כי <strong>כבר עשית one-hot ידני</strong> לפניו. היתרון של CatBoost (אוטומציה) מתבטל. אילו לא היית עושה preprocessing — CatBoost היה הכוכב.</p>
+        <p data-i18n="cat_p3"><strong>השיעור:</strong> coupling בין preprocessing למודל. כשבוחרים מודל, צריך לחשוב מה ה-pipeline שלפניו.</p>
+      </div>
+    </details>
+
+    <details class="card you">
+      <summary>
+        <span class="card-name">Stacking</span>
+        <span class="card-subtag" data-i18n="stack_sub">meta-model combining base models</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.272</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="stack_p1"><strong>הרעיון:</strong> Meta-model (Ridge) שלומד לשקלל את חיזויי כמה base models (RF+XGB+LGB). בקאגל זה לפעמים נותן את הקצה המנצח.</p>
+        <p data-i18n="stack_p2"><strong>אצלך:</strong> MAE=0.272 — <strong>כמו LGB יחיד, לא יותר טוב.</strong></p>
+        <p data-i18n="stack_p3"><strong>למה לא עזר:</strong> stacking עובד רק כש-base models טועים <em>בדברים שונים</em> (decorrelated errors). אצלך כל המודלים נכשלים באותם אירועים (שאגת הארי, שבת, פריים-טיים). אין מה לשלב.</p>
+        <p data-i18n="stack_p4"><strong>השיעור לראיון:</strong> זאת תובנה חזקה. stacking לא קסם — דורש diversity ב-errors. זה אישור נוסף שהתקרה היא drift, לא בחירת מודל.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- Family C: Deep Learning -->
+  <div class="family-header">
+    <h3 data-i18n="fc_title">משפחה C: Deep Learning</h3>
+    <div class="family-tag" data-i18n="fc_tag">requires large data — usually loses on small tabular</div>
+  </div>
+
+  <div class="cards two-col">
+    <details class="card you">
+      <summary>
+        <span class="card-name">MLP</span>
+        <span class="card-subtag" data-i18n="mlp_sub">multi-layer perceptron (basic neural network)</span>
+        <span class="card-meta">
+          <span class="meta-pill you">MAE 0.328</span>
+          <span class="meta-pill loser" data-i18n="pill_failed">נכשל</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="mlp_p1"><strong>הרעיון:</strong> רשת נוירונים בסיסית. שכבות fully-connected. אצלך — שכבות (64×32) עם early stopping.</p>
+        <p data-i18n="mlp_p2"><strong>אצלך:</strong> MAE=0.328 — <strong>מהגרועים בכלל המודלים שלך</strong>. למה? סיבה קלאסית: <strong>דאטה קטן + features מעורבים = MLP overfit מיד</strong>.</p>
+        <p data-i18n="mlp_p3"><strong>השיעור:</strong> רשתות נוירונים זוהרות על דאטה לא-טבלאי (תמונות, טקסט) או טבלאי-ענק (>1M שורות). על טבלה של 8K שורות, GBDT תמיד מנצח MLP. זה לא debate — זה pattern.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">RNN</span>
+        <span class="card-subtag" data-i18n="rnn_sub">recurrent neural network</span>
+        <span class="card-meta">
+          <span class="meta-pill neutral" data-i18n="pill_not_tried">לא ניסית</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="rnn_p1"><strong>הרעיון:</strong> רשת שלומדת רצף. כל פלט תלוי בקודמים. הבעיה: שוכחת רצפים ארוכים (vanishing gradients).</p>
+        <p data-i18n="rnn_p2"><strong>אצלך:</strong> לא הרצת. <strong>גם לא היה עוזר</strong> — 10K שורות זה מעט מדי ל-DL, ו-RNN בלי זיכרון ארוך מוגבל לרצפים קצרים.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">LSTM</span>
+        <span class="card-subtag" data-i18n="lstm_sub">long short-term memory</span>
+        <span class="card-meta">
+          <span class="meta-pill neutral" data-i18n="pill_not_tried2">לא ניסית</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="lstm_p1"><strong>הרעיון:</strong> RNN עם זיכרון לטווח קצר וארוך, gating mechanisms (forget gate, input gate, output gate). פותר את בעיית ה-vanishing gradients.</p>
+        <p data-i18n="lstm_p2"><strong>אצלך:</strong> לא הרצת. <strong>הציפייה הריאלית: 0-5% שיפור</strong> — כי 76% מהמידע כבר ב-lag features שה-RF/HistGB מנצלים. LSTM היה תופס את אותן תלויות לא-לינאריות.</p>
+        <div class="your-model">
+          <span class="your-label" data-i18n="your_label5">הטענה שלך מסעיף 8 ב-MENTOR_MEETING_SCRIPT</span>
+          <p data-i18n="lstm_you1"><strong>ציטוט:</strong> "LSTM מתפיסה בעיקר תלויות לא-לינאריות בין lag features שכבר יש במודל. ציפייה ריאלית: 0-5% שיפור MAE."</p>
+          <p data-i18n="lstm_you2"><strong>זאת טענה נכונה לחלוטין.</strong> RF/HistGB כבר תופסים את הקשרים האלה דרך 19 הפיצ׳רים והעצים. LSTM היה מנסה לעשות את אותו דבר דרך משוואות מסובכות יותר על דאטה קטן יותר. סיכוי לעבוד טוב יותר — נמוך.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">Transformer</span>
+        <span class="card-subtag" data-i18n="trans_sub">attention-based, modern standard</span>
+        <span class="card-meta">
+          <span class="meta-pill neutral" data-i18n="pill_not_tried3">לא ניסית</span>
+        </span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="trans_p1"><strong>הרעיון:</strong> Self-attention — המודל "רואה" את כל הרצף בבת אחת, ומחליט לכל token כמה לתת משקל לכל token אחר. הסטנדרט המודרני (BERT, GPT, etc.).</p>
+        <p data-i18n="trans_p2"><strong>אצלך:</strong> לא הרצת. ב-10K שורות זה <strong>overfit מובטח</strong> ללא הסבר. Transformer דורש עשרות אלפי דוגמאות לפחות.</p>
+        <p data-i18n="trans_p3"><strong>מתי כן רלוונטי?</strong> אם בעתיד תוסיפי טקסט (טוויטים, חדשות) או תמונות (תמונות-מסך מהשידור), Transformer מתאים לבעיה רב-מודאלית כזאת.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- SECTION 3: ARCHITECTURE -->
+<section id="architecture">
+  <div class="section-header">
+    <span class="section-num">3</span>
+    <div>
+      <div class="section-title" data-i18n="s3_title">אדריכלות תכנה</div>
+      <div class="section-subtitle" data-i18n="s3_sub">3 layers + monolith vs distributed</div>
+    </div>
+  </div>
+  <p class="section-intro" data-i18n="s3_intro">האפליקציה שלך עובדת. עכשיו בא לי שתכירי את <strong>השפה האדריכלית</strong> — 3 שכבות, ועם החולשה של מה שבנית.</p>
+
+  <div class="cards">
+    <details class="card">
+      <summary>
+        <span class="card-name">Frontend</span>
+        <span class="card-subtag" data-i18n="fe_sub">UI layer — what the user sees and clicks</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="fe_p1"><strong>הרעיון:</strong> השכבה שמדברת עם המשתמש. כפתורים, טפסים, גרפים, dropdown menus.</p>
+        <p data-i18n="fe_p2"><strong>אצלך בקוד:</strong> <code>app.py</code> (homepage), <code>pages/1_📊_חיזויים.py</code>, <code>pages/2_📺_כרטיס_תוכנית.py</code>, <code>pages/3_🔍_השוואת_מודלים.py</code>, <code>pages/4_🎯_חיזוי_עתידי.py</code>, <code>utils/style.py</code>.</p>
+        <p data-i18n="fe_p3"><strong>מתי כדאי להפריד:</strong> כשרוצים יותר מ-UI אחד (web + mobile), צוות UI נפרד, או reusability גבוה. אצלך — Streamlit מספק את שלוש הפונקציות בקובץ אחד; אם תרצי mobile app בעתיד, תצטרכי להפריד.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">Backend</span>
+        <span class="card-subtag" data-i18n="be_sub">business logic — predictions, auth, data access</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="be_p1"><strong>הרעיון:</strong> ה-"מוח" של האפליקציה. החישובים, ההגיון העסקי, ההחלטות. לא מדבר ישירות עם המשתמש — רק עם ה-Frontend.</p>
+        <p data-i18n="be_p2"><strong>אצלך בקוד:</strong> <code>utils/predict.py</code> (טעינת מודל, חישוב CI, scenarios), <code>utils/data_loader.py</code> (cached loading), <code>utils/auth.py</code> (password gate), <code>utils/imputers.py</code>, <code>train_and_save_model.py</code>.</p>
+        <p data-i18n="be_p3"><strong>מתי כדאי להפריד ל-API נפרד:</strong> שלוש סיבות עיקריות. (1) <strong>Scaling</strong> — 100 משתמשים במקביל מצריכים backend נפרד. (2) <strong>Security</strong> — להפריד את ה-secrets ואת המודל מהקוד הפומבי. (3) <strong>Sharing</strong> — אם רוצים שאפליקציות אחרות (mobile, partners) ישתמשו באותו backend.</p>
+        <p data-i18n="be_p4"><strong>הדרך לעבור:</strong> FastAPI או Flask — API שמקבל JSON עם פרטי תוכנית ומחזיר חיזוי. ה-Streamlit הופך ל-thin client שקורא ל-API.</p>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>
+        <span class="card-name">Data</span>
+        <span class="card-subtag" data-i18n="data_sub">storage layer — raw data + trained model</span>
+      </summary>
+      <div class="card-body">
+        <p data-i18n="data_p1"><strong>הרעיון:</strong> איפה הדאטה והמודל יושבים. לפעמים זה קבצים, לפעמים DB, לפעמים cloud storage.</p>
+        <p data-i18n="data_p2"><strong>אצלך בקוד:</strong> <code>model_saved.joblib</code> (HistGB serialized, 1.2MB), <code>תוכניות_מעובד.xlsx</code> (raw data, 1.9MB), <code>אירועים_מדויקים.csv</code> (events table). <strong>הכל בקבצים בריפו</strong>.</p>
+        <p data-i18n="data_p3"><strong>מתי כדאי לעבור ל-DB:</strong> (1) <strong>Concurrent access</strong> — כמה משתמשים קוראים/כותבים בו-זמנית. (2) <strong>Mutations</strong> — דאטה משתנה בזמן ריצה (נכון אצלך אם תרצי להוסיף שורות חדשות בלי לעדכן את הריפו). (3) <strong>Persistence</strong> — שמירת ביצועי משתמשים, היסטוריית חיזויים. (4) <strong>Size</strong> — מעל ~100MB, Git לא מתחבר אהוב.</p>
+        <p data-i18n="data_p4"><strong>אופציות:</strong> Postgres (SQL מסורתי), Supabase (Postgres + auth + storage כשירות), MongoDB (NoSQL), DuckDB (analytical, file-based).</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- Monolith vs Distributed -->
+  <div class="monolith-section">
+    <h3 data-i18n="mono_title">מונוליט vs מבוזר — איפה את עכשיו</h3>
+    <p data-i18n="mono_intro">האפליקציה שלך היום היא <strong>monolith</strong> — כל 3 השכבות (Frontend, Backend, Data) רצות באותו תהליך של Streamlit. זה נורמלי לפרוטוטיפ, אבל יש לכך מחיר.</p>
+
+    <div class="mono-grid">
+      <div class="mono-card now">
+        <h4 data-i18n="mono_now_title">מה יש לך עכשיו (Monolith)</h4>
+        <p data-i18n="mono_now_pros"><strong>יתרונות:</strong></p>
+        <ul>
+          <li data-i18n="mono_now_l1">מהיר לבנות וסטרימליט עושה הכל</li>
+          <li data-i18n="mono_now_l2">פריסה פשוטה — push to GitHub, Streamlit Cloud בונה</li>
+          <li data-i18n="mono_now_l3">קל לדבג — הכל בתהליך אחד</li>
+        </ul>
+        <p data-i18n="mono_now_cons" style="margin-top:0.8rem;"><strong>חסרונות:</strong></p>
+        <ul>
+          <li data-i18n="mono_now_l4"><strong>Scaling:</strong> 100 משתמשים במקביל = בעיה</li>
+          <li data-i18n="mono_now_l5"><strong>Security:</strong> secrets בקובץ, repo public = exposure לדאטה האמיתי של i24</li>
+          <li data-i18n="mono_now_l6"><strong>Coupling:</strong> לא יכולה להחליף UI בלי לבנות מחדש</li>
+          <li data-i18n="mono_now_l7"><strong>Cold-start:</strong> כל refresh טוען מחדש את המודל</li>
+        </ul>
+      </div>
+
+      <div class="mono-card next">
+        <h4 data-i18n="mono_next_title">המעבר ל-Distributed (Production)</h4>
+        <p data-i18n="mono_next_p1"><strong>השכבות מנותקות:</strong></p>
+        <ul>
+          <li data-i18n="mono_next_l1"><strong>Frontend:</strong> React / Vue / Streamlit (thin client בלבד)</li>
+          <li data-i18n="mono_next_l2"><strong>API:</strong> FastAPI / Flask על Render / Railway</li>
+          <li data-i18n="mono_next_l3"><strong>Database:</strong> Postgres / Supabase</li>
+          <li data-i18n="mono_next_l4"><strong>Model Storage:</strong> S3 / GCS / HuggingFace</li>
+        </ul>
+        <p data-i18n="mono_next_p2" style="margin-top:0.8rem;"><strong>היתרון:</strong> כל שכבה יכולה לעלות בגרסה לבד. אם רוצה mobile app — רק עוד Frontend על אותו API. אם רוצה לשפר את המודל — רק Backend.</p>
+        <p data-i18n="mono_next_p3"><strong>אצלך — מתי לעבור?</strong> רק כשיש סיבה. עכשיו, monolith מספיק. אם תרצי לסגור עסקה עם i24, תצטרכי security ו-scaling — אז כן. במפגש 4 נדבר.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOMEWORK -->
+<section class="homework" id="homework">
+  <h2 data-i18n="hw_title">המשך הדרך — מה עכשיו</h2>
+  <p data-i18n="hw_intro">היום עברנו על שלושת העמודים. החזק לראיון לא נמצא בכמות אלא ב<strong>בעלות אמיתית</strong> על מה שבנית. הנה ההצעה — אבל את בוחרת.</p>
+
+  <div class="homework-list">
+    <div class="hw-item">
+      <span class="hw-num">1</span>
+      <strong data-i18n="hw1_title">MY_MODEL.md — במילים שלך, לא של קלוד</strong>
+      <p data-i18n="hw1_body">דף אחד בריפו שמסביר איך עובד HistGradientBoosting ולמה הוא מתאים לדאטה שלך. <strong>כלל המשחק:</strong> אסור לפתוח את MODEL_FAQ. אסור לבקש מקלוד "תכתוב את זה". אם תקועה — לכתוב "לא יודעת" וזה בסדר. מה שיוצא — הקול שלך.</p>
+    </div>
+
+    <div class="hw-item">
+      <span class="hw-num">2</span>
+      <strong data-i18n="hw2_title">30 דגימות — ניתוח שגיאות ידני</strong>
+      <p data-i18n="hw2_body">דגום 30 שורות מ-test set: 10 שגיאות הכי גדולות, 10 בינוניות, 10 קטנות. לכל אחת — משפט אחד: למה המודל צדק/טעה? מה ראית שהמודל לא ראה? <strong>30 משפטים — שם נמצא ה-DS שלך, לא ב-MAE.</strong></p>
+    </div>
+
+    <div class="hw-item">
+      <span class="hw-num">3</span>
+      <strong data-i18n="hw3_title">סעיף 8 (LSTM defense) — במילים שלך</strong>
+      <p data-i18n="hw3_body">קחי את סעיף 8 ב-MENTOR_MEETING_SCRIPT שלך (טיעון ה-LSTM) ונסי לכתוב אותו מחדש <em>במילים שלך</em>, 4-5 משפטים. אסור לפתוח את הסקריפט בזמן הכתיבה.</p>
+    </div>
+
+    <div class="hw-item">
+      <span class="hw-num">★</span>
+      <strong data-i18n="hw_async_title">משמעת אסינכרונית</strong>
+      <p data-i18n="hw_async_body">לפני שאת שואלת אותי שאלה בוואטסאפ — נסי 30 שניות לכתוב לעצמך מה את חושבת. ואז שלחי: "הנה מה שאני חושבת — איפה הקליק?" זה יבנה לך שריר עצמאי. לא חוק קשוח. הצעה.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p data-i18n="footer_made">נבנה עבור אורית — מפגש 3, מאי 2026</p>
+  <p data-i18n="footer_link" style="margin-top:0.5rem;">חזור לכל המדריכים: <a href="index.html">student-guides</a></p>
+</footer>
+
+<script>
+  let currentLang = 'he';
+
+  const T = {
+    he: {
+      hero_title: 'i24 — שלושת העמודים',
+      hero_sub: 'מדריך אינטראקטיבי לפרויקט שלך — איפה את על המפה, ומה היה צריך להיות מעבר לפינה.',
+      p1_label: 'דאטה',
+      p2_label: 'אלגוריתמים',
+      p3_label: 'אדריכלות תכנה',
+      nav_data: 'דאטה',
+      nav_algos: 'אלגוריתמים',
+      nav_arch: 'אדריכלות',
+      nav_hw: 'המשך',
+      s1_title: 'דאטה',
+      s1_sub: 'יסודות + ספציפיים לסדרות זמן',
+      s1_intro: 'כל מודל מתחיל בהבנת הדאטה. בלי הבנה זו, אפילו המודל הטוב ביותר ייכשל. הנה שישה קונספטים מרכזיים שמכריעים את הפרויקט שלך — לחצי על כל אחד להעמיק.',
+      d1_name: 'קורלציות',
+      d1_sub: 'correlations',
+      d2_name: 'התפלגויות',
+      d2_sub: 'distributions',
+      d3_name: 'עונתיות',
+      d3_sub: 'seasonality',
+      d4_name: 'טרנד',
+      d4_sub: 'trend',
+      d5_name: 'תנודתיות',
+      d5_sub: 'volatility / heteroscedasticity',
+      d6_name: 'חוסר סטציונריות',
+      d6_sub: 'non-stationarity',
+      s2_title: 'אלגוריתמים',
+      s2_sub: 'מפת אבולוציה — שלוש משפחות',
+      s2_intro: 'מפת האבולוציה של אלגוריתמים לחיזוי. שלוש משפחות, 22 אלגוריתמים. את הרצת מ-3 השכבות (SARIMAX, RF, MLP) — בא לי שתביני איפה כל אחד יושב ולמה הוא הצליח או נכשל אצלך.',
+      map_title: 'מפת המודלים — מבט-על',
+      map_hint: 'המודלים שאת הרצת מסומנים בצהוב. ירוק = המנצח. אדום = נכשל. לחצי על כרטיס למטה לפרטים.',
+      map_fa: 'סטטיסטיים',
+      map_fb: 'ML טבלאי',
+      map_fc: 'Deep Learning',
+      fa_title: 'משפחה A: סטטיסטיים',
+      fa_tag: 'סדרה יחידה, דורש סטציונריות, תמיכה מוגבלת בפיצ׳רים חיצוניים',
+      fb_title: 'משפחה B: ML טבלאי',
+      fb_tag: 'מבוסס פיצ׳רים, לא דורש סטציונריות, ה-sweet spot שלך',
+      fc_title: 'משפחה C: Deep Learning',
+      fc_tag: 'דורש דאטה גדול, בדרך כלל מפסיד על טבלאי קטן',
+      pill_you_ran: 'הרצת',
+      pill_you_ran2: 'הרצת',
+      pill_failed: 'נכשל',
+      pill_not_tried: 'לא ניסית',
+      pill_not_tried2: 'לא ניסית',
+      pill_not_tried3: 'לא ניסית',
+      your_label: 'אצלך',
+      your_label2: 'אצלך',
+      your_label3: 'אצלך',
+      your_label4: 'אצלך — המנצח',
+      your_label5: 'הטענה שלך מסעיף 8 ב-MENTOR_MEETING_SCRIPT',
+      s3_title: 'אדריכלות תכנה',
+      s3_sub: '3 שכבות + מונוליט vs מבוזר',
+      s3_intro: 'האפליקציה שלך עובדת. עכשיו בא לי שתכירי את <strong>השפה האדריכלית</strong> — 3 שכבות, ועם החולשה של מה שבנית.',
+      fe_sub: 'שכבת UI — מה המשתמש רואה ומקליק',
+      be_sub: 'לוגיקה עסקית — חיזוי, אימות, גישה לדאטה',
+      data_sub: 'שכבת אחסון — דאטה גולמי + מודל מאומן',
+      mono_title: 'מונוליט vs מבוזר — איפה את עכשיו',
+      mono_intro: 'האפליקציה שלך היום היא <strong>monolith</strong> — כל 3 השכבות (Frontend, Backend, Data) רצות באותו תהליך של Streamlit. זה נורמלי לפרוטוטיפ, אבל יש לכך מחיר.',
+      mono_now_title: 'מה יש לך עכשיו (Monolith)',
+      mono_next_title: 'המעבר ל-Distributed (Production)',
+      hw_title: 'המשך הדרך — מה עכשיו',
+      hw_intro: 'היום עברנו על שלושת העמודים. החזק לראיון לא נמצא בכמות אלא ב<strong>בעלות אמיתית</strong> על מה שבנית. הנה ההצעה — אבל את בוחרת.',
+      hw1_title: 'MY_MODEL.md — במילים שלך, לא של קלוד',
+      hw1_body: 'דף אחד בריפו שמסביר איך עובד HistGradientBoosting ולמה הוא מתאים לדאטה שלך. <strong>כלל המשחק:</strong> אסור לפתוח את MODEL_FAQ. אסור לבקש מקלוד "תכתוב את זה". אם תקועה — לכתוב "לא יודעת" וזה בסדר. מה שיוצא — הקול שלך.',
+      hw2_title: '30 דגימות — ניתוח שגיאות ידני',
+      hw2_body: 'דגום 30 שורות מ-test set: 10 שגיאות הכי גדולות, 10 בינוניות, 10 קטנות. לכל אחת — משפט אחד: למה המודל צדק/טעה? מה ראית שהמודל לא ראה? <strong>30 משפטים — שם נמצא ה-DS שלך, לא ב-MAE.</strong>',
+      hw3_title: 'סעיף 8 (LSTM defense) — במילים שלך',
+      hw3_body: 'קחי את סעיף 8 ב-MENTOR_MEETING_SCRIPT שלך (טיעון ה-LSTM) ונסי לכתוב אותו מחדש <em>במילים שלך</em>, 4-5 משפטים. אסור לפתוח את הסקריפט בזמן הכתיבה.',
+      hw_async_title: 'משמעת אסינכרונית',
+      hw_async_body: 'לפני שאת שואלת אותי שאלה בוואטסאפ — נסי 30 שניות לכתוב לעצמך מה את חושבת. ואז שלחי: "הנה מה שאני חושבת — איפה הקליק?" זה יבנה לך שריר עצמאי. לא חוק קשוח. הצעה.',
+      footer_made: 'נבנה עבור אורית — מפגש 3, מאי 2026',
+      footer_link: 'חזור לכל המדריכים: <a href="index.html">student-guides</a>'
+    },
+    en: {
+      hero_title: 'i24 — Three Pillars',
+      hero_sub: 'Interactive guide to your project — where you are on the map, and what was around the corner.',
+      p1_label: 'Data',
+      p2_label: 'Algorithms',
+      p3_label: 'Software Architecture',
+      nav_data: 'Data',
+      nav_algos: 'Algorithms',
+      nav_arch: 'Architecture',
+      nav_hw: 'Next',
+      s1_title: 'Data',
+      s1_sub: 'fundamentals + time-series specifics',
+      s1_intro: 'Every model starts with understanding the data. Without it, even the best model will fail. Six core concepts decide your project — click each to dive deeper.',
+      d1_name: 'Correlations',
+      d1_sub: 'correlations',
+      d2_name: 'Distributions',
+      d2_sub: 'distributions',
+      d3_name: 'Seasonality',
+      d3_sub: 'seasonality',
+      d4_name: 'Trend',
+      d4_sub: 'trend',
+      d5_name: 'Volatility',
+      d5_sub: 'volatility / heteroscedasticity',
+      d6_name: 'Non-stationarity',
+      d6_sub: 'non-stationarity',
+      s2_title: 'Algorithms',
+      s2_sub: 'evolution map — three families',
+      s2_intro: 'The evolution map of forecasting algorithms. Three families, 22 algorithms. You ran models from all 3 layers (SARIMAX, RF, MLP) — let\'s see where each sits and why it succeeded or failed for your data.',
+      map_title: 'Model Map — Overview',
+      map_hint: 'Models you ran are highlighted in yellow. Green = winner. Red = failed. Click any card below for details.',
+      map_fa: 'Statistical',
+      map_fb: 'ML Tabular',
+      map_fc: 'Deep Learning',
+      fa_title: 'Family A: Statistical',
+      fa_tag: 'single series — requires stationarity — limited exogenous support',
+      fb_title: 'Family B: ML Tabular',
+      fb_tag: 'features-based — no stationarity needed — your sweet spot',
+      fc_title: 'Family C: Deep Learning',
+      fc_tag: 'requires large data — usually loses on small tabular',
+      pill_you_ran: 'You ran',
+      pill_you_ran2: 'You ran',
+      pill_failed: 'failed',
+      pill_not_tried: 'not tried',
+      pill_not_tried2: 'not tried',
+      pill_not_tried3: 'not tried',
+      your_label: 'For you',
+      your_label2: 'For you',
+      your_label3: 'For you',
+      your_label4: 'For you — the winner',
+      your_label5: 'Your argument from section 8 of MENTOR_MEETING_SCRIPT',
+      s3_title: 'Software Architecture',
+      s3_sub: '3 layers + monolith vs distributed',
+      s3_intro: 'Your app works. Now let me introduce you to the <strong>architectural vocabulary</strong> — 3 layers, plus the weakness of what you built.',
+      fe_sub: 'UI layer — what the user sees and clicks',
+      be_sub: 'business logic — predictions, auth, data access',
+      data_sub: 'storage layer — raw data + trained model',
+      mono_title: 'Monolith vs Distributed — Where You Are',
+      mono_intro: 'Your app today is a <strong>monolith</strong> — all 3 layers (Frontend, Backend, Data) run in the same Streamlit process. Normal for a prototype, but with costs.',
+      mono_now_title: 'What you have now (Monolith)',
+      mono_next_title: 'Moving to Distributed (Production)',
+      hw_title: 'Next — What Now',
+      hw_intro: 'Today we covered all three pillars. Your interview strength is not in quantity but in <strong>real ownership</strong> over what you built. Here\'s the proposal — but you choose.',
+      hw1_title: 'MY_MODEL.md — in YOUR words, not Claude\'s',
+      hw1_body: 'One-page in your repo explaining how HistGradientBoosting works and why it fits your data. <strong>Rules:</strong> No opening MODEL_FAQ. No asking Claude to write it. If stuck on something, write "I don\'t know" — that\'s fine. What comes out is your voice.',
+      hw2_title: '30 samples — manual error analysis',
+      hw2_body: 'Sample 30 rows from test set: 10 biggest errors, 10 medium, 10 small. For each, one sentence: why did the model get it right/wrong? What did you see that the model missed? <strong>30 sentences — that\'s where your DS lives, not in MAE.</strong>',
+      hw3_title: 'Section 8 (LSTM defense) — in your words',
+      hw3_body: 'Take section 8 in your MENTOR_MEETING_SCRIPT (the LSTM argument) and rewrite it <em>in your own words</em>, 4-5 sentences. Don\'t open the script while writing.',
+      hw_async_title: 'Async discipline',
+      hw_async_body: 'Before sending me a WhatsApp question, take 30 seconds to write down what you think. Then send: "Here\'s what I think — where\'s the click?" This builds independent muscle. Not a rule. A suggestion.',
+      footer_made: 'Made for Orit — Meeting 3, May 2026',
+      footer_link: 'Back to all guides: <a href="index.html">student-guides</a>'
+    }
+  };
+
+  function setLang(lang) {
+    currentLang = lang;
+    const html = document.documentElement;
+    html.lang = lang;
+    html.dir = lang === 'he' ? 'rtl' : 'ltr';
+
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-he').classList.toggle('active', lang === 'he');
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (T[lang][key]) {
+        el.innerHTML = T[lang][key];
+      }
+    });
+  }
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('.nav-link, .map-algo').forEach(link => {
+    link.addEventListener('click', e => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        document.querySelector(href).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Initial: Hebrew
+  setLang('he');
+</script>
+
+</body>
+</html>
