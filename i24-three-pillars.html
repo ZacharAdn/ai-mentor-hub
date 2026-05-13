@@ -649,7 +649,7 @@
       <div class="card-body">
         <p data-i18n="d6_p1"><strong>הרעיון:</strong> תכונות סטטיסטיות (mean, variance, autocorrelation) משתנות לאורך זמן. רוב מודלי TS קלאסיים דורשים סטציונריות — אחרת המקדמים שלהם פשוט שגויים.</p>
         <p data-i18n="d6_p2"><strong>אצלך בדאטה:</strong> כל הדאטה זז בגלל הפאנל. ה-mean של רייטינג בחודשים הראשונים שונה משמעותית מהאחרונים.</p>
-        <p data-i18n="d6_p3"><strong>מתי זה חשוב:</strong> זאת בדיוק הסיבה ש-SARIMAX שלך (MAE=0.379) נכשל. ה-<code>d=0</code> שב-config שלך אומר "אל תעשה differencing" — וזה היה צריך להיות <code>d=1</code> כדי לטפל בטרנד הפאנל. בנוסף, <code>enforce_stationarity=False</code> הוא דגל אדום.</p>
+        <p data-i18n="d6_p3"><strong>מתי זה חשוב:</strong> זו כנראה הסיבה ש-SARIMAX שלך (MAE=0.379) נכשל. אולי ה-<code>d=0</code> שב-config שלך — "אל תעשה differencing" — היה צריך להיות <code>d=1</code> כדי לטפל בטרנד הפאנל. בנוסף, <code>enforce_stationarity=False</code> הוא דגל אזהרה ששווה לבדוק.</p>
       </div>
     </details>
 
@@ -661,7 +661,7 @@
       <div class="card-body">
         <p data-i18n="d7_p1"><strong>הרעיון:</strong> פיצ׳רים שנגזרים <em>מהסדרה עצמה</em>. הסדרה "מזינה את עצמה". כוללים: lag features (ערכי עבר), rolling mean/std (ממוצעים נעים), differences (הפרשים), expanding windows.</p>
         <p data-i18n="d7_p2"><strong>אצלך בדאטה:</strong> כל ה-<code>lag_*</code> שלך: <code>lag_slot_mean</code> (52%), <code>lag_status_slot_mean</code> (14%), <code>lag_program_mean</code> (6%), <code>lag_program_n</code> (4%). יחד <strong>76% מ-feature importance</strong>.</p>
-        <p data-i18n="d7_p3"><strong>למה זה חשוב:</strong> זה היה הכוח של RF/HistGB שלך. הם זיהו אוטומטית שהעבר של אותה רצועה הוא הסיגנל הכי חזק. <strong>הסיכון:</strong> בלי טיפול זהיר ב-leakage, lag features הם המקור הראשון של זיוף. את הוצאת את הפיצ׳רים שנמדדים אחרי השידור (<code>נתח</code>, <code>צופים 4+</code>) — זה היה נכון.</p>
+        <p data-i18n="d7_p3"><strong>למה זה חשוב:</strong> זה כנראה מה שהפך את RF/HistGB ליעילים אצלך. הם זיהו אוטומטית שערכי העבר של אותה רצועה הם פיצ׳רים דומיננטיים. <strong>הסיכון:</strong> בלי טיפול זהיר ב-leakage, lag features הם המקור הראשון של זיוף. את הוצאת את הפיצ׳רים שנמדדים אחרי השידור (<code>נתח</code>, <code>צופים 4+</code>) — זאת היתה ההחלטה הנכונה.</p>
       </div>
     </details>
 
@@ -673,7 +673,7 @@
       <div class="card-body">
         <p data-i18n="d8_p1"><strong>הרעיון:</strong> פיצ׳רים שמגיעים <em>מחוץ</em> לסדרה. ה-<strong>"X" ב-SARIMAX = eXogenous</strong>. כוללים: חגים, מתחרים, אירועים מדיניים, מזג אוויר, נתוני שיווק — כל מה שמשפיע על ה-target אבל לא נגזר ממנו.</p>
         <p data-i18n="d8_p2"><strong>אצלך בדאטה:</strong> <code>reception_pct</code> (פאנל), <code>is_holiday</code>, <code>is_security</code>, <code>event_tag</code>, <code>day_of_week</code>, <code>is_friday</code>. יחד 24% מ-importance.</p>
-        <p data-i18n="d8_p3"><strong>למה זה חשוב — וזה התובנה הגדולה:</strong> זאת הדרך היחידה שלך לתת למודל מידע שהוא לא יכול לגזור מהסדרה עצמה. <strong>התקרה שלך = מגבלת exogenous.</strong> האירוע של 28/02 דורש signal exogenous שלא היה לך (Twitter live, חדשות בזמן אמת). DL/LSTM/Transformer לא יעזרו — הם לא מייצרים signal חדש, רק מנצלים את מה שיש. <strong>אם תרצי קפיצת-מדרגה — לא מודל חדש, פיצ׳ר אקסוגני חדש.</strong></p>
+        <p data-i18n="d8_p3"><strong>למה זה חשוב — וזה התובנה הגדולה:</strong> זאת הדרך היחידה שלך לתת למודל מידע שהוא לא יכול לגזור מהסדרה עצמה. <strong>השערה לתקרה שלך: מגבלת exogenous.</strong> האירוע של 28/02 כנראה דורש signal exogenous שלא היה לך (Twitter live, חדשות בזמן אמת). DL/LSTM/Transformer כנראה לא יעזרו — הם לא מייצרים signal חדש, רק מנצלים את מה שיש. <strong>אם תרצי קפיצת-מדרגה — סביר יותר שהדרך היא פיצ׳ר אקסוגני חדש, לא מודל חדש.</strong> זאת השערה — דרך לבדוק אותה: לנסות לאסוף signal חיצוני ולראות אם זה אכן משפר.</p>
       </div>
     </details>
   </div>
@@ -794,7 +794,7 @@
         <div class="your-model">
           <span class="your-label" data-i18n="your_label">אצלך</span>
           <p data-i18n="sarimax_you1"><strong>קונפיג:</strong> <code>SARIMAX(1,0,1)(1,1,1,7) + holiday + security + reception_pct</code>. MAE יומי 0.379. <strong>גרוע מ-naive (0.199 יומי).</strong></p>
-          <p data-i18n="sarimax_you2"><strong>למה נכשל:</strong> שני דברים. (1) <code>d=0</code> + <code>enforce_stationarity=False</code> = התעלמות מהטרנד של הפאנל. (2) SARIMAX מסתמך על סדרה אחת + כמה exog — לא יודע לנצל את 19 הפיצ׳רים המהונדסים שלך. הוא במשפחה הלא-נכונה לבעיה שלך.</p>
+          <p data-i18n="sarimax_you2"><strong>השערות לכישלון:</strong> שני חשודים סבירים. (1) <code>d=0</code> + <code>enforce_stationarity=False</code> כנראה הובילו להתעלמות מהטרנד של הפאנל. (2) SARIMAX מבנית מסתמך על סדרה אחת + כמה exog — סביר שהוא לא יודע לנצל את 19 הפיצ׳רים המהונדסים שלך. <strong>איך לאמת:</strong> להריץ עם <code>d=1</code> ולראות אם זה משנה. אם לא — ההשערה השנייה חזקה יותר.</p>
         </div>
       </div>
     </details>
@@ -825,7 +825,7 @@
         <div class="your-model">
           <span class="your-label" data-i18n="your_label2">אצלך</span>
           <p data-i18n="additive_you1"><strong>חשוב מאוד להבהיר:</strong> מה שב-<code>MODEL_REPORT_TS.md</code> שלך נקרא "Additive (Prophet-style)" <em>אינו</em> Prophet האמיתי של פייסבוק. זה רגרסיה לינארית רגילה עם פיצ׳רי sin/cos. שני מודלים שונים לחלוטין — אחד נשמע כמו השני אבל מתחת למכסה המנוע זה רגרסיה.</p>
-          <p data-i18n="additive_you2"><strong>למה נכשל (MAE 0.397):</strong> אותה סיבה כמו SARIMAX — OLS לינארי לא יודע לנצל את 19 הפיצ׳רים שלך, וזה לא מטפל בנון-לינאריות שבדאטה.</p>
+          <p data-i18n="additive_you2"><strong>השערה לכישלון (MAE 0.397):</strong> כנראה אותה סיבה כמו SARIMAX — OLS לינארי מבנית לא מנצל את 19 הפיצ׳רים שלך, ולא מטפל בנון-לינאריות שבדאטה.</p>
           <p data-i18n="additive_you3"><strong>ל-interview:</strong> אם שואלים אותך אם השתמשת ב-Prophet — <strong>תגידי "לא"</strong>. תגידי שעשית additive regression. זה יראה שאת יודעת להבדיל בין מודלים בעלי שם דומה.</p>
         </div>
       </div>
@@ -849,7 +849,7 @@
       </summary>
       <div class="card-body">
         <p data-i18n="ridge_p1"><strong>הרעיון:</strong> רגרסיה לינארית עם penalty על מקדמים גדולים (<code>||β||²</code>). מקטין מקדמים אבל לא מאפס אותם.</p>
-        <p data-i18n="ridge_p2"><strong>אצלך:</strong> נכשל בצפוי — הקשרים בדאטה שלך לא לינאריים (שעה×יום×סטטוס יוצר אינטראקציות). Ridge sanity-check, לא candidate.</p>
+        <p data-i18n="ridge_p2"><strong>אצלך:</strong> Ridge הניב MAE גבוה יחסית (0.372). השערה: הקשרים בדאטה שלך כנראה לא לינאריים (שעה×יום×סטטוס יוצר אינטראקציות). Ridge sanity-check, לא candidate.</p>
         <p data-i18n="ridge_p3"><strong>הכלל לראיון:</strong> אם Ridge ינצח עצים — יש לך data leakage. בדקי שוב.</p>
       </div>
     </details>
@@ -864,8 +864,8 @@
       </summary>
       <div class="card-body">
         <p data-i18n="lasso_p1"><strong>הרעיון:</strong> רגרסיה לינארית עם penalty <code>||β||₁</code>. בניגוד ל-Ridge — <strong>מאפס</strong> מקדמים של פיצ׳רים מיותרים. אוטומטית עושה feature selection.</p>
-        <p data-i18n="lasso_p2"><strong>אצלך:</strong> ניצח את Ridge ב-0.084 (24% טוב יותר). למה: אחרי one-hot על 6 קטגוריות יש ~50 features, רובם רעש. Lasso למד שרק ~10 חשובים.</p>
-        <p data-i18n="lasso_p3"><strong>השיעור:</strong> בדאטה עם הרבה קטגוריאליים אחרי one-hot, L1 כמעט תמיד גובר על L2.</p>
+        <p data-i18n="lasso_p2"><strong>אצלך:</strong> ניצח את Ridge ב-0.084 (24% טוב יותר). השערה אפשרית: אחרי one-hot על 6 קטגוריות יש ~50 features, רובם רעש. Lasso כנראה למד שרק ~10 חשובים.</p>
+        <p data-i18n="lasso_p3"><strong>תבנית נצפית:</strong> בדאטה עם הרבה קטגוריאליים אחרי one-hot, L1 לרוב גובר על L2.</p>
       </div>
     </details>
 
@@ -911,7 +911,7 @@
         <div class="your-model">
           <span class="your-label" data-i18n="your_label3">אצלך</span>
           <p data-i18n="rf_you1"><strong>RF tuned (V2):</strong> MAE=0.280, R²=0.566. 400 עצים, <code>max_features="sqrt"</code>, <code>min_samples_leaf=5</code>. היה <strong>המוביל של V2</strong>.</p>
-          <p data-i18n="rf_you2"><strong>למה עבד:</strong> 76% מ-importance הוא lag features. RF זיהה אותם אוטומטית מבלי שתגידי לו. זה הכוח של trees — אינטראקציות לא-לינאריות בלי הנדסה ידנית.</p>
+          <p data-i18n="rf_you2"><strong>מה כנראה תרם להצלחה:</strong> 76% מ-importance הוא lag features. RF זיהה אותם אוטומטית מבלי שתגידי לו. זה הכוח האופייני של trees — אינטראקציות לא-לינאריות בלי הנדסה ידנית. <em>הערה: זאת השערה מבוססת על ה-importance, לא הוכחה — feature importance מצביעה על שימוש, לא בהכרח על סיבתיות.</em></p>
         </div>
       </div>
     </details>
@@ -941,8 +941,8 @@
       </summary>
       <div class="card-body">
         <p data-i18n="xgb_p1"><strong>הרעיון:</strong> "אגדת קאגל". Boosting עם רגולריזציה L1+L2 על העלים, second-order optimization, וטריקים נוספים. עובד עם הערכים המקוריים (לא binning).</p>
-        <p data-i18n="xgb_p2"><strong>אצלך:</strong> MAE=0.280 — <strong>שווה ל-RF, נחות מ-LightGBM/HistGB</strong>. למה? ערכים רציפים ב-<code>lag_slot_mean</code> (יכול להיות 0.234, 0.235, 0.236...) יוצרים הרבה נקודות-פיצול אפשריות — וזה מזמין overfitting על noise.</p>
-        <p data-i18n="xgb_p3"><strong>השיעור לראיון:</strong> אגדת קאגל לא תמיד תזכה. תלוי בגודל ובסוג הדאטה. אצלך — דאטה קטן + features רציפים → histogram-based ניצח.</p>
+        <p data-i18n="xgb_p2"><strong>אצלך:</strong> MAE=0.280 — <strong>שווה ל-RF, נחות מ-LightGBM/HistGB</strong>. השערה אפשרית: ערכים רציפים ב-<code>lag_slot_mean</code> (יכול להיות 0.234, 0.235, 0.236...) יוצרים הרבה נקודות-פיצול אפשריות — מה שעשוי להזמין overfitting על noise.</p>
+        <p data-i18n="xgb_p3"><strong>השיעור לראיון:</strong> אגדת קאגל לא תמיד מנצחת. תלוי בגודל ובסוג הדאטה. אצלך — דאטה קטן + features רציפים → histogram-based ניצח בפועל.</p>
       </div>
     </details>
 
@@ -976,7 +976,7 @@
         <div class="your-model">
           <span class="your-label" data-i18n="your_label4">אצלך — המנצח</span>
           <p data-i18n="hgb_you1"><strong>MAE=0.263, R²=0.603.</strong> שיפור 37.7% מעל naive, 6% מעל RF tuned. אומן ב-1.1 שנ' (מהיר פי 12 מ-vanilla GB).</p>
-          <p data-i18n="hgb_you2"><strong>למה ניצח אצלך ספציפית:</strong> ה-binning הוא רגולריזציה אוטומטית. בדאטה קטן (~8K שורות) זה זהב — מונע overfitting אוטומטית. ניצח את XGBoost שעובד עם ערכים מקוריים ולכן רגיש יותר לרעש.</p>
+          <p data-i18n="hgb_you2"><strong>מה כנראה תרם להצלחה אצלך:</strong> ה-binning משמש כרגולריזציה. בדאטה קטן (~8K שורות) זה לרוב יתרון — מקטין סיכון ל-overfit. כנראה ניצח את XGBoost כי האחרון עובד עם ערכים מקוריים ולכן רגיש יותר לרעש. <em>זאת הסבר אופייני, לא הוכחה ל-runtime ספציפי שלך.</em></p>
           <p data-i18n="hgb_you3"><strong>לראיון — אם שואלים "למה HistGB ולא LightGBM?":</strong> "אין סיבה טכנית מהותית. ההפרש 0.002 הוא רעש סטטיסטי. שניהם histogram-based GBDT, אותה משפחה." זה היושר האינטלקטואלי שיעמיד אותך מעל מועמדים שמנסים להמציא סיבות.</p>
         </div>
       </div>
@@ -992,8 +992,8 @@
       </summary>
       <div class="card-body">
         <p data-i18n="cat_p1"><strong>הרעיון:</strong> Boosting עם target encoding אוטומטי לקטגוריאליים. <strong>לא דורש</strong> one-hot ידני.</p>
-        <p data-i18n="cat_p2"><strong>אצלך:</strong> MAE=0.271. טוב, אבל לא ניצח. למה? כי <strong>כבר עשית one-hot ידני</strong> לפניו. היתרון של CatBoost (אוטומציה) מתבטל. אילו לא היית עושה preprocessing — CatBoost היה הכוכב.</p>
-        <p data-i18n="cat_p3"><strong>השיעור:</strong> coupling בין preprocessing למודל. כשבוחרים מודל, צריך לחשוב מה ה-pipeline שלפניו.</p>
+        <p data-i18n="cat_p2"><strong>אצלך:</strong> MAE=0.271. טוב, אבל לא ניצח. השערה: ייתכן ש<strong>כבר עשית one-hot ידני</strong> לפניו, והיתרון של CatBoost (אוטומציה לקטגוריאליים) התבטל. אילו לא היית עושה preprocessing — סביר ש-CatBoost היה ביצועים שונים.</p>
+        <p data-i18n="cat_p3"><strong>השיעור:</strong> coupling בין preprocessing למודל. כשבוחרים מודל, כדאי לחשוב מה ה-pipeline שלפניו.</p>
       </div>
     </details>
 
@@ -1008,8 +1008,8 @@
       <div class="card-body">
         <p data-i18n="stack_p1"><strong>הרעיון:</strong> Meta-model (Ridge) שלומד לשקלל את חיזויי כמה base models (RF+XGB+LGB). בקאגל זה לפעמים נותן את הקצה המנצח.</p>
         <p data-i18n="stack_p2"><strong>אצלך:</strong> MAE=0.272 — <strong>כמו LGB יחיד, לא יותר טוב.</strong></p>
-        <p data-i18n="stack_p3"><strong>למה לא עזר:</strong> stacking עובד רק כש-base models טועים <em>בדברים שונים</em> (decorrelated errors). אצלך כל המודלים נכשלים באותם אירועים (שאגת הארי, שבת, פריים-טיים). אין מה לשלב.</p>
-        <p data-i18n="stack_p4"><strong>השיעור לראיון:</strong> זאת תובנה חזקה. stacking לא קסם — דורש diversity ב-errors. זה אישור נוסף שהתקרה היא drift, לא בחירת מודל.</p>
+        <p data-i18n="stack_p3"><strong>השערה לכישלון:</strong> stacking עובד בעיקר כש-base models טועים <em>בדברים שונים</em> (decorrelated errors). הנתונים שלך מראים שכל המודלים נכשלים באותם אירועים (שאגת הארי, שבת, פריים-טיים) — נצפה ב-<code>MODEL_REPORT_ALL.md</code>. כשאין diversity ב-errors, stacking לרוב לא מוסיף ערך.</p>
+        <p data-i18n="stack_p4"><strong>השיעור לראיון:</strong> זאת תובנה חזקה. stacking לא קסם — דורש diversity ב-errors. עבורך זה ראיה תומכת להשערה שהתקרה היא drift, לא בחירת מודל.</p>
       </div>
     </details>
   </div>
@@ -1032,8 +1032,8 @@
       </summary>
       <div class="card-body">
         <p data-i18n="mlp_p1"><strong>הרעיון:</strong> רשת נוירונים בסיסית. שכבות fully-connected. אצלך — שכבות (64×32) עם early stopping.</p>
-        <p data-i18n="mlp_p2"><strong>אצלך:</strong> MAE=0.328 — <strong>מהגרועים בכלל המודלים שלך</strong>. למה? סיבה קלאסית: <strong>דאטה קטן + features מעורבים = MLP overfit מיד</strong>.</p>
-        <p data-i18n="mlp_p3"><strong>השיעור:</strong> רשתות נוירונים זוהרות על דאטה לא-טבלאי (תמונות, טקסט) או טבלאי-ענק (>1M שורות). על טבלה של 8K שורות, GBDT תמיד מנצח MLP. זה לא debate — זה pattern.</p>
+        <p data-i18n="mlp_p2"><strong>אצלך:</strong> MAE=0.328 — <strong>מהגרועים בכלל המודלים שלך</strong>. השערה אפשרית — התבנית הקלאסית: <strong>דאטה קטן + features מעורבים = סיכון גבוה ל-MLP overfit</strong>.</p>
+        <p data-i18n="mlp_p3"><strong>תבנית נצפית:</strong> רשתות נוירונים זוהרות על דאטה לא-טבלאי (תמונות, טקסט) או טבלאי-ענק (>1M שורות). על טבלאות קטנות (~8K שורות), GBDT בדרך כלל מנצח MLP — זה pattern עקבי בספרות ובקאגל, אבל לא חוק מוחלט.</p>
       </div>
     </details>
 
@@ -1047,7 +1047,7 @@
       </summary>
       <div class="card-body">
         <p data-i18n="rnn_p1"><strong>הרעיון:</strong> רשת שלומדת רצף. כל פלט תלוי בקודמים. הבעיה: שוכחת רצפים ארוכים (vanishing gradients).</p>
-        <p data-i18n="rnn_p2"><strong>אצלך:</strong> לא הרצת. <strong>גם לא היה עוזר</strong> — 10K שורות זה מעט מדי ל-DL, ו-RNN בלי זיכרון ארוך מוגבל לרצפים קצרים.</p>
+        <p data-i18n="rnn_p2"><strong>אצלך:</strong> לא הרצת. השערה: <strong>כנראה גם לא היה עוזר</strong> — 10K שורות הוא דאטה קטן יחסית ל-DL, ו-RNN בלי זיכרון ארוך מוגבל לרצפים קצרים. <em>זאת השערה מבוססת על דפוס שמופיע בספרות, לא בדיקה אמפירית על הדאטה שלך.</em></p>
       </div>
     </details>
 
@@ -1061,11 +1061,11 @@
       </summary>
       <div class="card-body">
         <p data-i18n="lstm_p1"><strong>הרעיון:</strong> RNN עם זיכרון לטווח קצר וארוך, gating mechanisms (forget gate, input gate, output gate). פותר את בעיית ה-vanishing gradients.</p>
-        <p data-i18n="lstm_p2"><strong>אצלך:</strong> לא הרצת. <strong>הציפייה הריאלית: 0-5% שיפור</strong> — כי 76% מהמידע כבר ב-lag features שה-RF/HistGB מנצלים. LSTM היה תופס את אותן תלויות לא-לינאריות.</p>
+        <p data-i18n="lstm_p2"><strong>אצלך:</strong> לא הרצת. <strong>הציפייה הריאלית: 0-5% שיפור</strong> — כי 76% מהמידע כבר ב-lag features שה-RF/HistGB מנצלים. סביר ש-LSTM היה תופס את אותן תלויות לא-לינאריות.</p>
         <div class="your-model">
           <span class="your-label" data-i18n="your_label5">הטענה שלך מסעיף 8 ב-MENTOR_MEETING_SCRIPT</span>
           <p data-i18n="lstm_you1"><strong>ציטוט:</strong> "LSTM מתפיסה בעיקר תלויות לא-לינאריות בין lag features שכבר יש במודל. ציפייה ריאלית: 0-5% שיפור MAE."</p>
-          <p data-i18n="lstm_you2"><strong>זאת טענה נכונה לחלוטין.</strong> RF/HistGB כבר תופסים את הקשרים האלה דרך 19 הפיצ׳רים והעצים. LSTM היה מנסה לעשות את אותו דבר דרך משוואות מסובכות יותר על דאטה קטן יותר. סיכוי לעבוד טוב יותר — נמוך.</p>
+          <p data-i18n="lstm_you2"><strong>זאת טענה מבוססת היטב.</strong> RF/HistGB כבר תופסים את הקשרים האלה דרך 19 הפיצ׳רים והעצים. סביר ש-LSTM היה מנסה לעשות את אותו דבר דרך משוואות מסובכות יותר על דאטה קטן יותר. הסבירות לשיפור משמעותי — נמוכה. <em>כמובן, הדרך היחידה לוודא היא להריץ — אבל ה-prior חזק.</em></p>
         </div>
       </div>
     </details>
@@ -1080,7 +1080,7 @@
       </summary>
       <div class="card-body">
         <p data-i18n="trans_p1"><strong>הרעיון:</strong> Self-attention — המודל "רואה" את כל הרצף בבת אחת, ומחליט לכל token כמה לתת משקל לכל token אחר. הסטנדרט המודרני (BERT, GPT, etc.).</p>
-        <p data-i18n="trans_p2"><strong>אצלך:</strong> לא הרצת. ב-10K שורות זה <strong>overfit מובטח</strong> ללא הסבר. Transformer דורש עשרות אלפי דוגמאות לפחות.</p>
+        <p data-i18n="trans_p2"><strong>אצלך:</strong> לא הרצת. ב-10K שורות הסיכון ל-overfit גבוה מאוד. Transformer בדרך כלל דורש עשרות אלפי דוגמאות לפחות. <em>השערה מבוססת על הספרות, לא מבדיקה אמפירית.</em></p>
         <p data-i18n="trans_p3"><strong>מתי כן רלוונטי?</strong> אם בעתיד תוסיפי טקסט (טוויטים, חדשות) או תמונות (תמונות-מסך מהשידור), Transformer מתאים לבעיה רב-מודאלית כזאת.</p>
       </div>
     </details>
