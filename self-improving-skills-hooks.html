@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מערכת שמשפרת את עצמה — Skills & Hooks</title>
+<style>
+  :root{
+    --bg-primary:#0f172a;--bg-card:#1e293b;--border:#334155;--border-hover:#475569;
+    --text-primary:#e2e8f0;--text-secondary:#cbd5e1;--text-muted:#94a3b8;
+    --accent-purple:#818cf8;--accent-violet:#c084fc;--accent-pink:#f472b6;
+    --accent-indigo:#6366f1;--accent-bright:#8b5cf6;--success:#22c55e;--error:#ef4444;--info:#3b82f6;--amber:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg-primary);color:var(--text-primary);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    line-height:1.7;overflow-x:hidden}
+  section{max-width:980px;margin:0 auto;padding:3.5rem 1.5rem}
+  h1,h2,h3{line-height:1.3}
+  .lang-toggle{position:fixed;top:1.2rem;right:1.5rem;z-index:1000;display:flex;
+    background:rgba(30,41,59,.9);backdrop-filter:blur(12px);border-radius:12px;
+    border:1px solid var(--border);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+  html[dir=rtl] .lang-toggle{right:auto;left:1.5rem}
+  .lang-btn{background:transparent;color:var(--text-muted);border:none;padding:.55rem 1rem;
+    font-size:.9rem;font-weight:600;cursor:pointer;transition:.2s}
+  .lang-btn.active{background:linear-gradient(135deg,var(--accent-indigo),var(--accent-bright));color:#fff}
+  .hero{text-align:center;padding:5rem 1.5rem 3rem;
+    background:radial-gradient(ellipse at top,rgba(129,140,248,.15),transparent 60%)}
+  .hero .kicker{color:var(--accent-pink);font-weight:700;letter-spacing:.08em;
+    text-transform:uppercase;font-size:.8rem;margin-bottom:1rem}
+  .hero h1{font-size:2.8rem;background:linear-gradient(135deg,var(--accent-purple),var(--accent-violet),var(--accent-pink));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem}
+  .hero p{color:var(--text-secondary);font-size:1.15rem;max-width:680px;margin:0 auto}
+  .card{background:var(--bg-card);border-radius:16px;padding:2rem;margin:1.5rem 0;
+    border:1px solid var(--border);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+  h2.sec{font-size:1.9rem;color:var(--accent-violet);margin-bottom:.5rem}
+  .sec-sub{color:var(--text-muted);margin-bottom:1.5rem;font-size:1.02rem}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem}
+  .mini{background:var(--bg-primary);border:1px solid var(--border);border-radius:12px;padding:1.3rem}
+  .mini h3{color:var(--accent-pink);font-size:1.1rem;margin-bottom:.5rem}
+  .mini p{color:var(--text-secondary);font-size:.97rem}
+  .tag{display:inline-block;font-size:.72rem;font-weight:700;padding:.2rem .6rem;border-radius:99px;margin-bottom:.6rem}
+  .tag.model{background:rgba(129,140,248,.18);color:var(--accent-purple)}
+  .tag.harness{background:rgba(245,158,11,.18);color:var(--amber)}
+  .vs-row{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:stretch}
+  .vs-mid{display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-weight:800;font-size:1.1rem}
+  .anatomy{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:.86rem;
+    background:#0b1120;border:1px solid var(--border);border-radius:12px;padding:1.2rem;overflow-x:auto}
+  .anatomy .fm{color:var(--accent-pink)} .anatomy .cm{color:var(--text-muted)}
+  .anatomy .kw{color:var(--accent-purple)} .anatomy .ok{color:var(--success)}
+  /* demo */
+  .rate-btns{display:flex;gap:.6rem;flex-wrap:wrap;justify-content:center;margin:1.2rem 0}
+  .rate-btn{width:62px;height:62px;border-radius:14px;border:2px solid var(--border);
+    background:var(--bg-primary);color:var(--text-secondary);font-size:1.5rem;font-weight:800;
+    cursor:pointer;transition:.18s}
+  .rate-btn:hover{border-color:var(--border-hover);transform:translateY(-2px)}
+  .rate-btn.sel{transform:translateY(-3px) scale(1.06);box-shadow:0 0 22px rgba(99,102,241,.5)}
+  .rate-btn.sel.low{border-color:var(--error);color:var(--error)}
+  .rate-btn.sel.mid{border-color:var(--amber);color:var(--amber)}
+  .rate-btn.sel.high{border-color:var(--success);color:var(--success)}
+  .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.4rem}
+  .branch{border:1px solid var(--border);border-radius:14px;padding:1.2rem;background:var(--bg-primary);
+    opacity:.32;transition:.25s;filter:grayscale(.5)}
+  .branch.on{opacity:1;filter:none;transform:translateY(-4px)}
+  .branch.on.low{border-color:var(--error);box-shadow:0 0 20px rgba(239,68,68,.25)}
+  .branch.on.mid{border-color:var(--amber);box-shadow:0 0 20px rgba(245,158,11,.25)}
+  .branch.on.high{border-color:var(--success);box-shadow:0 0 20px rgba(34,197,94,.25)}
+  .branch .bnum{font-size:.74rem;font-weight:700;color:var(--text-muted);letter-spacing:.05em}
+  .branch h4{font-size:1.05rem;margin:.35rem 0 .5rem;color:var(--text-primary)}
+  .branch p{font-size:.9rem;color:var(--text-secondary)}
+  .stepinfo{margin-top:1.3rem;background:#0b1120;border:1px dashed var(--border);
+    border-radius:12px;padding:1rem 1.2rem;color:var(--text-secondary);font-size:1rem;min-height:58px}
+  .stepinfo b{color:var(--accent-pink)}
+  .judge-map{margin-top:1.2rem;background:linear-gradient(135deg,rgba(129,140,248,.10),rgba(244,114,182,.08));
+    border:1px solid var(--border);border-radius:12px;padding:1.1rem 1.3rem}
+  .judge-map .jl{color:var(--accent-purple);font-weight:700}
+  .takeaways li{margin:.7rem 0;color:var(--text-secondary)}
+  .takeaways li b{color:var(--text-primary)}
+  .callout{border-right:4px solid var(--accent-pink);background:rgba(244,114,182,.08);
+    padding:1.1rem 1.3rem;border-radius:8px;margin:1.2rem 0;color:var(--text-secondary)}
+  html[dir=ltr] .callout{border-right:none;border-left:4px solid var(--accent-pink)}
+  .footer{text-align:center;color:var(--text-muted);font-size:.88rem;padding:2.5rem 1rem 3rem;border-top:1px solid var(--border)}
+  .pill{display:inline-block;background:var(--bg-card);border:1px solid var(--border);
+    border-radius:99px;padding:.25rem .8rem;font-size:.8rem;color:var(--text-muted);margin:.2rem}
+  @media(max-width:768px){
+    .hero h1{font-size:2rem}.grid2,.grid3,.flow,.vs-row{grid-template-columns:1fr}
+    .vs-mid{transform:rotate(90deg)}section{padding:2.5rem 1rem}
+    .lang-toggle{top:.8rem;right:.8rem}html[dir=rtl] .lang-toggle{left:.8rem;right:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עב</button>
+</div>
+
+<div class="hero">
+  <div class="kicker" data-i18n="kicker">Bonim Bina · Itay · Meeting 6</div>
+  <h1 data-i18n="hero_title">A System That Improves Itself</h1>
+  <p data-i18n="hero_sub">Skills &amp; Hooks in Claude Code — and why it's the exact same Judge/eval loop you built, just one layer up.</p>
+</div>
+
+<section>
+  <div class="card">
+    <h2 class="sec" data-i18n="s1_title">The one-sentence idea</h2>
+    <p class="sec-sub" data-i18n="s1_sub">Start from something you already built.</p>
+    <p data-i18n="s1_body">You built a <b>Judge</b>: a rubric scores each AI summary 1–5, the best one wins, and a low score triggers a fallback. Claude Code's skill system does the <b>exact same thing</b> — but the thing being scored is not a football summary, it's a <i>skill run</i>. Score it 1–5, and the system routes itself to fix, self-improve, or bank the win. Same eval loop. One layer up.</p>
+    <div class="callout" data-i18n="s1_callout">📌 Hold this anchor the whole way: <b>rubric → score → improve</b> is your idea. Everything below is that idea applied to the tools instead of the summaries.</div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec" data-i18n="s2_title">Skill vs Hook — who decides?</h2>
+  <p class="sec-sub" data-i18n="s2_sub">The whole distinction is one question: does the model choose, or does an event force it?</p>
+  <div class="vs-row">
+    <div class="mini">
+      <span class="tag model" data-i18n="s2_t_model">THE MODEL DECIDES</span>
+      <h3 data-i18n="s2_skill_h">Skill</h3>
+      <p data-i18n="s2_skill_p">A capability the model can choose to invoke when it's relevant — like a function it decides to call. Your <code>/mentoring-session-prep</code> is a skill. The model read the request, judged it relevant, and ran it. <b>Optional, model-driven.</b></p>
+    </div>
+    <div class="vs-mid">VS</div>
+    <div class="mini">
+      <span class="tag harness" data-i18n="s2_t_harness">THE EVENT DECIDES</span>
+      <h3 data-i18n="s2_hook_h">Hook</h3>
+      <p data-i18n="s2_hook_p">Deterministic code that fires <i>automatically</i> on a lifecycle event — the model has no say. The "rate this 1–5" prompt after a skill is a <b>Stop hook</b>: it runs because the turn ended, not because the model felt like asking. <b>Forced, event-driven.</b></p>
+    </div>
+  </div>
+  <div class="callout" data-i18n="s2_callout">In your world: the <b>Writer agent</b> deciding to call the LLM = skill-like (logic chooses). A DB <b>trigger</b> that fires on every <code>INSERT</code> into <code>ai_summaries</code> = hook-like (the event fires it, not your code's choice). You already use both patterns.</div>
+</section>
+
+<section>
+  <div class="card">
+    <h2 class="sec" data-i18n="s3_title">What's the "harness"?</h2>
+    <p class="sec-sub" data-i18n="s3_sub">A word that gets dropped without definition. Here it is in plain language.</p>
+    <p data-i18n="s3_body">The <b>harness</b> is the program that runs the agent — the loop wrapping the model. It is <i>not</i> the AI. It's the deterministic code that: feeds the model your message, runs the tools the model asks for, enforces permissions, manages the context window, and <b>fires the hooks</b> at lifecycle events. The model is the brain; the harness is the body and nervous system around it.</p>
+    <div class="judge-map" data-i18n="s3_map"><span class="jl">Your analogy:</span> in <code>nightly-summary</code>, the LLM writes the roast — but the surrounding TypeScript (build the payload, loop the 5 variants, call the Judge, save to DB, fallback on failure) is the harness. You already wrote a harness. Claude Code's is just bigger.</div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec" data-i18n="s4_title">Anatomy of a skill</h2>
+  <p class="sec-sub" data-i18n="s4_sub">A skill is a folder. Two parts the loop cares about.</p>
+  <div class="anatomy" id="anatomyBox">
+<span class="cm"># my-skill/SKILL.md</span>
+<span class="fm">---</span>
+<span class="fm">name:</span> my-skill
+<span class="fm">description:</span> what it does + when to use it + trigger phrases
+<span class="fm">allowed-tools:</span> Read, Write, Bash
+<span class="fm">---</span>
+
+<span class="kw"># Body</span> <span class="cm">— the instructions the model follows when the skill runs</span>
+
+<span class="cm"># my-skill/references/</span>
+  good-001.md   <span class="cm">← an exemplar: "this is what a 5/5 run looks like"</span>
+  good-002.md   <span class="cm">← the loop READS these to self-improve at rating 4</span>
+  good-003.md   <span class="ok">← the loop WRITES a new one here at rating 5</span>
+  </div>
+  <div class="callout" data-i18n="s4_callout">The <code>good-*.md</code> files are to a skill what your <code>prompt_versions</code> rows are to a prompt: versioned snapshots of "what good looks like", that the system reads from and writes to over time.</div>
+</section>
+
+<section>
+  <h2 class="sec" data-i18n="demo_title">⚡ The self-improving loop — try it</h2>
+  <p class="sec-sub" data-i18n="demo_sub">A skill just finished. The Stop hook asks: "rate it 1–5". Pick a score and watch where the system routes itself.</p>
+  <div class="card">
+    <div class="rate-btns" id="rateBtns">
+      <button class="rate-btn" data-r="1" onclick="rate(1)">1</button>
+      <button class="rate-btn" data-r="2" onclick="rate(2)">2</button>
+      <button class="rate-btn" data-r="3" onclick="rate(3)">3</button>
+      <button class="rate-btn" data-r="4" onclick="rate(4)">4</button>
+      <button class="rate-btn" data-r="5" onclick="rate(5)">5</button>
+    </div>
+    <div class="flow">
+      <div class="branch low" id="br-low">
+        <div class="bnum" data-i18n="br_low_n">RATING 1–3</div>
+        <h4 data-i18n="br_low_h">Ask me</h4>
+        <p data-i18n="br_low_p">The skill clearly missed. The loop asks the user <i>what</i> was wrong, then proposes a concrete edit to <code>SKILL.md</code>. Human-in-the-loop because the gap is unknown.</p>
+      </div>
+      <div class="branch mid" id="br-mid">
+        <div class="bnum" data-i18n="br_mid_n">RATING 4</div>
+        <h4 data-i18n="br_mid_h">Self-diagnose</h4>
+        <p data-i18n="br_mid_p">Good, not perfect. The loop reads its own <code>good-*.md</code> exemplars, diagnoses the gap <i>by itself</i> (no questions), and proposes a fix. It has enough signal to learn alone.</p>
+      </div>
+      <div class="branch high" id="br-high">
+        <div class="bnum" data-i18n="br_high_n">RATING 5</div>
+        <h4 data-i18n="br_high_h">Bank the win</h4>
+        <p data-i18n="br_high_p">This run was exemplary. The loop saves it as a new <code>good-*.md</code> — tomorrow's "what good looks like". The bar rises automatically.</p>
+      </div>
+    </div>
+    <div class="stepinfo" id="stepInfo" data-i18n="demo_hint">👆 Pick a rating above to route the loop.</div>
+    <div class="judge-map" id="judgeMap" data-i18n="demo_map_idle"><span class="jl">↔ Your Judge:</span> the rating is the rubric score. The 3 branches are your <b>threshold gating</b> — the idea you proposed yourself in Meeting 5: below a threshold → fallback; above → keep. Same control flow, applied to skills.</div>
+  </div>
+</section>
+
+<section>
+  <div class="card">
+    <h2 class="sec" data-i18n="s6_title">The meta-moment</h2>
+    <p class="sec-sub" data-i18n="s6_sub">Why this is continuity, not a new concept.</p>
+    <div class="grid2">
+      <div class="mini">
+        <h3 data-i18n="s6_you_h">What you built (content layer)</h3>
+        <p data-i18n="s6_you_p"><b>Judge LLM</b> + 4-criteria rubric → score 1–5 → pick winner / fallback. Versions tracked in <code>prompt_versions</code> per <code>agent_slot</code>. You named it: "a unit test for a prompt".</p>
+      </div>
+      <div class="mini">
+        <h3 data-i18n="s6_cc_h">Skills &amp; Hooks (tooling layer)</h3>
+        <p data-i18n="s6_cc_p"><b>Stop hook</b> + rating → score 1–5 → fix / self-improve / save exemplar. Versions tracked in <code>good-*.md</code> per skill. Same shape: <i>a unit test for a tool</i>.</p>
+      </div>
+    </div>
+    <div class="callout" data-i18n="s6_callout">🎯 The point of Meeting 6: the instinct "don't trust one shot — score it, then improve" is <b>yours</b>. You applied it to summaries. The same loop, one layer up, improves the tools that build the summaries. Production maturity isn't a new trick — it's your own eval loop, recursive.</div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec" data-i18n="kt_title">Key takeaways</h2>
+  <div class="card">
+    <ul class="takeaways">
+      <li data-i18n="kt1"><b>Skill = model decides</b> to invoke a capability. <b>Hook = an event forces</b> deterministic code to run. The split is "who decides".</li>
+      <li data-i18n="kt2"><b>Harness</b> = the loop around the model (tools, permissions, context, hooks). Not the AI — the body around it. You already wrote one in <code>nightly-summary</code>.</li>
+      <li data-i18n="kt3">The <b>skill-rate Stop hook</b> turns a score into a route: 1–3 ask · 4 self-diagnose from exemplars · 5 save a new exemplar.</li>
+      <li data-i18n="kt4"><code>good-*.md</code> exemplars ≈ your <code>prompt_versions</code>: versioned "what good looks like" the system reads and writes.</li>
+      <li data-i18n="kt5">It's <b>your Judge/rubric/threshold idea</b> applied to tools instead of summaries — continuity, not a new concept.</li>
+    </ul>
+  </div>
+</section>
+
+<div class="footer">
+  <div>
+    <span class="pill">Skills</span><span class="pill">Hooks</span><span class="pill">Harness</span>
+    <span class="pill">skill-rate loop</span><span class="pill">Judge / eval</span>
+  </div>
+  <p style="margin-top:1rem" data-i18n="footer">Bonim Bina · supplementary material for Itay, Meeting 6 (World Cup app, Track F → Production)</p>
+</div>
+
+<script>
+const T = {
+  en:{
+    kicker:"Bonim Bina · Itay · Meeting 6",
+    hero_title:"A System That Improves Itself",
+    hero_sub:"Skills &amp; Hooks in Claude Code — and why it's the exact same Judge/eval loop you built, just one layer up.",
+    s1_title:"The one-sentence idea",
+    s1_sub:"Start from something you already built.",
+    s1_body:"You built a <b>Judge</b>: a rubric scores each AI summary 1–5, the best one wins, and a low score triggers a fallback. Claude Code's skill system does the <b>exact same thing</b> — but the thing being scored is not a football summary, it's a <i>skill run</i>. Score it 1–5, and the system routes itself to fix, self-improve, or bank the win. Same eval loop. One layer up.",
+    s1_callout:"📌 Hold this anchor the whole way: <b>rubric → score → improve</b> is your idea. Everything below is that idea applied to the tools instead of the summaries.",
+    s2_title:"Skill vs Hook — who decides?",
+    s2_sub:"The whole distinction is one question: does the model choose, or does an event force it?",
+    s2_t_model:"THE MODEL DECIDES",
+    s2_skill_h:"Skill",
+    s2_skill_p:"A capability the model can choose to invoke when it's relevant — like a function it decides to call. Your <code>/mentoring-session-prep</code> is a skill. The model read the request, judged it relevant, and ran it. <b>Optional, model-driven.</b>",
+    s2_t_harness:"THE EVENT DECIDES",
+    s2_hook_h:"Hook",
+    s2_hook_p:"Deterministic code that fires <i>automatically</i> on a lifecycle event — the model has no say. The \"rate this 1–5\" prompt after a skill is a <b>Stop hook</b>: it runs because the turn ended, not because the model felt like asking. <b>Forced, event-driven.</b>",
+    s2_callout:"In your world: the <b>Writer agent</b> deciding to call the LLM = skill-like (logic chooses). A DB <b>trigger</b> that fires on every <code>INSERT</code> into <code>ai_summaries</code> = hook-like (the event fires it, not your code's choice). You already use both patterns.",
+    s3_title:"What's the \"harness\"?",
+    s3_sub:"A word that gets dropped without definition. Here it is in plain language.",
+    s3_body:"The <b>harness</b> is the program that runs the agent — the loop wrapping the model. It is <i>not</i> the AI. It's the deterministic code that: feeds the model your message, runs the tools the model asks for, enforces permissions, manages the context window, and <b>fires the hooks</b> at lifecycle events. The model is the brain; the harness is the body and nervous system around it.",
+    s3_map:"<span class='jl'>Your analogy:</span> in <code>nightly-summary</code>, the LLM writes the roast — but the surrounding TypeScript (build the payload, loop the 5 variants, call the Judge, save to DB, fallback on failure) is the harness. You already wrote a harness. Claude Code's is just bigger.",
+    s4_title:"Anatomy of a skill",
+    s4_sub:"A skill is a folder. Two parts the loop cares about.",
+    s4_callout:"The <code>good-*.md</code> files are to a skill what your <code>prompt_versions</code> rows are to a prompt: versioned snapshots of \"what good looks like\", that the system reads from and writes to over time.",
+    demo_title:"⚡ The self-improving loop — try it",
+    demo_sub:"A skill just finished. The Stop hook asks: \"rate it 1–5\". Pick a score and watch where the system routes itself.",
+    br_low_n:"RATING 1–3", br_low_h:"Ask me",
+    br_low_p:"The skill clearly missed. The loop asks the user <i>what</i> was wrong, then proposes a concrete edit to <code>SKILL.md</code>. Human-in-the-loop because the gap is unknown.",
+    br_mid_n:"RATING 4", br_mid_h:"Self-diagnose",
+    br_mid_p:"Good, not perfect. The loop reads its own <code>good-*.md</code> exemplars, diagnoses the gap <i>by itself</i> (no questions), and proposes a fix. It has enough signal to learn alone.",
+    br_high_n:"RATING 5", br_high_h:"Bank the win",
+    br_high_p:"This run was exemplary. The loop saves it as a new <code>good-*.md</code> — tomorrow's \"what good looks like\". The bar rises automatically.",
+    demo_hint:"👆 Pick a rating above to route the loop.",
+    demo_map_idle:"<span class='jl'>↔ Your Judge:</span> the rating is the rubric score. The 3 branches are your <b>threshold gating</b> — the idea you proposed yourself in Meeting 5: below a threshold → fallback; above → keep. Same control flow, applied to skills.",
+    s6_title:"The meta-moment",
+    s6_sub:"Why this is continuity, not a new concept.",
+    s6_you_h:"What you built (content layer)",
+    s6_you_p:"<b>Judge LLM</b> + 4-criteria rubric → score 1–5 → pick winner / fallback. Versions tracked in <code>prompt_versions</code> per <code>agent_slot</code>. You named it: \"a unit test for a prompt\".",
+    s6_cc_h:"Skills &amp; Hooks (tooling layer)",
+    s6_cc_p:"<b>Stop hook</b> + rating → score 1–5 → fix / self-improve / save exemplar. Versions tracked in <code>good-*.md</code> per skill. Same shape: <i>a unit test for a tool</i>.",
+    s6_callout:"🎯 The point of Meeting 6: the instinct \"don't trust one shot — score it, then improve\" is <b>yours</b>. You applied it to summaries. The same loop, one layer up, improves the tools that build the summaries. Production maturity isn't a new trick — it's your own eval loop, recursive.",
+    kt_title:"Key takeaways",
+    kt1:"<b>Skill = model decides</b> to invoke a capability. <b>Hook = an event forces</b> deterministic code to run. The split is \"who decides\".",
+    kt2:"<b>Harness</b> = the loop around the model (tools, permissions, context, hooks). Not the AI — the body around it. You already wrote one in <code>nightly-summary</code>.",
+    kt3:"The <b>skill-rate Stop hook</b> turns a score into a route: 1–3 ask · 4 self-diagnose from exemplars · 5 save a new exemplar.",
+    kt4:"<code>good-*.md</code> exemplars ≈ your <code>prompt_versions</code>: versioned \"what good looks like\" the system reads and writes.",
+    kt5:"It's <b>your Judge/rubric/threshold idea</b> applied to tools instead of summaries — continuity, not a new concept.",
+    footer:"Bonim Bina · supplementary material for Itay, Meeting 6 (World Cup app, Track F → Production)"
+  },
+  he:{
+    kicker:"בונים בינה · איתי · מפגש 6",
+    hero_title:"מערכת שמשפרת את עצמה",
+    hero_sub:"Skills &amp; Hooks ב-Claude Code — ולמה זו בדיוק אותה לולאת Judge/eval שאתה בנית, רק שכבה אחת למעלה.",
+    s1_title:"הרעיון במשפט אחד",
+    s1_sub:"מתחילים ממשהו שכבר בנית.",
+    s1_body:"בנית <b>Judge</b>: rubric נותן לכל סיכום AI ציון 1–5, הטוב מנצח, וציון נמוך מפעיל fallback. מערכת ה-skills של Claude Code עושה <b>בדיוק אותו דבר</b> — רק שמה שמקבל ציון הוא לא סיכום כדורגל, אלא <i>ריצה של skill</i>. נותנים לה ציון 1–5, והמערכת מנתבת את עצמה: לתקן, להשתפר לבד, או לשמור את ההצלחה. אותה לולאת eval. שכבה אחת למעלה.",
+    s1_callout:"📌 תחזיק את העוגן הזה כל הדרך: <b>rubric ← ציון ← שיפור</b> זה הרעיון שלך. כל מה שלמטה הוא הרעיון הזה, מיושם על הכלים במקום על הסיכומים.",
+    s2_title:"Skill מול Hook — מי מחליט?",
+    s2_sub:"כל ההבחנה היא שאלה אחת: המודל בוחר, או שאירוע כופה?",
+    s2_t_model:"המודל מחליט",
+    s2_skill_h:"Skill",
+    s2_skill_p:"יכולת שהמודל יכול לבחור להפעיל כשהיא רלוונטית — כמו פונקציה שהוא מחליט לקרוא לה. ה-<code>/mentoring-session-prep</code> שלך הוא skill. המודל קרא את הבקשה, שפט שהיא רלוונטית, והריץ. <b>אופציונלי, מונע ע\"י המודל.</b>",
+    s2_t_harness:"האירוע מחליט",
+    s2_hook_h:"Hook",
+    s2_hook_p:"קוד דטרמיניסטי שרץ <i>אוטומטית</i> על אירוע מחזור-חיים — למודל אין מילה. הבקשה \"דרג 1–5\" אחרי skill היא <b>Stop hook</b>: היא רצה כי התור נגמר, לא כי המודל החליט לשאול. <b>נכפה, מונע ע\"י אירוע.</b>",
+    s2_callout:"בעולם שלך: ה-<b>Writer agent</b> שמחליט לקרוא ל-LLM = דמוי-skill (הלוגיקה בוחרת). <b>trigger</b> ב-DB שרץ על כל <code>INSERT</code> ל-<code>ai_summaries</code> = דמוי-hook (האירוע מפעיל, לא בחירת הקוד). אתה כבר משתמש בשני הדפוסים.",
+    s3_title:"מה זה ה-\"harness\"?",
+    s3_sub:"מילה שזורקים בלי להגדיר. הנה היא בפשטות.",
+    s3_body:"ה-<b>harness</b> הוא התוכנה שמריצה את הסוכן — הלולאה שעוטפת את המודל. הוא <i>לא</i> ה-AI. זה הקוד הדטרמיניסטי ש: מזין למודל את ההודעה שלך, מריץ את הכלים שהמודל מבקש, אוכף הרשאות, מנהל את חלון ה-context, ו<b>מפעיל את ה-hooks</b> באירועי מחזור-חיים. המודל הוא המוח; ה-harness הוא הגוף ומערכת העצבים סביבו.",
+    s3_map:"<span class='jl'>האנלוגיה שלך:</span> ב-<code>nightly-summary</code>, ה-LLM כותב את ה-roast — אבל ה-TypeScript שמסביב (לבנות את ה-payload, ללופף את 5 הווריאנטים, לקרוא ל-Judge, לשמור ל-DB, fallback בכישלון) הוא ה-harness. כבר כתבת harness. זה של Claude Code פשוט גדול יותר.",
+    s4_title:"אנטומיה של skill",
+    s4_sub:"skill הוא תיקייה. שני חלקים שמעניינים את הלולאה.",
+    s4_callout:"קבצי ה-<code>good-*.md</code> הם ל-skill מה שש-<code>prompt_versions</code> שלך הם לפרומפט: snapshots מתוארכים של \"איך נראה טוב\", שהמערכת קוראת מהם וכותבת אליהם לאורך זמן.",
+    demo_title:"⚡ לולאת ההשתפרות העצמית — נסה",
+    demo_sub:"skill בדיוק הסתיים. ה-Stop hook שואל: \"דרג 1–5\". בחר ציון וראה לאן המערכת מנתבת את עצמה.",
+    br_low_n:"ציון 1–3", br_low_h:"תשאל אותי",
+    br_low_p:"ה-skill ברור שפספס. הלולאה שואלת את המשתמש <i>מה</i> היה לא בסדר, ואז מציעה עריכה קונקרטית ל-<code>SKILL.md</code>. אדם בלולאה כי הפער לא ידוע.",
+    br_mid_n:"ציון 4", br_mid_h:"אבחון עצמי",
+    br_mid_p:"טוב, לא מושלם. הלולאה קוראת את ה-<code>good-*.md</code> שלה עצמה, מאבחנת את הפער <i>לבד</i> (בלי שאלות), ומציעה תיקון. יש לה מספיק signal ללמוד לבד.",
+    br_high_n:"ציון 5", br_high_h:"לשמור את ההצלחה",
+    br_high_p:"הריצה הזו הייתה מופתית. הלולאה שומרת אותה כ-<code>good-*.md</code> חדש — ה\"איך נראה טוב\" של מחר. הרף עולה אוטומטית.",
+    demo_hint:"👆 בחר ציון למעלה כדי לנתב את הלולאה.",
+    demo_map_idle:"<span class='jl'>↔ ה-Judge שלך:</span> הציון הוא ציון ה-rubric. 3 הענפים הם ה-<b>threshold gating</b> שלך — הרעיון שהצעת בעצמך במפגש 5: מתחת ל-threshold ← fallback; מעל ← להשאיר. אותה זרימת בקרה, מיושמת על skills.",
+    s6_title:"רגע המטא",
+    s6_sub:"למה זו המשכיות, לא קונספט חדש.",
+    s6_you_h:"מה שבנית (שכבת התוכן)",
+    s6_you_p:"<b>Judge LLM</b> + rubric של 4 קריטריונים ← ציון 1–5 ← בחירת מנצח / fallback. גרסאות ב-<code>prompt_versions</code> פר-<code>agent_slot</code>. אתה קראת לזה: \"unit test לפרומפט\".",
+    s6_cc_h:"Skills &amp; Hooks (שכבת הכלים)",
+    s6_cc_p:"<b>Stop hook</b> + דירוג ← ציון 1–5 ← תיקון / שיפור-עצמי / שמירת דוגמה. גרסאות ב-<code>good-*.md</code> פר-skill. אותו מבנה: <i>unit test לכלי</i>.",
+    s6_callout:"🎯 הנקודה של מפגש 6: האינסטינקט \"אל תסמוך על ניסיון אחד — תן ציון, ואז שפר\" הוא <b>שלך</b>. יישמת אותו על סיכומים. אותה לולאה, שכבה אחת למעלה, משפרת את הכלים שבונים את הסיכומים. בגרות production היא לא טריק חדש — היא לולאת ה-eval שלך עצמך, רקורסיבית.",
+    kt_title:"נקודות מפתח",
+    kt1:"<b>Skill = המודל מחליט</b> להפעיל יכולת. <b>Hook = אירוע כופה</b> קוד דטרמיניסטי לרוץ. החלוקה היא \"מי מחליט\".",
+    kt2:"<b>Harness</b> = הלולאה סביב המודל (כלים, הרשאות, context, hooks). לא ה-AI — הגוף סביבו. כבר כתבת אחד ב-<code>nightly-summary</code>.",
+    kt3:"ה-<b>Stop hook של skill-rate</b> הופך ציון לניתוב: 1–3 לשאול · 4 לאבחן לבד מדוגמאות · 5 לשמור דוגמה חדשה.",
+    kt4:"דוגמאות <code>good-*.md</code> ≈ ה-<code>prompt_versions</code> שלך: \"איך נראה טוב\" מתוארך שהמערכת קוראת וכותבת.",
+    kt5:"זה <b>רעיון ה-Judge/rubric/threshold שלך</b> מיושם על כלים במקום על סיכומים — המשכיות, לא קונספט חדש.",
+    footer:"בונים בינה · חומר משלים לאיתי, מפגש 6 (אפליקציית מונדיאל, מסלול F ← Production)"
+  }
+};
+
+let currentLang='he';
+function setLang(lang){
+  currentLang=lang;
+  const h=document.documentElement;
+  h.lang=lang; h.dir = lang==='he'?'rtl':'ltr';
+  document.getElementById('btn-en').classList.toggle('active',lang==='en');
+  document.getElementById('btn-he').classList.toggle('active',lang==='he');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(T[lang][k]!==undefined) el.innerHTML=T[lang][k];
+  });
+  // re-apply current demo state in the new language
+  applyState();
+}
+
+let selected=null;
+function rate(r){
+  selected=r;
+  document.querySelectorAll('.rate-btn').forEach(b=>{
+    b.classList.remove('sel','low','mid','high');
+    if(+b.dataset.r===r){
+      b.classList.add('sel', r<=3?'low':(r===4?'mid':'high'));
+    }
+  });
+  applyState();
+}
+function applyState(){
+  const lo=document.getElementById('br-low'),
+        mi=document.getElementById('br-mid'),
+        hi=document.getElementById('br-high'),
+        info=document.getElementById('stepInfo'),
+        map=document.getElementById('judgeMap');
+  [lo,mi,hi].forEach(b=>b.classList.remove('on'));
+  if(selected===null){
+    info.innerHTML=T[currentLang].demo_hint;
+    map.innerHTML=T[currentLang].demo_map_idle;
+    return;
+  }
+  const L=currentLang;
+  if(selected<=3){
+    lo.classList.add('on');
+    info.innerHTML = L==='he'
+      ? `ציון <b>${selected}</b> ← הלולאה לא מנחשת. היא <b>שואלת אותך</b> מה היה הפער, ואז מציעה עריכה ל-<code>SKILL.md</code>. (זה ה-fallback שלך כשה-Judge לא בטוח — רק שכאן ה\"שופט\" הוא אתה.)`
+      : `Rating <b>${selected}</b> → the loop doesn't guess. It <b>asks you</b> what the gap was, then proposes a <code>SKILL.md</code> edit. (This is your fallback when the Judge isn't confident — except here the \"judge\" is you.)`;
+  } else if(selected===4){
+    mi.classList.add('on');
+    info.innerHTML = L==='he'
+      ? `ציון <b>4</b> ← מספיק signal. הלולאה קוראת את ה-<code>good-*.md</code> שלה, מאבחנת לבד, ומציעה תיקון — <b>בלי לשאול</b>. בדיוק כמו ה-Judge שלך שמשווה מול ה-rubric בלי בנאדם.`
+      : `Rating <b>4</b> → enough signal. The loop reads its <code>good-*.md</code>, self-diagnoses, and proposes a fix — <b>no questions</b>. Just like your Judge comparing against the rubric with no human.`;
+  } else {
+    hi.classList.add('on');
+    info.innerHTML = L==='he'
+      ? `ציון <b>5</b> ← הריצה נשמרת כ-<code>good-*.md</code> חדש. הרף של מחר עלה. זה כמו להוסיף שורה מנצחת ל-<code>prompt_versions</code> — רק שזה קורה אוטומטית.`
+      : `Rating <b>5</b> → the run is saved as a new <code>good-*.md</code>. Tomorrow's bar just rose. Like adding a winning row to <code>prompt_versions</code> — except automatic.`;
+  }
+  map.innerHTML = L==='he'
+    ? `<span class="jl">↔ ה-Judge שלך:</span> הציון = ציון rubric. הניתוב ל-3 ענפים = ה-<b>threshold gating</b> שהצעת במפגש 5. אותה זרימת בקרה — רק שהדבר שמשתפר הוא ה-skill, לא הסיכום.`
+    : `<span class="jl">↔ Your Judge:</span> the score = rubric score. The 3-way routing = the <b>threshold gating</b> you proposed in Meeting 5. Same control flow — except the thing improving is the skill, not the summary.`;
+}
+setLang('he');
+</script>
+</body>
+</html>
