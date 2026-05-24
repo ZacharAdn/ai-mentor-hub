@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדריך התקנת Claude Code</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a1a2e;
+            line-height: 1.8;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-logo {
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .lang-switcher {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 4px;
+        }
+
+        .lang-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-family: 'Heebo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .lang-btn:hover {
+            color: white;
+        }
+
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #a0a0b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .prerequisites {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .prerequisites h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prerequisites ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .prerequisites li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .prerequisites li .icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .step {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-5px);
+        }
+
+        .step-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-title-container h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .step-title-container .duration {
+            font-size: 0.9rem;
+            color: #a0a0b8;
+            margin-top: 5px;
+        }
+
+        .step-content {
+            padding: 30px;
+        }
+
+        .step-description {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border-right: 4px solid #667eea;
+        }
+
+        .gif-container {
+            margin: 25px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            background: #f5f5f5;
+        }
+
+        .gif-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .gif-label {
+            background: #1a1a2e;
+            color: white;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gif-label::before {
+            content: "צפו";
+            background: #667eea;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .instructions {
+            margin-top: 25px;
+        }
+
+        .instructions h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1a1a2e;
+        }
+
+        .instruction-list {
+            list-style: none;
+            counter-reset: instruction;
+        }
+
+        .instruction-list li {
+            counter-increment: instruction;
+            padding: 15px 60px 15px 15px;
+            margin-bottom: 10px;
+            background: #fafbff;
+            border-radius: 12px;
+            position: relative;
+            border: 1px solid #e8e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .instruction-list li:hover {
+            background: #f0f2ff;
+            border-color: #667eea;
+        }
+
+        .instruction-list li::before {
+            content: counter(instruction);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .code-block {
+            background: #1a1a2e;
+            color: #7ee787;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .code-block::before {
+            content: "פקודה";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #667eea;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-family: 'Heebo', sans-serif;
+            font-weight: 600;
+        }
+
+        .code-block code {
+            display: block;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-right: 4px solid #4caf50;
+            padding: 20px;
+            border-radius: 12px 0 0 12px;
+            margin: 20px 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-right: 4px solid #ff9800;
+            padding: 20px;
+            border-radius: 12px 0 0 12px;
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .optional-badge {
+            background: #667eea;
+            color: white;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .success-banner {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .success-banner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .step-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .instruction-list li {
+                padding-right: 50px;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="nav-logo">
+            <span>Claude Code</span> מדריך התקנה
+        </div>
+        <div class="lang-switcher">
+            <a href="index.html" class="lang-btn">
+                English
+            </a>
+            <a href="he.html" class="lang-btn active">
+                עברית
+            </a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>מדריך התקנת Claude Code</h1>
+        <p>מדריך פשוט וידידותי להתקנת Claude Code — שלבים 1-6 מותאמים ל-Windows, ולמשתמשי Mac יש קיצור דרך של פקודה אחת. אין צורך בניסיון טכני קודם!</p>
+        <div class="badge">זמן משוער: 15-20 דקות</div>
+        <p style="margin-top: 15px; font-size: 0.95rem; color: #c0c0d0;">משתמשים ב-Mac? <a href="#mac-shortcut" style="color: #a0c4ff; text-decoration: underline;">דלגו לקיצור הדרך ל-Mac</a> — שלבים 1-3 לא רלוונטיים אצלכם.</p>
+    </div>
+
+    <div class="container">
+        <!-- Prerequisites -->
+        <div class="prerequisites">
+            <h2>לפני שמתחילים</h2>
+            <ul>
+                <li>
+                    <div class="icon">W</div>
+                    <span>Windows 10 או 11</span>
+                </li>
+                <li>
+                    <div class="icon">$</div>
+                    <span>מנוי Claude Pro או Team</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Mac Shortcut Banner -->
+        <div id="mac-shortcut" class="step" style="border: 2px solid #f4a261;">
+            <div class="step-header" style="background: linear-gradient(135deg, #264653 0%, #2a9d8f 100%);">
+                <div class="step-number" style="background: linear-gradient(135deg, #f4a261, #e76f51); font-size: 1.8rem;">🍎</div>
+                <div class="step-title-container">
+                    <h2>על Mac? קיצור דרך — פקודה אחת</h2>
+                    <div class="duration">דלגו על שלבים 1, 2, 3</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    ב-macOS אין צורך ב-Node.js או ב-Git כדי להריץ את Claude Code — הוא מותקן כקובץ בינארי טבעי. פקודה אחת בטרמינל מחליפה את כל שלושת השלבים הראשונים, ואז מדלגים ישר לשלב 4 (התחברות) ולשלב 5 (VS Code).
+                </div>
+
+                <div class="instructions">
+                    <h3>איך עושים את זה:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את <strong>Terminal</strong> (קיצור: <strong>Cmd+Space</strong> → הקלידו "terminal" → Enter)</li>
+                        <li>הדביקו את הפקודה הבאה ולחצו Enter:</li>
+                    </ol>
+                </div>
+
+                <div class="code-block">
+                    <code>curl -fsSL https://claude.ai/install.sh | bash</code>
+                </div>
+
+                <div class="instructions">
+                    <ol class="instruction-list" start="3">
+                        <li>חכו דקה-שתיים עד שההתקנה מסתיימת</li>
+                        <li>בדקו שזה עבד — הקלידו <code>claude --version</code>. אם מופיע מספר גרסה, מצוין</li>
+                        <li>עברו ישר ל-<strong>שלב 4</strong> (הגדרה והתחברות) למטה</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">מה הפקודה עושה?</div>
+                    <p>היא מורידה את Claude Code כקובץ בינארי מותאם ל-Mac (לא חבילת npm) — לכן לא צריך Node.js. גם Git לא נדרש להתקנה עצמה (הוא שימושי אם תרצו לעבוד עם repos של GitHub בעתיד, אבל זה לא חיוני להתחלה).</p>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">שאר המדריך — מה רלוונטי ל-Mac?</div>
+                    <p>שלבים 1, 2, 3 ייעודיים ל-Windows — דלגו עליהם. <strong>שלב 4</strong> (התחברות), <strong>שלב 5</strong> (VS Code/Cursor), ו-<strong>שלב 6</strong> (פרטיות) — זהים לחלוטין ב-Mac, פשוט תזכרו שהקיצורים שונים: <code>Cmd</code> במקום <code>Ctrl</code>.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Install Node.js -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title-container">
+                    <h2>התקנת Node.js</h2>
+                    <div class="duration">כ-2 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Node.js היא סביבת הריצה שמפעילה את Claude Code. זו תוכנה חינמית שמשמשת מפתחים רבים.
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">התקנת Node.js בווינדוס</div>
+                    <img src="gifs/step1_nodejs.gif" alt="התקנת Node.js" loading="lazy">
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים הבאים:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את הדפדפן וחפשו <strong>"Node js"</strong> בגוגל</li>
+                        <li>לחצו על האתר הרשמי (nodejs.org)</li>
+                        <li>לחצו על הכפתור הירוק <strong>"LTS"</strong> להורדה (זו הגרסה היציבה)</li>
+                        <li>הריצו את הקובץ שהורדתם (שם הקובץ מסתיים ב-.msi)</li>
+                        <li>לחצו על <strong>"Next"</strong> באשף ההתקנה</li>
+                        <li>אשרו את הסכם הרישיון</li>
+                        <li>השאירו את תיקיית ההתקנה כברירת מחדל</li>
+                        <li><strong>חשוב:</strong> אל תסמנו את האפשרות "Automatically install necessary tools" - השאירו אותה ריקה</li>
+                        <li>לחצו על <strong>"Install"</strong> והמתינו לסיום</li>
+                        <li>לחצו על <strong>"Finish"</strong></li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">איך יודעים שזה עבד?</div>
+                    <p>פתחו Command Prompt והקלידו <code>node --version</code>. אם מופיע מספר (כמו v24.12.0), הכל בסדר!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Install Claude Code -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title-container">
+                    <h2>התקנת Claude Code</h2>
+                    <div class="duration">כדקה</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    עכשיו נתקין את Claude Code עצמו באמצעות פקודה פשוטה ב-Command Prompt.
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">התקנת Claude Code דרך Command Prompt</div>
+                    <img src="gifs/step2_claudecode.gif" alt="התקנת Claude Code" loading="lazy">
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים הבאים:</h3>
+                    <ol class="instruction-list">
+                        <li>לחצו על <strong>תפריט התחל</strong> (אייקון החלון)</li>
+                        <li>הקלידו <strong>"cmd"</strong> או <strong>"Command Prompt"</strong></li>
+                        <li>לחצו על Command Prompt כדי לפתוח אותו</li>
+                        <li>העתיקו והדביקו את הפקודה הזו, ולחצו Enter:</li>
+                    </ol>
+                </div>
+
+                <div class="code-block">
+                    <code>npm install -g @anthropic-ai/claude-code</code>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">מה הפקודה הזו עושה?</div>
+                    <p>היא אומרת ל-Node.js להוריד ולהתקין את Claude Code מהאינטרנט. ה-<code>-g</code> אומר "התקן גלובלית" כדי שתוכלו להשתמש בזה מכל מקום.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Install Git -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title-container">
+                    <h2>התקנת Git</h2>
+                    <div class="duration">כ-3 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Git היא תוכנה חינמית שעוזרת לעקוב אחרי שינויים בקבצים. Claude Code צריך אותה כדי לעבוד כמו שצריך.
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">הורדה והתקנה של Git</div>
+                    <img src="gifs/step3_git.gif" alt="התקנת Git" loading="lazy">
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים הבאים:</h3>
+                    <ol class="instruction-list">
+                        <li>חפשו <strong>"git scm"</strong> בגוגל</li>
+                        <li>היכנסו לאתר הרשמי של Git (git-scm.com)</li>
+                        <li>לחצו על <strong>"Download for Windows"</strong></li>
+                        <li>בחרו ב-<strong>"64-bit Git for Windows Setup"</strong> (Standalone Installer)</li>
+                        <li>הריצו את קובץ ההתקנה שהורדתם</li>
+                        <li>לחצו על <strong>"Next"</strong> ברוב האפשרויות (ברירות המחדל מצוינות)</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">אל תדאגו מהאפשרויות!</div>
+                    <p>למתקין של Git יש הרבה מסכים עם אפשרויות טכניות. פשוט לחצו "Next" והשאירו את ברירות המחדל - הן עובדות מצוין עם Claude Code.</p>
+                </div>
+
+                <div class="instructions">
+                    <h3>סיכום מהיר של אפשרויות Git (פשוט לחצו Next):</h3>
+                    <ol class="instruction-list">
+                        <li><strong>עורך:</strong> Vim (ברירת מחדל) - זה בסדר</li>
+                        <li><strong>ענף ברירת מחדל:</strong> תנו ל-Git להחליט</li>
+                        <li><strong>סביבת PATH:</strong> "Git from command line and 3rd-party software" (מומלץ)</li>
+                        <li><strong>SSH:</strong> השתמשו ב-OpenSSH המובנה</li>
+                        <li><strong>HTTPS:</strong> השתמשו ב-Windows Secure Channel</li>
+                        <li><strong>סיומי שורות:</strong> Checkout Windows-style, commit Unix-style</li>
+                        <li><strong>טרמינל:</strong> השתמשו ב-MinTTY</li>
+                        <li>לבסוף, לחצו על <strong>"Install"</strong></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Initialize and Authenticate -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title-container">
+                    <h2>הגדרה והתחברות</h2>
+                    <div class="duration">כ-3 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    הגיע הזמן להפעיל את Claude Code ולחבר אותו לחשבון Claude שלכם. כאן מתחיל הקסם!
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">הפעלת Claude Code והתחברות</div>
+                    <img src="gifs/step4_authenticate.gif" alt="התחברות ל-Claude" loading="lazy">
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים הבאים:</h3>
+                    <ol class="instruction-list">
+                        <li>צרו תיקייה חדשה לפרויקט (למשל, קליק ימני על שולחן העבודה ← חדש ← תיקייה ← קראו לה "test")</li>
+                        <li>פתחו את <strong>PowerShell</strong> או <strong>Command Prompt</strong></li>
+                        <li>נווטו לתיקייה שלכם על ידי הקלדת <code>cd Desktop\test</code> (או הנתיב לתיקייה שלכם)</li>
+                        <li>הקלידו <strong>claude</strong> ולחצו Enter</li>
+                        <li>השתמשו בחיצים כדי לבחור ערכת נושא (כמו <strong>Dark mode</strong>) ולחצו Enter</li>
+                        <li>בחרו ב-<strong>"Claude account with subscription"</strong></li>
+                        <li>ייפתח חלון דפדפן - התחברו לחשבון Claude שלכם</li>
+                        <li>לחצו על <strong>"Authorize"</strong> כדי לחבר את Claude Code</li>
+                        <li>תראו "You're all set up" - אפשר לסגור את הדפדפן</li>
+                        <li>חזרו לטרמינל, קראו את אפשרויות הפרטיות ולחצו Enter לאישור</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">צריכים מנוי?</div>
+                    <p>אתם צריכים מנוי <strong>Claude Pro</strong> או <strong>Team</strong>. אם אין לכם, הדפדפן יציע לכם לשדרג. המנויים מתחילים מ-$20 לחודש.</p>
+                </div>
+
+                <div class="success-banner">
+                    <h3>מזל טוב!</h3>
+                    <p>Claude Code מוכן לשימוש! אתם יכולים להתחיל לשוחח עם Claude בטרמינל.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: VS Code / Cursor Integration -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title-container">
+                    <h2>שילוב ב-VS Code או Cursor</h2>
+                    <div class="duration">כ-5 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    עד עכשיו Claude Code עובד מהטרמינל בלבד. עכשיו נחבר אותו ל-VS Code (או Cursor) — סביבת קוד עם פאנל צ'אט ייעודי וגישה לקבצים בלחיצה. השלבים זהים ב-Windows וב-macOS, ההבדל היחיד הוא הקיצורים.
+                </div>
+
+                <div class="instructions">
+                    <h3>שלב א — התקנת VS Code (דלגו אם כבר מותקן):</h3>
+                    <ol class="instruction-list">
+                        <li>גלשו ל-<strong>code.visualstudio.com</strong> ולחצו על כפתור ההורדה הגדול</li>
+                        <li><strong>Windows:</strong> בחרו "User Installer (64-bit)". <strong>macOS:</strong> בחרו "Apple Silicon" אם המעבד M1/M2/M3, אחרת "Intel"</li>
+                        <li>הריצו את הקובץ שהורד, אשרו את ברירות המחדל ולחצו <strong>Install</strong></li>
+                        <li>פתחו את VS Code כשההתקנה מסתיימת</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">משתמשים ב-Cursor?</div>
+                    <p>Cursor מבוסס על VS Code — אותה חנות תוספים, אותם קיצורים. דלגו ישר לשלב ב' למטה.</p>
+                </div>
+
+                <div class="instructions">
+                    <h3>שלב ב — התקנת התוסף Claude Code for VS Code:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את חלונית ה-<strong>Extensions</strong>: <strong>Ctrl+Shift+X</strong> ב-Windows / <strong>Cmd+Shift+X</strong> ב-macOS (או לחצו על אייקון 4 הריבועים בסרגל הצד השמאלי)</li>
+                        <li>הקלידו <strong>Claude Code</strong> בשורת החיפוש</li>
+                        <li>בחרו את התוסף <strong>"Claude Code for VS Code"</strong> מטעם <strong>Anthropic</strong> (סימן וי כחול ליד השם — זה ה-publisher הרשמי)</li>
+                        <li>לחצו על <strong>Install</strong></li>
+                    </ol>
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">חיפוש והתקנת התוסף הרשמי של Anthropic</div>
+                    <img src="gifs/step5b_extension.png" alt="חלונית Extensions עם התוסף Claude Code for VS Code" loading="lazy">
+                </div>
+
+                <div class="instructions">
+                    <h3>שלב ג — הפעלה ראשונה:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו תיקיית פרויקט: <strong>File → Open Folder</strong> (קיצור: <strong>Ctrl+K Ctrl+O</strong> ב-Windows / <strong>Cmd+O</strong> ב-macOS)</li>
+                        <li><strong>פתחו קובץ מתוך התיקייה</strong> — לחצו על קובץ כלשהו ב-Explorer (למשל README.md). זה חשוב — אייקון Claude מופיע רק כשיש קובץ פתוח בעורך</li>
+                        <li>הסתכלו על <strong>הפינה הימנית-עליונה של חלון העורך</strong> (לא בסרגל הצד השמאלי) — תראו אייקון של "פיצוץ" כתום-אדום. זה Claude</li>
+                        <li>לחצו עליו — ייפתח פאנל הצ'אט של Claude, מחובר אוטומטית לחשבון שלכם (לא צריך להזין סיסמה שוב — השלמתם זאת בשלב 4)</li>
+                        <li>נסו פקודה ראשונה — לדוגמה: <em>"תסכם לי מה יש בתיקייה הזאת"</em></li>
+                    </ol>
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">אייקון Claude בפינה הימנית-עליונה של העורך (מסומן באדום) — מופיע רק כשיש קובץ פתוח</div>
+                    <img src="gifs/step5c_icon.png" alt="אייקון Claude בסרגל העליון של העורך, ליד שאר כפתורי העורך" loading="lazy">
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">לא רואים את האייקון?</div>
+                    <p>סביר שעדיין לא פתחתם קובץ. ה-VS Code מציג את האייקון רק כשיש לשונית עורך פעילה. פתחו כל קובץ מהתיקייה (אפילו ריק) והאייקון יופיע מיד.</p>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">דרך חלופית — בלי תוסף</div>
+                    <p>אם תעדיפו טרמינל פנימי במקום פאנל ייעודי — פתחו טרמינל מובנה ב-VS Code עם <strong>Ctrl+`</strong> (Windows) או <strong>Cmd+`</strong> (macOS), והקלידו <code>claude</code>. אותה חוויה כמו ב-Command Prompt, רק שמשולבת ב-IDE שלכם.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Privacy Settings (Optional) -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title-container">
+                    <h2>הגדרות פרטיות <span class="optional-badge">אופציונלי</span></h2>
+                    <div class="duration">כדקה</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    כברירת מחדל, השיחות שלכם עשויות לשמש לשיפור Claude. אם אתם מעדיפים יותר פרטיות, אפשר לשנות את ההגדרה הזו.
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">ניהול הגדרות פרטיות</div>
+                    <img src="gifs/step5_privacy.gif" alt="הגדרות פרטיות" loading="lazy">
+                </div>
+
+                <div class="instructions">
+                    <h3>כדי לבטל שימוש בנתונים לאימון:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את הדפדפן וגלשו ל-<strong>claude.ai</strong></li>
+                        <li>לחצו על <strong>אייקון הפרופיל</strong> שלכם בפינה העליונה</li>
+                        <li>לחצו על <strong>"Settings"</strong></li>
+                        <li>עברו ללשונית <strong>"Privacy"</strong></li>
+                        <li>כבו את האפשרות <strong>"Help improve Claude"</strong></li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">מה זה אומר?</div>
+                    <p>כש-"Help improve Claude" מופעל, השיחות שלכם עשויות להיבדק על ידי Anthropic כדי לשפר את Claude. כיבוי האפשרות אומר שהנתונים שלכם נשארים פרטיים ולא ישמשו לאימון.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>נבנה באהבה — הבסיס נלקח מאביץ (אברהם יצחק מאיר)</p>
+        <p style="margin-top: 10px; opacity: 0.8;">
+            <a href="https://github.com/anthropics/claude-code" target="_blank">Claude Code ב-GitHub</a>
+        </p>
+    </footer>
+</body>
+</html>
