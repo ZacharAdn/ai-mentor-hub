@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A collection of standalone, interactive HTML teaching guides built for a Hebrew-speaking student cohort (ML/AI, DevOps, Claude Code tooling). Each guide is a single self-contained `.html` file — all CSS and JS inlined, no build step, no shared assets. Pure static; viewed by opening the file in a browser or via GitHub Pages.
 
-Some guides are course-wide (e.g. `i24-*`, `cnn.html`, `confusion-matrix-explorer.html`); others are addressed to a named student (`omer-concepts-guide.html`, `demo-to-production-itay.html`, `llm-guide-reference.html` for Eli). When editing a per-student guide, keep its tone and depth aligned with that student's level — don't generalize it.
+Guides are categorized into three folders: `interactive-ml-concepts/`, `architecture-production/`, `tooling-setup/`. The root `index.html` is the Windows Claude Code install guide and doubles as the GitHub Pages landing page — it stays at root, not in `tooling-setup/`. Some guides are course-wide (e.g. `i24-*`, `cnn.html`, `confusion-matrix-explorer.html`); others are addressed to a named student (`omer-concepts-guide.html`, `demo-to-production-itay.html`, `llm-guide-reference.html` for Eli). When editing a per-student guide, keep its tone and depth aligned with that student's level — don't generalize it.
 
 ## No build / no tests
 
@@ -18,12 +18,12 @@ Two paths:
 
 1. **Use the `teaching-html` skill** (preferred for new topics) — it's tuned for this repo's style and bilingual conventions.
 2. **Copy an existing guide as a template.** Good templates by category:
-   - Interactive ML concept (sliders, canvas plots): `confusion-matrix-explorer.html`, `decision-tree.html`, `logistic-regression.html`
-   - Step-by-step install with GIFs: `claude-code-installation-guide.html` (GIFs live in `gifs/`)
-   - Concept reference cards: `omer-concepts-guide.html`, `llm-guide-reference.html`
-   - Architecture / system explainer: `fullstack-data-flow.html`, `production-readiness-explorer.html`
+   - Interactive ML concept (sliders, canvas plots): `interactive-ml-concepts/confusion-matrix-explorer.html`, `interactive-ml-concepts/decision-tree.html`, `interactive-ml-concepts/logistic-regression.html`
+   - Step-by-step install with GIFs: `tooling-setup/claude-code-installation-guide.html` (GIFs live in `gifs/`, referenced as `../gifs/...` from the subfolder)
+   - Concept reference cards: `interactive-ml-concepts/omer-concepts-guide.html`, `interactive-ml-concepts/llm-guide-reference.html`
+   - Architecture / system explainer: `architecture-production/fullstack-data-flow.html`, `architecture-production/production-readiness-explorer.html`
 
-After adding a guide, link it from `index.html` if it belongs in the main hub, or from `links.html` if it's a resource pointer.
+Place the new guide in the matching folder and add a row to the README table. If it references images, use `../gifs/<subfolder>/<file>` paths so they resolve from the nested location. If it links back to the landing page, use `href="../index.html"`.
 
 ## Style conventions (followed by all guides — match these)
 
@@ -44,15 +44,16 @@ When writing or editing guide content: Hebrew is the default for student-facing 
 
 ## What lives where
 
-- `*.html` at the root — the guides themselves (one per topic).
-- `index.html` — Claude Code Windows install hub (also serves as a landing page).
-- `links.html` — curated external resource links.
-- `gifs/` — screen-recording GIFs referenced only by `claude-code-installation-guide.html`.
-- `.claude/` — project Claude Code config + the `learn` skill.
+- `index.html` — Claude Code Windows install guide; doubles as the GitHub Pages landing page (kept at root).
+- `interactive-ml-concepts/` — ML/AI concept guides with live sliders/canvas (logistic regression, decision tree, confusion matrix, CNN, LLM, etc.).
+- `architecture-production/` — system-architecture, production-readiness, and i24 project guides.
+- `tooling-setup/` — installation, setup, and tooling guides (Claude Code, Git/GitHub, Technion LBS, WhatsApp, OpenClaw, links hub, etc.).
+- `gifs/` — screenshots and GIFs, organized in per-guide subfolders (e.g. `gifs/git-github/`). Referenced from guides in subfolders as `../gifs/<subfolder>/<file>`.
+- `.claude/` — project Claude Code config + the local `learn` skill.
 - `.mcp.json` — Playwright MCP server registration.
 
 ## When making changes
 
 - Edits to one HTML file never affect another — there are no shared dependencies. Don't refactor "for consistency" across files unless the user asks; the per-file independence is intentional.
 - Don't strip the language toggle, the Heebo font load, or the RTL handling when editing — these are load-bearing for the student audience.
-- GIFs in `gifs/` are referenced by filename from the install guide; if you rename one, update the `<img src="gifs/...">` references.
+- If you move a guide between folders, update its `src="../gifs/..."` and `href="../index.html"` paths to match the new depth, and update the table in `README.md`.
