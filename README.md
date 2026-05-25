@@ -1,4 +1,4 @@
-# Student Guides
+# AI Mentor Hub
 
 A collection of interactive HTML teaching guides for Hebrew-speaking students in ML/AI, DevOps, and developer tooling. Each guide is a single self-contained `.html` file — all CSS and JS inlined, no build step, no dependencies.
 
@@ -13,7 +13,7 @@ open interactive-ml-concepts/confusion-matrix-explorer.html   # macOS
 start interactive-ml-concepts/confusion-matrix-explorer.html  # Windows
 ```
 
-The repo is also published via GitHub Pages: <https://zacharadn.github.io/student-guides/>
+The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-mentor-hub/>
 
 ## Guides
 
