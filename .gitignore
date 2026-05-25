@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Playwright MCP cache (regenerated on use)
+.playwright-mcp/
+
+# Claude Code local settings (per-machine; commit project skills, not local prefs)
+.claude/settings.local.json

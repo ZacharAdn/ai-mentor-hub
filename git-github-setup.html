@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מהתחלה ל-Push הראשון — Git, GitHub ו-VS Code</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; color: #1a1a2e; line-height: 1.8;
+        }
+        .top-nav {
+            background: rgba(26, 26, 46, 0.95); backdrop-filter: blur(10px);
+            padding: 15px 30px; display: flex; justify-content: space-between;
+            align-items: center; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav-logo {
+            color: white; font-weight: 700; font-size: 1.2rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .nav-logo span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white; padding: 60px 20px; text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.8rem; font-weight: 700; margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p { font-size: 1.2rem; color: #a0a0b8; max-width: 700px; margin: 0 auto; }
+        .hero .badge {
+            display: inline-block; background: rgba(102, 126, 234, 0.2);
+            color: #667eea; padding: 8px 16px; border-radius: 20px;
+            font-size: 0.9rem; margin-top: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .prerequisites {
+            background: white; border-radius: 20px; padding: 30px;
+            margin-bottom: 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        .prerequisites h2 {
+            font-size: 1.5rem; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .prerequisites ul {
+            list-style: none; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .prerequisites li {
+            display: flex; align-items: center; gap: 12px; padding: 15px;
+            background: #f8f9ff; border-radius: 12px; font-weight: 500;
+        }
+        .prerequisites li .icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; color: white; font-size: 1.2rem; flex-shrink: 0;
+        }
+        .step {
+            background: white; border-radius: 20px; margin-bottom: 30px;
+            overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .step:hover { transform: translateY(-5px); }
+        .step-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white; padding: 25px 30px;
+            display: flex; align-items: center; gap: 20px;
+        }
+        .step-number {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 1.5rem; font-weight: 700; flex-shrink: 0;
+        }
+        .step-title-container h2 { font-size: 1.4rem; font-weight: 600; }
+        .step-title-container .duration { font-size: 0.9rem; color: #a0a0b8; margin-top: 5px; }
+        .step-content { padding: 30px; }
+        .step-description {
+            font-size: 1.1rem; color: #666; margin-bottom: 25px; padding: 20px;
+            background: #f8f9ff; border-radius: 12px; border-right: 4px solid #667eea;
+        }
+        .instructions { margin-top: 25px; }
+        .instructions h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: #1a1a2e; }
+        .instruction-list { list-style: none; counter-reset: instruction; }
+        .instruction-list li {
+            counter-increment: instruction; padding: 15px 60px 15px 15px;
+            margin-bottom: 10px; background: #fafbff; border-radius: 12px;
+            position: relative; border: 1px solid #e8e8f0; transition: all 0.2s ease;
+        }
+        .instruction-list li:hover { background: #f0f2ff; border-color: #667eea; }
+        .instruction-list li::before {
+            content: counter(instruction); position: absolute; right: 15px; top: 22px;
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.9rem;
+        }
+        .code-block {
+            background: #1a1a2e; color: #7ee787; padding: 15px 20px;
+            border-radius: 8px; font-family: 'Courier New', monospace;
+            margin: 15px 0; overflow-x: auto; position: relative;
+            direction: ltr; text-align: left;
+        }
+        .code-block::before {
+            content: "פקודה"; position: absolute; top: -10px; left: 15px;
+            background: #667eea; color: white; font-size: 0.7rem;
+            padding: 3px 10px; border-radius: 4px;
+            font-family: 'Heebo', sans-serif; font-weight: 600;
+        }
+        .code-block code { display: block; white-space: pre; }
+        .platform-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+        .platform-tab {
+            background: #e8eaff; color: #667eea; padding: 6px 14px;
+            border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+        }
+        .screenshot {
+            margin: 20px 0; border-radius: 12px; overflow: hidden;
+            border: 2px solid #e0e0e0; background: #f5f5f5;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+        .screenshot img { width: 100%; display: block; }
+        .screenshot-label {
+            background: #1a1a2e; color: white; padding: 10px 18px;
+            font-size: 0.88rem; font-weight: 500;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .screenshot-label::before {
+            content: "צילום מסך"; background: #667eea; padding: 3px 10px;
+            border-radius: 4px; font-size: 0.72rem; font-weight: 700;
+        }
+        .tip, .warning, .skip {
+            padding: 20px; border-radius: 12px 0 0 12px; margin: 20px 0;
+        }
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-right: 4px solid #4caf50;
+        }
+        .warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-right: 4px solid #ff9800;
+        }
+        .skip {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-right: 4px solid #1976d2;
+        }
+        .tip-title { font-weight: 600; color: #2e7d32; margin-bottom: 8px; }
+        .warning-title { font-weight: 600; color: #e65100; margin-bottom: 8px; }
+        .skip-title { font-weight: 600; color: #0d47a1; margin-bottom: 8px; }
+        .success-banner {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white; padding: 30px; border-radius: 20px;
+            text-align: center; margin: 30px 0;
+        }
+        .success-banner h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        footer { text-align: center; padding: 40px 20px; color: white; }
+        footer a { color: white; text-decoration: none; font-weight: 500; }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .step-header { flex-direction: column; text-align: center; }
+            .instruction-list li { padding-right: 50px; }
+            .top-nav { flex-direction: column; gap: 15px; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-logo">
+            <span>Git + GitHub</span> · המדריך מאפס ל-Push הראשון
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>מאפס ל-Push הראשון</h1>
+        <p>איך פותחים חשבון GitHub, מתקינים ומגדירים Git, יוצרים repo חדש, ועושים את ה-commit וה-push הראשון — הכל דרך ה-UI של VS Code, בלי לפחד מהטרמינל.</p>
+        <div class="badge">זמן משוער: 20–30 דקות</div>
+    </div>
+
+    <div class="container">
+        <div class="prerequisites">
+            <h2>לפני שמתחילים</h2>
+            <ul>
+                <li><div class="icon">💻</div><span>מחשב Mac או Windows</span></li>
+                <li><div class="icon">🌐</div><span>חיבור אינטרנט</span></li>
+                <li><div class="icon">📧</div><span>חשבון מייל פעיל</span></li>
+                <li><div class="icon">📝</div><span>VS Code מותקן (קוד פתוח, חינם)</span></li>
+            </ul>
+        </div>
+
+        <!-- ============ STEP 1: GitHub signup ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title-container">
+                    <h2>פתיחת חשבון GitHub</h2>
+                    <div class="duration">כ-3 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    GitHub זה השרת בענן שבו ה-repos שלכם חיים — מקום ציבורי (או פרטי) שאליו דוחפים את הקוד. בלי חשבון, אין לאן לדחוף.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>גשו ל-<strong><a href="https://github.com/signup" target="_blank">github.com/signup</a></strong>.</li>
+                        <li>הזינו <strong>מייל</strong> פעיל שאתם בודקים — לשם יגיע קוד אימות וגם הודעות מ-GitHub.</li>
+                        <li>בחרו <strong>סיסמה חזקה</strong> (12+ תווים).</li>
+                        <li>בחרו <strong>username</strong> — זה ההזדהות שלכם ב-GitHub לטווח ארוך. עדיף משהו מקצועי (לדוגמה <code>shira-cohen</code>) ולא <code>cool_dude_2003</code>.</li>
+                        <li>פתרו את ה-CAPTCHA, אמתו במייל עם הקוד שתקבלו, ובחרו את התכנית החינמית (Free).</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 ה-username חשוב</div>
+                    הוא נכנס לכל ה-URLs של ה-repos שלכם (<code>github.com/<strong>username</strong>/repo-name</code>) ולפרופיל. אפשר לשנות מאוחר יותר, אבל זה שובר לינקים קיימים — עדיף לבחור פעם אחת ולהישאר.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 2: Check if Git is installed ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title-container">
+                    <h2>בדיקה — האם Git כבר מותקן אצלכם?</h2>
+                    <div class="duration">דקה</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    על הרבה מחשבים Git כבר מותקן (במיוחד Mac עם xcode-select מהעבר). נבדוק לפני שמורידים שוב — אם זה מותקן, מדלגים ישר לשלב 4.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את <strong>VS Code</strong>.</li>
+                        <li>פתחו את הטרמינל הפנימי — <code>Ctrl+`</code> (בק-טיק, התו מעל ה-Tab). ב-Mac גם <code>Cmd+`</code> עובד, או דרך התפריט <em>Terminal → New Terminal</em>.</li>
+                        <li>הקלידו ולחצו Enter:
+                            <div class="code-block"><code>git --version</code></div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="skip">
+                    <div class="skip-title">✅ קיבלתם תשובה כמו <code>git version 2.43.0</code>?</div>
+                    מצוין — Git כבר מותקן. <strong>דלגו ישר לשלב 4 (הקונפיגורציה).</strong>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ קיבלתם <code>command not found</code> או <code>'git' is not recognized</code>?</div>
+                    Git לא מותקן (או לא ב-PATH). המשיכו לשלב 3 ותתקינו.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 3: Install Git ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title-container">
+                    <h2>התקנת Git (רק אם שלב 2 נכשל)</h2>
+                    <div class="duration">5–10 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Git זו התוכנה שמנהלת גרסאות של הקוד שלכם על המחשב. <strong>Git ≠ GitHub:</strong> Git רץ אצלכם, GitHub זה השרת. שניהם עובדים ביחד.
+                </div>
+
+                <div class="platform-tabs"><div class="platform-tab">🍎 Mac</div></div>
+                <ol class="instruction-list">
+                    <li>פתחו טרמינל (Spotlight → Terminal, או הטרמינל של VS Code). הקלידו:
+                        <div class="code-block"><code>xcode-select --install</code></div>
+                    </li>
+                    <li>ייפתח דיאלוג של Apple — לחצו <strong>Install</strong> וחכו לסיום (3–5 דקות).</li>
+                    <li>בדיקה: סגרו ופתחו טרמינל חדש, הקלידו <code>git --version</code> — עכשיו אמור לעבוד.</li>
+                </ol>
+
+                <div class="platform-tabs" style="margin-top: 25px;"><div class="platform-tab">🪟 Windows</div></div>
+                <ol class="instruction-list">
+                    <li>גשו ל-<strong><a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a></strong> — ההורדה תתחיל אוטומטית.</li>
+                    <li>פתחו את קובץ ההתקנה והריצו אותו.</li>
+                    <li><strong>Next-Next-Next</strong> — ברירות המחדל בסדר. <strong>שימו לב במסך אחד:</strong> "Adjusting your PATH environment" — בחרו <em>"Git from the command line and also from 3rd-party software"</em> (האמצעית). זה מה שמאפשר ל-VS Code ולטרמינל לראות את Git.</li>
+                    <li>סיימו את ההתקנה.</li>
+                    <li>בדיקה: <strong>סגרו את VS Code לגמרי ופתחו מחדש</strong> (לא רק חלון — תהליך מלא), פתחו טרמינל פנימי, והקלידו <code>git --version</code>.</li>
+                </ol>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ עדיין <code>command not found</code> אחרי ההתקנה?</div>
+                    ב-Windows — תעשו <strong>restart למחשב</strong> כדי שה-PATH יתעדכן באופן מלא. ב-Mac — וודאו שה-<code>xcode-select --install</code> סיים לרוץ (לפעמים לוקח 10 דק').
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 4: Git config ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title-container">
+                    <h2>קונפיגורציית Git — שם ומייל</h2>
+                    <div class="duration">2 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    כל commit שאתם תעשו יישא את השם והמייל שלכם. בלי הקינפוג הזה, Git לא יודע מי אתם — וה-commits לא ייוחסו לחשבון שלכם בגרף התרומות ב-GitHub.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>בטרמינל הפנימי של VS Code, הקלידו (החליפו <code>"השם שלך"</code> בשם המלא שלכם):
+                            <div class="code-block"><code>git config --global user.name "השם שלך"</code></div>
+                        </li>
+                        <li>אחר כך, הקלידו (החליפו במייל שאיתו נרשמתם ל-GitHub בשלב 1):
+                            <div class="code-block"><code>git config --global user.email "your-email@example.com"</code></div>
+                        </li>
+                        <li>בדיקה — שתי השורות צריכות להופיע:
+                            <div class="code-block"><code>git config --global --list</code></div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 למה <code>--global</code>?</div>
+                    <code>--global</code> אומר ל-Git להחיל את ההגדרה על <strong>כל ה-repos במחשב</strong> — פעם אחת לכל החיים, לא צריך לחזור על זה לכל פרויקט חדש.
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ המייל חייב להתאים</div>
+                    המייל שאתם מקלידים פה חייב להיות זהה למייל שאיתו נרשמתם ל-GitHub. אם הוא שונה — ה-commits לא ייוחסו לכם בגרף התרומות בפרופיל.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 5: Create new repo on GitHub ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title-container">
+                    <h2>יצירת repo חדש ב-GitHub</h2>
+                    <div class="duration">3 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    עכשיו ניצור את ה-repo עצמו על השרת של GitHub — לפני שנקלן אותו למחשב.
+                </div>
+
+                <div class="skip">
+                    <div class="skip-title">↪️ כבר יש לכם קוד או מסמכים מקומיים שרוצים להעלות?</div>
+                    <strong>דלגו ישר לשלב 7</strong> — שם מראים איך לוקחים תיקייה קיימת שיש בה כבר קבצים, ויוצרים ממנה repo ב-GitHub בלחיצה אחת מתוך VS Code (בלי ליצור repo ריק ב-GitHub ובלי Clone).
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>היכנסו ל-<strong><a href="https://github.com" target="_blank">github.com</a></strong> עם החשבון שפתחתם בשלב 1.</li>
+                        <li>בפינה הימנית למעלה — לחצו על האייקון <strong>+</strong> ובחרו <strong>New repository</strong>. (לחלופין: גשו ישר ל-<a href="https://github.com/new" target="_blank">github.com/new</a>.)</li>
+                        <li><strong>Repository name</strong> — תנו שם קצר ותיאורי באנגלית, ללא רווחים. לדוגמה: <code>my-first-repo</code>.</li>
+                        <li><strong>Description (optional)</strong> — שורה אחת מה הפרויקט עושה. אפשר לדלג.</li>
+                        <li>בחרו <strong>Public</strong> (כולם רואים) או <strong>Private</strong> (רק אתם ומי שתזמינו). לתרגול — Public זה בסדר גמור.</li>
+                        <li>סמנו ✅ <strong>Add a README file</strong>. זה יוצר קובץ ראשוני, מה שמקל על ה-clone והעריכה.</li>
+                        <li>השאירו את שאר השדות (gitignore, license) בברירת מחדל.</li>
+                        <li>לחצו על הכפתור הירוק <strong>Create repository</strong>.</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 איך ה-repo נראה עכשיו</div>
+                    אחרי הלחיצה — תועברו לדף ה-repo. שמרו את ה-URL — הוא ייראה כמו <code>github.com/your-username/my-first-repo</code>. נחזור לכאן בעוד רגע.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 6: Clone to VS Code ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title-container">
+                    <h2>Clone — להוריד את ה-repo ל-VS Code</h2>
+                    <div class="duration">3 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Clone = להוריד עותק מקומי של ה-repo, עם הקישור ל-GitHub כבר מוגדר. מהרגע הזה — כל קומיט שאתם עושים יודע איפה ה-"בית" שלו (GitHub).
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>בדף ה-repo ב-GitHub, לחצו על הכפתור הירוק <strong>Code</strong> → בלשונית <strong>HTTPS</strong> → לחצו על אייקון ההעתקה ליד ה-URL. (ה-URL ייראה: <code>https://github.com/your-username/my-first-repo.git</code>)</li>
+                        <li>חזרו ל-VS Code.</li>
+                        <li>לחצו <code>Cmd+Shift+P</code> (Mac) או <code>Ctrl+Shift+P</code> (Windows) — נפתחת ה-Command Palette למעלה.</li>
+                        <li>הקלידו <strong>"Git: Clone"</strong> ובחרו את האפשרות שעולה.</li>
+                        <li>הדביקו את ה-URL שהעתקתם, לחצו Enter.</li>
+                        <li>בחרו תיקייה במחשב לשמור בה (לדוגמה Documents או Desktop).</li>
+                        <li>כשההורדה הסתיימה, VS Code ישאל "האם לפתוח את התיקייה?" — לחצו <strong>Open</strong>.</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ Clone — לא "Publish to GitHub"!</div>
+                    אם VS Code מציע לכם בכלל איפשהו <em>"Publish to GitHub"</em> — <strong>אל תלחצו</strong>. זה זרימה אחרת (פתיחת repo חדש <em>מ-</em>VS Code), והיא תיצור repo שני בחשבון שלכם במקום לעבוד עם זה שכבר יצרתם.
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 בפעם הראשונה — אימות GitHub</div>
+                    בלחיצה הראשונה על Clone, VS Code יבקש מכם להתחבר ל-GitHub. הוא יפתח דפדפן, תאשרו את ההרשאה, וזה יחזיר אתכם ל-VS Code — מאותו רגע, החיבור פעיל.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 7: Publish to GitHub (existing local files path) ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">7</div>
+                <div class="step-title-container">
+                    <h2>כבר יש קוד מקומי? — Publish to GitHub בלחיצה</h2>
+                    <div class="duration">3 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    זה המסלול הקצר אם יש לכם כבר תיקייה עם קבצים על המחשב (קוד, מסמכים, תמונות — כל דבר) ואתם רוצים להעלות אותה ל-GitHub <strong>בלי</strong> ליצור repo ריק ידנית ובלי Clone. VS Code עושה את הכל בלחיצה אחת — מאתחל git, יוצר את ה-repo ב-GitHub, ודוחף את הכל.
+                </div>
+
+                <div class="skip">
+                    <div class="skip-title">↪️ הגעתם משלב 5+6?</div>
+                    <strong>דלגו לשלב 8.</strong> השלב הזה הוא מסלול חלופי לאלה שעוד לא יצרו repo ב-GitHub.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>ב-VS Code: <strong>File → Open Folder</strong> ובחרו את התיקייה שיש בה את הקבצים שלכם.</li>
+                        <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל, או <code>Cmd/Ctrl+Shift+G</code>). תראו את ההודעה: <em>"The folder currently open doesn't have a Git repository"</em>.</li>
+                        <li>לחצו על הכפתור <strong>Publish to GitHub</strong> (לא על <em>Initialize Repository</em>).</li>
+                    </ol>
+
+                    <div class="screenshot">
+                        <div class="screenshot-label">Source Control — לפני אתחול: הכפתור Publish to GitHub</div>
+                        <img src="gifs/git-github/publish-button.png" alt="Source Control panel showing Publish to GitHub button" loading="lazy">
+                    </div>
+
+                    <ol class="instruction-list" start="4">
+                        <li>למעלה במסך תיפתח רשימת בחירה — הקלידו <strong>שם ל-repo</strong> ואז בחרו אחת משתי האפשרויות:
+                            <ul style="margin: 10px 30px 0 0; list-style: disc;">
+                                <li><strong>Publish to GitHub private repository</strong> — רק אתם רואים אותו (מתאים לרוב המקרים).</li>
+                                <li><strong>Publish to GitHub public repository</strong> — כל אחד יכול לראות אותו.</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                    <div class="screenshot">
+                        <div class="screenshot-label">בחירת שם + private/public ב-Command Palette</div>
+                        <img src="gifs/git-github/publish-visibility.png" alt="Quick pick offering Publish to GitHub private or public repository" loading="lazy">
+                    </div>
+
+                    <ol class="instruction-list" start="5">
+                        <li>אם VS Code שואל אילו קבצים לכלול — סמנו את כולם (או רק את אלה שאתם רוצים שיעלו).</li>
+                        <li>חכו כמה שניות. בסיום תופיע הודעה: <em>"Successfully published"</em> עם לינק ל-repo החדש.</li>
+                        <li>לחצו על הלינק — תועברו ישר לדף ה-repo ב-GitHub, וכל הקבצים שלכם כבר שם ✅</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 מה Publish to GitHub עושה מאחורי הקלעים</div>
+                    בלחיצה אחת VS Code מבצע את הרצף: <code>git init</code> (אתחול מקומי) → יצירת repo חדש בחשבון GitHub שלכם דרך ה-API → <code>git add</code> + <code>git commit</code> ראשון → הוספת ה-remote → <code>git push</code>. ידנית זה 5 פקודות; פה זו לחיצה אחת.
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ אם הכפתור לא מופיע</div>
+                    אם במקום שתי האפשרויות אתם רואים רק <em>Initialize Repository</em> — סימן שהתיקייה כבר היא repo (יש בה <code>.git/</code> נסתרת). אם זה לא רצוי, אפשר למחוק את התיקייה הנסתרת <code>.git</code> ולנסות שוב — אבל זהירות, זה מוחק את ההיסטוריה המקומית.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 8: Stage + Commit + Push via UI ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">8</div>
+                <div class="step-title-container">
+                    <h2>Stage + Commit + Push — הזרימה לכל שינוי עתידי</h2>
+                    <div class="duration">3 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    הגדרתם את ה-repo (בין אם דרך Clone או דרך Publish). מהרגע הזה, כל פעם שאתם משנים קובץ — הזרימה היא אותה: <strong>ערכו → Stage עם + → Commit &amp; Sync</strong>. שתי לחיצות, ובלי לעבור לטרמינל.
+                </div>
+
+                <div class="instructions">
+                    <h3>חלק א' — שינוי קובץ:</h3>
+                    <ol class="instruction-list">
+                        <li>ב-Explorer (סמל הקבצים בצד שמאל) — לחצו על קובץ קיים, לדוגמה <code>README.md</code>.</li>
+                        <li>הוסיפו או שנו טקסט.</li>
+                        <li>שמרו: <code>Cmd+S</code> (Mac) או <code>Ctrl+S</code> (Windows).</li>
+                    </ol>
+                </div>
+
+                <div class="instructions" style="margin-top: 25px;">
+                    <h3>חלק ב' — Stage עם כפתור ה-+:</h3>
+                    <ol class="instruction-list">
+                        <li>בצד שמאל, לחצו על אייקון <strong>Source Control</strong> (ענף עם נקודה, או <code>Cmd/Ctrl+Shift+G</code>).</li>
+                        <li>תחת <strong>Changes</strong> תראו את כל הקבצים ששינתם.</li>
+                        <li>רחפו עם העכבר על הכותרת <strong>Changes</strong> או על שורה של קובץ ספציפי, ולחצו על ה-<strong>+</strong>:
+                            <ul style="margin: 10px 30px 0 0; list-style: disc;">
+                                <li>+ ליד <strong>Changes</strong> = Stage לכל הקבצים בבת אחת.</li>
+                                <li>+ ליד קובץ ספציפי = Stage רק לקובץ הזה.</li>
+                            </ul>
+                        </li>
+                        <li>הקבצים יעברו למעלה ל-<strong>Staged Changes</strong>.</li>
+                    </ol>
+
+                    <div class="screenshot">
+                        <div class="screenshot-label">כפתור ה-+ ב-Source Control — Stage All Changes</div>
+                        <img src="gifs/git-github/stage-plus.png" alt="VS Code Source Control panel with + Stage All Changes button highlighted" loading="lazy">
+                    </div>
+                </div>
+
+                <div class="instructions" style="margin-top: 25px;">
+                    <h3>חלק ג' — Commit &amp; Sync בלחיצה אחת:</h3>
+                    <ol class="instruction-list">
+                        <li>בשדה הטקסט למעלה ("Message"), כתבו הודעת commit קצרה ותיאורית. דוגמה: <code>Add interactive teaching guides and setup instructions for Git and GitHub</code>.</li>
+                        <li>במקום ללחוץ על <strong>✓ Commit</strong> הרגיל, לחצו על <strong>החץ ⌄</strong> שמימין לכפתור הכחול — נפתחת רשימה.</li>
+                        <li>בחרו <strong>Commit &amp; Sync</strong> — זה מבצע commit ואז push ל-GitHub בלחיצה אחת.</li>
+                        <li>חזרו לדף ה-repo ב-GitHub בדפדפן ורעננו — השינויים אמורים להופיע ✅</li>
+                    </ol>
+
+                    <div class="screenshot">
+                        <div class="screenshot-label">החץ ⌄ ליד Commit — בוחרים Commit &amp; Sync</div>
+                        <img src="gifs/git-github/commit-sync.png" alt="Commit dropdown options including Commit, Commit Amend, Commit Push, Commit Sync" loading="lazy">
+                    </div>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 ההבדל בין האופציות בתפריט</div>
+                    <strong>Commit</strong> — מקליט מקומית בלבד (לא מגיע ל-GitHub). · <strong>Commit &amp; Push</strong> — Commit + שולח ל-GitHub. · <strong>Commit &amp; Sync</strong> — כמו Push, ובנוסף מושך עדכונים אם מישהו אחר עבד על אותו repo. <strong>בעבודה לבד — Commit &amp; Push מספיק. בעבודה בצוות — תמיד Sync.</strong>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 הזרימה המלאה לזכור</div>
+                    <strong>ערכו קובץ → שמרו → + (stage) → הודעת commit → ⌄ → Commit &amp; Sync.</strong> זה הזרימה הקבועה לכל קומיט מכאן והלאה.
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ אם Sync או Push נכשל</div>
+                    פתחו את הטרמינל הפנימי (<code>Ctrl+`</code>) — שם תראו הודעת שגיאה ספציפית. הסיבות הנפוצות: <strong>(א)</strong> לא אישרתם את ההתחברות של VS Code ל-GitHub — סגרו ופתחו VS Code מחדש. <strong>(ב)</strong> מישהו אחר דחף לאותו repo — לחצו על 🔄 Sync שמטמיע את השינויים שלהם לפני שלכם.
+                </div>
+            </div>
+        </div>
+
+        <div class="success-banner">
+            <h3>🎉 סיימתם — Push ראשון הצליח!</h3>
+            <p>יש לכם עכשיו: חשבון GitHub, Git מותקן ומקונפג עם השם והמייל שלכם, repo חדש שעובד מקצה לקצה, וזרימה ברורה שתשמש אתכם בכל קומיט עתידי. מכאן והלאה — אותו <strong>שינוי → + → ✓ → 🔄</strong>.</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>מדריך מאת זכר אדינייב · <a href="https://github.com/" target="_blank">github.com</a></p>
+    </footer>
+</body>
+</html>
