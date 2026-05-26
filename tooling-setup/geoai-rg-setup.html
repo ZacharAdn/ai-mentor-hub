@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדריך הקמת סביבת פיתוח — GeoAI · RG Innovation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh; color: #1a1a2e; line-height: 1.8;
+        }
+        .top-nav {
+            background: rgba(26, 26, 46, 0.95); backdrop-filter: blur(10px);
+            padding: 15px 30px; display: flex; justify-content: space-between;
+            align-items: center; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .nav-logo {
+            color: white; font-weight: 700; font-size: 1.2rem;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .nav-logo span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white; padding: 60px 20px; text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.8rem; font-weight: 700; margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p { font-size: 1.2rem; color: #a0a0b8; max-width: 700px; margin: 0 auto; }
+        .hero .badge {
+            display: inline-block; background: rgba(102, 126, 234, 0.2);
+            color: #667eea; padding: 8px 16px; border-radius: 20px;
+            font-size: 0.9rem; margin-top: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        .prerequisites {
+            background: white; border-radius: 20px; padding: 30px;
+            margin-bottom: 30px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+        .prerequisites h2 {
+            font-size: 1.5rem; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .prerequisites ul {
+            list-style: none; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        .prerequisites li {
+            display: flex; align-items: center; gap: 12px; padding: 15px;
+            background: #f8f9ff; border-radius: 12px; font-weight: 500;
+        }
+        .prerequisites li .icon {
+            width: 40px; height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px; display: flex; align-items: center;
+            justify-content: center; color: white; font-size: 1.2rem; flex-shrink: 0;
+        }
+        .step {
+            background: white; border-radius: 20px; margin-bottom: 30px;
+            overflow: hidden; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .step:hover { transform: translateY(-5px); }
+        .step-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white; padding: 25px 30px;
+            display: flex; align-items: center; gap: 20px;
+        }
+        .step-number {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 1.5rem; font-weight: 700; flex-shrink: 0;
+        }
+        .step-title-container h2 { font-size: 1.4rem; font-weight: 600; }
+        .step-title-container .duration { font-size: 0.9rem; color: #a0a0b8; margin-top: 5px; }
+        .step-content { padding: 30px; }
+        .step-description {
+            font-size: 1.1rem; color: #666; margin-bottom: 25px; padding: 20px;
+            background: #f8f9ff; border-radius: 12px; border-right: 4px solid #667eea;
+        }
+        .path-card {
+            background: #fafbff; border: 2px solid #c8d0ff; border-radius: 16px;
+            padding: 25px; margin: 20px 0;
+        }
+        .path-card .path-title {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 1.15rem; font-weight: 700; color: #1a1a2e; margin-bottom: 10px;
+        }
+        .path-card .path-tag {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; padding: 4px 12px; border-radius: 6px;
+            font-size: 0.8rem; font-weight: 700;
+        }
+        .path-card .path-subtitle {
+            color: #666; font-size: 0.98rem; margin-bottom: 18px;
+        }
+        .instructions { margin-top: 25px; }
+        .instructions h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: 15px; color: #1a1a2e; }
+        .instruction-list { list-style: none; counter-reset: instruction; }
+        .instruction-list li {
+            counter-increment: instruction; padding: 15px 60px 15px 15px;
+            margin-bottom: 10px; background: white; border-radius: 12px;
+            position: relative; border: 1px solid #e8e8f0; transition: all 0.2s ease;
+        }
+        .path-card .instruction-list li { background: white; }
+        .instruction-list li:hover { background: #f0f2ff; border-color: #667eea; }
+        .instruction-list li::before {
+            content: counter(instruction); position: absolute; right: 15px; top: 22px;
+            width: 30px; height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.9rem;
+        }
+        .code-block {
+            background: #1a1a2e; color: #7ee787; padding: 15px 20px;
+            border-radius: 8px; font-family: 'Courier New', monospace;
+            margin: 15px 0; overflow-x: auto; position: relative;
+            direction: ltr; text-align: left;
+        }
+        .code-block::before {
+            content: "פקודה"; position: absolute; top: -10px; left: 15px;
+            background: #667eea; color: white; font-size: 0.7rem;
+            padding: 3px 10px; border-radius: 4px;
+            font-family: 'Heebo', sans-serif; font-weight: 600;
+        }
+        .code-block code { display: block; white-space: pre; }
+        .platform-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
+        .platform-tab {
+            background: #e8eaff; color: #667eea; padding: 6px 14px;
+            border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+        }
+        .tip, .warning, .info {
+            padding: 20px; border-radius: 12px 0 0 12px; margin: 20px 0;
+        }
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-right: 4px solid #4caf50;
+        }
+        .warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-right: 4px solid #ff9800;
+        }
+        .info {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-right: 4px solid #2196f3;
+        }
+        .tip-title { font-weight: 600; color: #2e7d32; margin-bottom: 8px; }
+        .warning-title { font-weight: 600; color: #e65100; margin-bottom: 8px; }
+        .info-title { font-weight: 600; color: #1565c0; margin-bottom: 8px; }
+        .success-banner {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white; padding: 30px; border-radius: 20px;
+            text-align: center; margin: 30px 0;
+        }
+        .success-banner h3 { font-size: 1.5rem; margin-bottom: 10px; }
+        footer { text-align: center; padding: 40px 20px; color: white; }
+        footer a { color: white; text-decoration: none; font-weight: 500; }
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .step-header { flex-direction: column; text-align: center; }
+            .instruction-list li { padding-right: 50px; }
+            .top-nav { flex-direction: column; gap: 15px; padding: 15px; }
+            .path-card { padding: 18px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-logo">
+            <span>GeoAI · RG Innovation</span> · הקמת סביבת פיתוח
+        </div>
+    </nav>
+
+    <div class="hero">
+        <h1>הקמת סביבת פיתוח</h1>
+        <p>מדריך מלא להקמת סביבת העבודה לקורס GeoAI: GitHub, VS Code, Git, ו-Claude Code extension. עקבו לפי הסדר — אל תדלגו.</p>
+        <div class="badge">זמן משוער: 30–45 דקות</div>
+    </div>
+
+    <div class="container">
+        <div class="prerequisites">
+            <h2>לפני שמתחילים</h2>
+            <ul>
+                <li><div class="icon">💻</div><span>מחשב נייד (Mac / Windows / Linux)</span></li>
+                <li><div class="icon">🌐</div><span>חיבור אינטרנט יציב</span></li>
+                <li><div class="icon">📧</div><span>חשבון מייל פעיל</span></li>
+                <li><div class="icon">📨</div><span>הזמנה לארגון <strong>Geo-AI-Course</strong> ב-GitHub (נשלחת במייל)</span></li>
+            </ul>
+        </div>
+
+        <!-- ============ STEP 1: GitHub ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title-container">
+                    <h2>חשבון GitHub + הצטרפות לארגון של הקורס</h2>
+                    <div class="duration">כ-5 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    GitHub זה המקום שבו הקוד שלכם יחיה. כל הפרויקטים שלכם בקורס נחים תחת הארגון <strong>Geo-AI-Course</strong> — לשם תדחפו את הקוד לאורך כל המודול.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>גשו ל-<strong><a href="https://github.com/signup" target="_blank">github.com/signup</a></strong>.</li>
+                        <li>הירשמו עם <strong>המייל שאיתו אתם רשומים בקורס</strong> — זה המייל שאליו אנחנו שולחים את ההזמנה לארגון ואת רישיון Anthropic.</li>
+                        <li>בחרו <strong>username מקצועי</strong> — זה נשאר איתכם הרבה שנים, אז להימנע מ-<code>cool_dude_2003</code>.</li>
+                        <li>אשרו את המייל שיגיע מ-GitHub.</li>
+                        <li>פתחו את ההזמנה לארגון שתגיע במייל — היא נראית: <em>"@ZacharAdn has invited you to join @Geo-AI-Course"</em>. לחצו על הלינק ואשרו.</li>
+                        <li>וודאו שאתם רואים את <strong><a href="https://github.com/Geo-AI-Course" target="_blank">github.com/Geo-AI-Course</a></strong> בחשבון שלכם.</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ למה דווקא המייל הרשום בקורס?</div>
+                    כל המערכות של הקורס (GitHub, Anthropic Team) מסונכרנות לפי המייל הזה. אם תירשמו עם מייל אחר — לא תקבלו את ההזמנות והרישיונות, ויהיה צורך לפתור ידנית.
+                </div>
+
+                <div class="info">
+                    <div class="info-title">ℹ️ עוד לא קיבלתם הזמנה?</div>
+                    אם הגעתם למפגש הראשון בלי הזמנה במייל — אל תיתקעו. סיימו את שאר השלבים (VS Code + Git), וזכר יוסיף אתכם בלייב במהלך הסדנה.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 2: VS Code ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title-container">
+                    <h2>התקנת VS Code (סביבת הפיתוח)</h2>
+                    <div class="duration">כ-5 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    VS Code (Visual Studio Code) זו סביבת הפיתוח החינמית של מיקרוסופט — הכלי הכי פופולרי לעבודה עם קוד. אם כבר התקנתם — תדלגו לשלב הבא.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>גשו ל-<strong><a href="https://code.visualstudio.com/download" target="_blank">code.visualstudio.com/download</a></strong></li>
+                        <li>בחרו את הגרסה למערכת ההפעלה שלכם (Mac / Windows / Linux) ולחצו <strong>Download</strong>.</li>
+                        <li>פתחו את קובץ ההתקנה מתיקיית ההורדות. <em>Windows:</em> Next-Next-Next. <em>Mac:</em> גוררים את האייקון לתיקיית Applications.</li>
+                        <li>פתחו את VS Code לפעם הראשונה. אפשר לסגור את ה-Welcome.</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 הכרת הפאנלים</div>
+                    בצד שמאל יש כמה אייקונים: <strong>Explorer</strong> (קבצים) · <strong>Search</strong> (חיפוש) · <strong>Source Control</strong> (Git GUI, אייקון של ענף) · <strong>Extensions</strong> (תוספים). את הטרמינל התחתון פותחים עם <code>Ctrl+`</code> (בק-טיק).
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 3: Git ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title-container">
+                    <h2>התקנת Git</h2>
+                    <div class="duration">כ-5 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Git זה התוכנה שמנהלת גרסאות של הקוד שלכם. <strong>Git ≠ GitHub:</strong> Git רץ על המחשב, GitHub זה שרת ענן. שניהם עובדים ביחד.
+                </div>
+
+                <div class="instructions">
+                    <h3>בחרו את מערכת ההפעלה שלכם:</h3>
+                </div>
+
+                <div class="platform-tabs"><div class="platform-tab">🍎 Mac</div></div>
+                <ol class="instruction-list">
+                    <li>פתחו טרמינל (Spotlight → Terminal). הקלידו:
+                        <div class="code-block"><code>xcode-select --install</code></div>
+                    </li>
+                    <li>ייפתח דיאלוג של Apple — לחצו <strong>Install</strong> וחכו לסיום (3-5 דק').</li>
+                </ol>
+
+                <div class="platform-tabs" style="margin-top: 25px;"><div class="platform-tab">🪟 Windows</div></div>
+                <ol class="instruction-list">
+                    <li>גשו ל-<strong><a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a></strong> — ההורדה תתחיל אוטומטית.</li>
+                    <li>פתחו את קובץ ההתקנה והריצו אותו.</li>
+                    <li><strong>Next-Next-Next</strong> — ברירות המחדל בסדר. <strong>חשוב:</strong> במסך "Adjusting your PATH" — בחרו <em>"Git from the command line and also from 3rd-party software"</em>.</li>
+                    <li>סיימו את ההתקנה.</li>
+                </ol>
+
+                <div class="platform-tabs" style="margin-top: 25px;"><div class="platform-tab">🐧 Linux</div></div>
+                <ol class="instruction-list">
+                    <li>פתחו טרמינל. Ubuntu/Debian: <code>sudo apt install git</code>. Fedora: <code>sudo dnf install git</code></li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- ============ STEP 4: Verify ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title-container">
+                    <h2>אימות — האם Git באמת מותקן?</h2>
+                    <div class="duration">כ-1 דקה</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    אסור לדלג. אפשר להיות בלי Git על המחשב, גם אם נדמה שמותקן — וכל ה-flow ייפול בשלב הבא. בודקים עכשיו.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את VS Code (אם עוד לא פתוח).</li>
+                        <li>פתחו את הטרמינל הפנימי — <code>Ctrl+`</code> (בק-טיק, התו מעל ה-Tab).</li>
+                        <li>הקלידו:
+                            <div class="code-block"><code>git --version</code></div>
+                        </li>
+                        <li>צריך לקבל משהו כמו <code>git version 2.43.0</code> (המספר עשוי להשתנות).</li>
+                    </ol>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ אם קיבלתם <code>command not found</code></div>
+                    סימן ש-Git לא מותקן או לא ב-PATH. <strong>Mac:</strong> חזרו לשלב 3, וודאו ש-<code>xcode-select --install</code> הסתיים. <strong>Windows:</strong> סגרו את VS Code, פתחו אותו מחדש — אם עדיין לא עובד, restart למחשב כדי שה-PATH יתעדכן.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 5: Git config ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title-container">
+                    <h2>קונפיגורציית Git — שם ומייל</h2>
+                    <div class="duration">כ-2 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    כל commit שאתם תעשו יישא את השם והמייל שלכם. בלי הקינפוג הזה, Git לא יודע מי אתם וה-commits לא ייוחסו לחשבון שלכם בגרף התרומות ב-GitHub.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>בטרמינל הפנימי של VS Code, הקלידו (החליפו "השם שלך" בשם שלכם):
+                            <div class="code-block"><code>git config --global user.name "השם שלך"</code></div>
+                        </li>
+                        <li>אחר כך, הקלידו (החליפו במייל שאיתו נרשמתם ל-GitHub):
+                            <div class="code-block"><code>git config --global user.email "your-email@example.com"</code></div>
+                        </li>
+                        <li>בדיקה — שתי השורות תופיעו ב:
+                            <div class="code-block"><code>git config --global --list</code></div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 למה <code>--global</code>?</div>
+                    <code>--global</code> אומר ל-Git להחיל את ההגדרה על כל ה-repos במחשב — פעם אחת לכל החיים, לא צריך לחזור על זה לכל פרויקט.
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ חשוב</div>
+                    המייל חייב להיות זהה למייל שאיתו נרשמתם ל-GitHub. אם הוא שונה — ה-commits לא ייוחסו לכם בגרף התרומות.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 6: First push ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title-container">
+                    <h2>הפרויקט הראשון שלכם + push ל-GitHub</h2>
+                    <div class="duration">כ-10 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    זה הרגע שבו הכל מתחבר: יוצרים פרויקט, עושים commit ראשון, ודוחפים ל-GitHub תחת הארגון <strong>Geo-AI-Course</strong>. <strong>הכל דרך ה-GUI של VS Code — לא טרמינל.</strong>
+                </div>
+
+                <div class="info">
+                    <div class="info-title">ℹ️ שני מסלולים — זכר יגיד לכם איזה רלוונטי לכם</div>
+                    תלוי איך הוחלט להקים repos: או שכבר יש לכם repo מוכן בארגון (מסלול A — Clone), או שאתם יוצרים בעצמכם תחת הארגון (מסלול B — Publish). הצעדים שונים — תעקבו רק אחרי המסלול שלכם.
+                </div>
+
+                <!-- Path A: Clone -->
+                <div class="path-card">
+                    <div class="path-title">
+                        <span class="path-tag">מסלול A</span>
+                        Clone — יש לי repo מוכן בארגון
+                    </div>
+                    <div class="path-subtitle">קיבלתם הזמנה ל-repo ספציפי תחת <code>Geo-AI-Course</code> (זכר הקים אותו עבורכם). מורידים עותק → עורכים → דוחפים בחזרה.</div>
+
+                    <div class="instructions">
+                        <h3>Clone — להוריד עותק:</h3>
+                        <ol class="instruction-list">
+                            <li>ב-GitHub, היכנסו ל-repo שלכם תחת <strong><a href="https://github.com/Geo-AI-Course" target="_blank">Geo-AI-Course</a></strong>. לחצו על הכפתור הירוק <code>Code</code> → העתיקו את ה-HTTPS URL.</li>
+                            <li>ב-VS Code: <code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Git: Clone"</strong> → הדביקו את ה-URL.</li>
+                            <li>בחרו תיקיית יעד במחשב (Desktop / Documents — מה שנוח).</li>
+                            <li>כשהורדה הסתיימה, לחצו <strong>Open Folder</strong>. התיקייה תיטען ב-Explorer.</li>
+                        </ol>
+                    </div>
+
+                    <div class="warning">
+                        <div class="warning-title">⚠️ Clone — לא Publish!</div>
+                        אם VS Code מציע <em>"Publish to GitHub"</em> במסלול הזה — <strong>אל תלחצו.</strong> זה יוצר repo חדש בחשבון הפרטי שלכם במקום לעבוד עם זה שכבר קיים בארגון.
+                    </div>
+
+                    <div class="instructions" style="margin-top: 25px;">
+                        <h3>עריכה + commit + push דרך ה-GUI:</h3>
+                        <ol class="instruction-list">
+                            <li>פתחו את <code>README.md</code> ב-Editor (אם אין — צרו אחד חדש: <strong>File → New File</strong>, שמרו כ-<code>README.md</code>).</li>
+                            <li>הוסיפו שורה: שם הפרויקט + משפט תיאור.</li>
+                            <li>שמרו (<code>Cmd/Ctrl + S</code>).</li>
+                            <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל). תראו את README תחת <strong>Changes</strong>.</li>
+                            <li>לחצו על <strong>+</strong> ליד הקובץ — Stage.</li>
+                            <li>בשדה הטקסט למעלה — כתבו הודעת commit (למשל: <code>docs: add project description</code>).</li>
+                            <li>לחצו <strong>✓ Commit</strong>.</li>
+                            <li>לחצו <strong>🔄 Sync Changes</strong> — זה Push + Pull.</li>
+                            <li>רעננו את דף ה-GitHub בדפדפן — הקובץ אמור להופיע ✅</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <!-- Path B: Publish -->
+                <div class="path-card">
+                    <div class="path-title">
+                        <span class="path-tag">מסלול B</span>
+                        Publish — אני יוצר/ת repo חדש בארגון
+                    </div>
+                    <div class="path-subtitle">יש לכם הרשאת יצירת repos בארגון <code>Geo-AI-Course</code>. יוצרים תיקייה מקומית, מוסיפים README, ודוחפים ל-GitHub בלחיצה אחת.</div>
+
+                    <div class="instructions">
+                        <h3>יצירת פרויקט מקומי:</h3>
+                        <ol class="instruction-list">
+                            <li>במחשב — צרו תיקייה חדשה במקום נוח (Desktop / Documents). שם לדוגמה: <code>my-first-geoai</code>.</li>
+                            <li>ב-VS Code: <strong>File → Open Folder</strong> → בחרו את התיקייה שיצרתם.</li>
+                            <li>ב-Explorer (סרגל שמאל) → לחצו על אייקון <strong>New File</strong> → שם הקובץ: <code>README.md</code>.</li>
+                            <li>הוסיפו שורה: שם הפרויקט + משפט תיאור. שמרו (<code>Cmd/Ctrl + S</code>).</li>
+                        </ol>
+                    </div>
+
+                    <div class="instructions" style="margin-top: 25px;">
+                        <h3>Publish ל-GitHub תחת הארגון:</h3>
+                        <ol class="instruction-list">
+                            <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל).</li>
+                            <li>לחצו <strong>Initialize Repository</strong> — זה יוצר git מקומי.</li>
+                            <li>תראו את README תחת <strong>Changes</strong>. לחצו <strong>+</strong> ליד הקובץ (Stage), כתבו הודעת commit (למשל: <code>initial commit</code>), ולחצו <strong>✓ Commit</strong>.</li>
+                            <li><code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Publish to GitHub"</strong>.</li>
+                            <li><strong>חשוב:</strong> כשנשאלים לאיזה חשבון לפרסם — בחרו <strong>Geo-AI-Course</strong> (לא את החשבון הפרטי שלכם).</li>
+                            <li>בחרו <strong>"Publish to GitHub public repository"</strong> או <strong>private</strong> לפי הנחיית זכר.</li>
+                            <li>VS Code יפתח את ה-repo בדפדפן ✅</li>
+                        </ol>
+                    </div>
+
+                    <div class="warning">
+                        <div class="warning-title">⚠️ אם לא רואים את הארגון ברשימה</div>
+                        סימן שעוד אין לכם הרשאת יצירת repos ב-<code>Geo-AI-Course</code>, או שעוד לא קיבלתם הזמנה. בקשו מזכר להוסיף אתכם, או עברו זמנית למסלול A אחרי שהוא יכין לכם repo.
+                    </div>
+                </div>
+
+                <div class="tip" style="margin-top: 25px;">
+                    <div class="tip-title">💡 בפעם הראשונה — אימות GitHub</div>
+                    בפעולה הראשונה מול GitHub (Clone / Sync / Publish), VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.
+                </div>
+            </div>
+        </div>
+
+        <!-- ============ STEP 7: Claude Code extension ============ -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">7</div>
+                <div class="step-title-container">
+                    <h2>התקנת Claude Code Extension</h2>
+                    <div class="duration">כ-5 דקות</div>
+                </div>
+            </div>
+            <div class="step-content">
+                <div class="step-description">
+                    Claude Code זה הסוכן של Anthropic שיעבוד איתכם בתוך VS Code. סוכן = כלי AI שיכול לקרוא קבצים (Read), לכתוב קבצים (Write), ולהריץ פקודות בטרמינל (Bash). אחרי ההתקנה תראו אותו בצד ימין של VS Code.
+                </div>
+
+                <div class="instructions">
+                    <h3>עקבו אחרי השלבים:</h3>
+                    <ol class="instruction-list">
+                        <li>קודם כל — וודאו שקיבלתם <strong>הזמנה ל-Anthropic Team</strong> במייל (זכר שלח). לחצו על הלינק במייל ואשרו רישום.</li>
+                        <li>ב-VS Code: לחצו על אייקון ה-<strong>Extensions</strong> בצד שמאל (4 ריבועים) או <code>Cmd/Ctrl + Shift + X</code>.</li>
+                        <li>בשורת החיפוש למעלה — חפשו <strong>"Claude Code"</strong>.</li>
+                        <li>בחרו את ה-extension הראשון (של <strong>Anthropic</strong>, סימן וי כחול ליד השם) ולחצו <strong>Install</strong>.</li>
+                        <li>אחרי ההתקנה תראו את ה-icon של Claude למטה ב-status bar או בסרגל הצד.</li>
+                        <li>לחצו עליו — VS Code יבקש מכם להתחבר. תאשרו, הוא יפתח דפדפן עם דף Anthropic, תאשרו, חוזרים ל-VS Code.</li>
+                        <li>לסשן חדש: <code>Cmd/Ctrl + Esc</code> או לחצו על ה-icon של Claude.</li>
+                    </ol>
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 @-mention להקשר</div>
+                    בתוך השיחה עם Claude, אפשר להקליד <code>@</code> ולבחור קובץ — והסוכן יקרא אותו כהקשר. דוגמה: <code>@README.md תכתוב לי FEATURE_PLAN.md לפי הפרויקט הזה</code>.
+                </div>
+
+                <div class="tip">
+                    <div class="tip-title">💡 פרומפט ממוספר</div>
+                    כשמבקשים מהסוכן משהו מורכב, עדיף לפרק לרשימה ממוספרת:
+                    <div class="code-block" style="margin-top: 10px;"><code>תכתוב README:
+1. שיהיה באנגלית
+2. שיכלול את הסעיפים: Problem, Target Users, Data Source, ML Approach
+3. שורת תיאור אחת בהתחלה</code></div>
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ אם הסוכן הציע פקודה לטרמינל</div>
+                    הסוכן יבקש מכם הרשאה לכל פעולה — קראו לפני שאתם מאשרים. במיוחד בפקודות <code>git push</code>: <strong>תעדיפו לעשות commit + push דרך ה-Source Control GUI</strong> כדי שאתם בשליטה, לא הסוכן.
+                </div>
+            </div>
+        </div>
+
+        <div class="success-banner">
+            <h3>🎉 סיימתם!</h3>
+            <p>הסביבה שלכם מוכנה: חשבון GitHub + חברות בארגון, VS Code + Git + Claude Code extension מותקנים ומקונפגים, ו-repo משוייך שעובד מקצה לקצה. עכשיו אפשר להתחיל לעבוד עם הסוכן על הפרויקט הראשון שלכם ב-GeoAI.</p>
+        </div>
+
+        <div class="prerequisites" style="margin-top: 30px;">
+            <h2>נתקעתם? כאן עוזרים:</h2>
+            <ul>
+                <li><div class="icon">🙋</div><span>בסדנה — בקשו מזכר שיעבור אליכם</span></li>
+                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zahar214@gmail.com">zahar214@gmail.com</a></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>GeoAI · RG Innovation · הזירה ההנדסית טכנולוגית בישראל · מודול 03 — ניהול נתוני־עתק גיאו־מרחביים</p>
+    </footer>
+</body>
+</html>

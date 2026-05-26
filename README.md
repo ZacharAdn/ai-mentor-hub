@@ -47,6 +47,7 @@ The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-men
 | [claude-code-installation-guide.html](tooling-setup/claude-code-installation-guide.html) | Claude Code installation — Windows, Mac, VS Code |
 | [git-github-setup.html](tooling-setup/git-github-setup.html) | From zero to first push — GitHub signup, Git install, config, commit/push via the VS Code UI |
 | [technion-lbs-setup.html](tooling-setup/technion-lbs-setup.html) | Technion LBS course dev environment setup |
+| [geoai-rg-setup.html](tooling-setup/geoai-rg-setup.html) | GeoAI / RG Innovation dev environment setup (Geo-AI-Course org) |
 | [whatsapp-setup.html](tooling-setup/whatsapp-setup.html) | WhatsApp Skill installation |
 | [hebrew-terminal-fix.html](tooling-setup/hebrew-terminal-fix.html) | Fixing Hebrew display in the Windows terminal |
 | [self-improving-skills-hooks.html](tooling-setup/self-improving-skills-hooks.html) | Claude Code Skills and Hooks system |
