@@ -398,93 +398,40 @@
             </div>
             <div class="step-content">
                 <div class="step-description">
-                    זה הרגע שבו הכל מתחבר: יוצרים פרויקט, עושים commit ראשון, ודוחפים ל-GitHub תחת הארגון <strong>Geo-AI-Course</strong>. <strong>הכל דרך ה-GUI של VS Code — לא טרמינל.</strong>
+                    זה הרגע שבו הכל מתחבר: יוצרים פרויקט מקומי, עושים commit ראשון, ודוחפים ל-GitHub תחת הארגון <strong>Geo-AI-Course</strong> בלחיצה אחת. <strong>הכל דרך ה-GUI של VS Code — לא טרמינל.</strong>
                 </div>
 
-                <div class="info">
-                    <div class="info-title">ℹ️ שני מסלולים — זכר יגיד לכם איזה רלוונטי לכם</div>
-                    תלוי איך הוחלט להקים repos: או שכבר יש לכם repo מוכן בארגון (מסלול A — Clone), או שאתם יוצרים בעצמכם תחת הארגון (מסלול B — Publish). הצעדים שונים — תעקבו רק אחרי המסלול שלכם.
+                <div class="instructions">
+                    <h3>יצירת פרויקט מקומי:</h3>
+                    <ol class="instruction-list">
+                        <li>במחשב — צרו תיקייה חדשה במקום נוח (Desktop / Documents). שם לדוגמה: <code>my-first-geoai</code>.</li>
+                        <li>ב-VS Code: <strong>File → Open Folder</strong> → בחרו את התיקייה שיצרתם.</li>
+                        <li>ב-Explorer (סרגל שמאל) → לחצו על אייקון <strong>New File</strong> → שם הקובץ: <code>README.md</code>.</li>
+                        <li>הוסיפו שורה: שם הפרויקט + משפט תיאור. שמרו (<code>Cmd/Ctrl + S</code>).</li>
+                    </ol>
                 </div>
 
-                <!-- Path A: Clone -->
-                <div class="path-card">
-                    <div class="path-title">
-                        <span class="path-tag">מסלול A</span>
-                        Clone — יש לי repo מוכן בארגון
-                    </div>
-                    <div class="path-subtitle">קיבלתם הזמנה ל-repo ספציפי תחת <code>Geo-AI-Course</code> (זכר הקים אותו עבורכם). מורידים עותק → עורכים → דוחפים בחזרה.</div>
-
-                    <div class="instructions">
-                        <h3>Clone — להוריד עותק:</h3>
-                        <ol class="instruction-list">
-                            <li>ב-GitHub, היכנסו ל-repo שלכם תחת <strong><a href="https://github.com/Geo-AI-Course" target="_blank">Geo-AI-Course</a></strong>. לחצו על הכפתור הירוק <code>Code</code> → העתיקו את ה-HTTPS URL.</li>
-                            <li>ב-VS Code: <code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Git: Clone"</strong> → הדביקו את ה-URL.</li>
-                            <li>בחרו תיקיית יעד במחשב (Desktop / Documents — מה שנוח).</li>
-                            <li>כשהורדה הסתיימה, לחצו <strong>Open Folder</strong>. התיקייה תיטען ב-Explorer.</li>
-                        </ol>
-                    </div>
-
-                    <div class="warning">
-                        <div class="warning-title">⚠️ Clone — לא Publish!</div>
-                        אם VS Code מציע <em>"Publish to GitHub"</em> במסלול הזה — <strong>אל תלחצו.</strong> זה יוצר repo חדש בחשבון הפרטי שלכם במקום לעבוד עם זה שכבר קיים בארגון.
-                    </div>
-
-                    <div class="instructions" style="margin-top: 25px;">
-                        <h3>עריכה + commit + push דרך ה-GUI:</h3>
-                        <ol class="instruction-list">
-                            <li>פתחו את <code>README.md</code> ב-Editor (אם אין — צרו אחד חדש: <strong>File → New File</strong>, שמרו כ-<code>README.md</code>).</li>
-                            <li>הוסיפו שורה: שם הפרויקט + משפט תיאור.</li>
-                            <li>שמרו (<code>Cmd/Ctrl + S</code>).</li>
-                            <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל). תראו את README תחת <strong>Changes</strong>.</li>
-                            <li>לחצו על <strong>+</strong> ליד הקובץ — Stage.</li>
-                            <li>בשדה הטקסט למעלה — כתבו הודעת commit (למשל: <code>docs: add project description</code>).</li>
-                            <li>לחצו <strong>✓ Commit</strong>.</li>
-                            <li>לחצו <strong>🔄 Sync Changes</strong> — זה Push + Pull.</li>
-                            <li>רעננו את דף ה-GitHub בדפדפן — הקובץ אמור להופיע ✅</li>
-                        </ol>
-                    </div>
-                </div>
-
-                <!-- Path B: Publish -->
-                <div class="path-card">
-                    <div class="path-title">
-                        <span class="path-tag">מסלול B</span>
-                        Publish — אני יוצר/ת repo חדש בארגון
-                    </div>
-                    <div class="path-subtitle">יש לכם הרשאת יצירת repos בארגון <code>Geo-AI-Course</code>. יוצרים תיקייה מקומית, מוסיפים README, ודוחפים ל-GitHub בלחיצה אחת.</div>
-
-                    <div class="instructions">
-                        <h3>יצירת פרויקט מקומי:</h3>
-                        <ol class="instruction-list">
-                            <li>במחשב — צרו תיקייה חדשה במקום נוח (Desktop / Documents). שם לדוגמה: <code>my-first-geoai</code>.</li>
-                            <li>ב-VS Code: <strong>File → Open Folder</strong> → בחרו את התיקייה שיצרתם.</li>
-                            <li>ב-Explorer (סרגל שמאל) → לחצו על אייקון <strong>New File</strong> → שם הקובץ: <code>README.md</code>.</li>
-                            <li>הוסיפו שורה: שם הפרויקט + משפט תיאור. שמרו (<code>Cmd/Ctrl + S</code>).</li>
-                        </ol>
-                    </div>
-
-                    <div class="instructions" style="margin-top: 25px;">
-                        <h3>Publish ל-GitHub תחת הארגון:</h3>
-                        <ol class="instruction-list">
-                            <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל).</li>
-                            <li>לחצו <strong>Initialize Repository</strong> — זה יוצר git מקומי.</li>
-                            <li>תראו את README תחת <strong>Changes</strong>. לחצו <strong>+</strong> ליד הקובץ (Stage), כתבו הודעת commit (למשל: <code>initial commit</code>), ולחצו <strong>✓ Commit</strong>.</li>
-                            <li><code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Publish to GitHub"</strong>.</li>
-                            <li><strong>חשוב:</strong> כשנשאלים לאיזה חשבון לפרסם — בחרו <strong>Geo-AI-Course</strong> (לא את החשבון הפרטי שלכם).</li>
-                            <li>בחרו <strong>"Publish to GitHub public repository"</strong> או <strong>private</strong> לפי הנחיית זכר.</li>
-                            <li>VS Code יפתח את ה-repo בדפדפן ✅</li>
-                        </ol>
-                    </div>
-
-                    <div class="warning">
-                        <div class="warning-title">⚠️ אם לא רואים את הארגון ברשימה</div>
-                        סימן שעוד אין לכם הרשאת יצירת repos ב-<code>Geo-AI-Course</code>, או שעוד לא קיבלתם הזמנה. בקשו מזכר להוסיף אתכם, או עברו זמנית למסלול A אחרי שהוא יכין לכם repo.
-                    </div>
+                <div class="instructions" style="margin-top: 25px;">
+                    <h3>Publish ל-GitHub תחת הארגון:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל).</li>
+                        <li>לחצו <strong>Initialize Repository</strong> — זה יוצר git מקומי.</li>
+                        <li>תראו את README תחת <strong>Changes</strong>. לחצו <strong>+</strong> ליד הקובץ (Stage), כתבו הודעת commit (למשל: <code>initial commit</code>), ולחצו <strong>✓ Commit</strong>.</li>
+                        <li><code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Publish to GitHub"</strong>.</li>
+                        <li><strong>חשוב:</strong> כשנשאלים לאיזה חשבון לפרסם — בחרו <strong>Geo-AI-Course</strong> (לא את החשבון הפרטי שלכם).</li>
+                        <li>בחרו <strong>"Publish to GitHub public repository"</strong> או <strong>private</strong> לפי הנחיית זכר.</li>
+                        <li>VS Code יפתח את ה-repo בדפדפן ✅</li>
+                    </ol>
                 </div>
 
                 <div class="tip" style="margin-top: 25px;">
                     <div class="tip-title">💡 בפעם הראשונה — אימות GitHub</div>
-                    בפעולה הראשונה מול GitHub (Clone / Sync / Publish), VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.
+                    בפעולה הראשונה מול GitHub, VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.
+                </div>
+
+                <div class="warning">
+                    <div class="warning-title">⚠️ אם לא רואים את הארגון Geo-AI-Course ברשימה</div>
+                    סימן שעוד אין לכם הרשאת יצירת repos בארגון, או שעוד לא קיבלתם הזמנה. בקשו מזכר להוסיף אתכם — הוא יוסיף בלייב במהלך הסדנה.
                 </div>
             </div>
         </div>
