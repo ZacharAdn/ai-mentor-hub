@@ -546,15 +546,25 @@
                 <details class="warning">
                     <summary>⚠️ דחפתי בטעות לחשבון הפרטי שלי — מה עכשיו?</summary>
                     <div class="callout-body">
-                        <p><strong>איך מזהים:</strong> הסתכלו על ה-URL של ה-repo בדפדפן. אם הוא <code>github.com/&lt;your-username&gt;/...</code> במקום <code>github.com/Geo-AI-Course/...</code> — ה-repo נחת בחשבון הפרטי שלכם, לא בארגון. זה קורה אם לחצתם <em>"Publish to GitHub"</em> במקום <strong>"Git: Clone"</strong>.</p>
+                        <p><strong>איך מזהים — שתי דרכים:</strong></p>
+                        <ol>
+                            <li><strong>URL בדפדפן:</strong> אם הוא <code>github.com/&lt;your-username&gt;/...</code> במקום <code>github.com/Geo-AI-Course/...</code> — ה-repo נחת בחשבון הפרטי שלכם.</li>
+                            <li><strong>מ-VS Code ישירות (ללא דפדפן):</strong> בפאנל <strong>Source Control</strong>, רחפו עם העכבר מעל הקומיט האחרון בגרף → המתינו ~3 שניות → ייפתח tooltip עם פרטי הקומיט וכפתור <strong>Open on GitHub</strong>. לחיצה תפתח את ה-repo בדפדפן — תראו מיד היכן הקומיט נחת.</li>
+                        </ol>
+                        <div class="gif-container">
+                            <div class="gif-label">Hover על קומיט ב-Source Control → Open on GitHub</div>
+                            <img src="../gifs/git-github/commit-hover-open-on-github.png" alt="VS Code Source Control tooltip עם Open on GitHub" loading="lazy">
+                        </div>
+                        <p style="margin-top: 12px;"><strong>הקבצים שכתבתי לא בסכנה:</strong> ה-Clone של ה-repo הנכון <strong>יוצר תיקייה חדשה לגמרי</strong> במחשב. התיקייה הישנה שלכם (עם ה-README שכתבתם) <strong>נשארת שלמה</strong> — שום דבר לא נמחק.</p>
                         <p><strong>איך מתקנים (הדרך הקלה — מומלץ):</strong></p>
                         <ol>
-                            <li>היכנסו ל-repo הפרטי ב-GitHub → לחצו <strong>Settings</strong>.</li>
-                            <li>גוללים לסוף, לאזור <strong>Danger Zone</strong> → <strong>Delete this repository</strong>.</li>
-                            <li>אישור — מקלידים את שם ה-repo.</li>
-                            <li>חוזרים לדף הארגון <a href="https://github.com/Geo-AI-Course" target="_blank">Geo-AI-Course</a>, יוצרים repo חדש שם (כפי שמתואר בשלב 0 למעלה), ועושים <strong>Git: Clone</strong> ב-VS Code.</li>
+                            <li>היכנסו ל-repo הפרטי ב-GitHub → <strong>Settings</strong> → <strong>Danger Zone</strong> → <strong>Delete this repository</strong> (מקלידים את שם ה-repo לאישור).</li>
+                            <li>בדף הארגון <a href="https://github.com/Geo-AI-Course" target="_blank">Geo-AI-Course</a>, יוצרים repo חדש (כפי שמתואר בשלב 0 למעלה).</li>
+                            <li>ב-VS Code: <code>Cmd/Ctrl + Shift + P</code> → <strong>"Git: Clone"</strong> ל-<strong>תיקייה חדשה</strong> (לא לתיקייה הישנה!).</li>
+                            <li><strong>העתיקו את ה-README (וקבצים נוספים) מהתיקייה הישנה לתיקייה החדשה שנוצרה ב-Clone.</strong></li>
+                            <li>Source Control: Stage → Commit → Sync. ה-README שלכם עולה ל-repo הנכון בארגון ✅</li>
                         </ol>
-                        <p><strong>אלטרנטיבה (Transfer):</strong> ב-Settings של ה-repo הפרטי → <em>Transfer ownership</em> → הקלידו <code>Geo-AI-Course</code>. אבל פשוט יותר למחוק ולהתחיל מחדש בארגון.</p>
+                        <p><strong>אלטרנטיבה (Transfer):</strong> ב-Settings של ה-repo הפרטי → <em>Transfer ownership</em> → הקלידו <code>Geo-AI-Course</code>. חוסך את צעדי 3-4, אבל דורש שתבדקו אחרי שה-remote של ה-repo המקומי שלכם הצביע לארגון.</p>
                     </div>
                 </details>
 
@@ -600,11 +610,6 @@
                 <div class="gif-container">
                     <div class="gif-label">אייקון Claude ב-VS Code אחרי ההתקנה</div>
                     <img src="../gifs/step5c_icon.png" alt="אייקון Claude בסרגל העליון של העורך" loading="lazy">
-                </div>
-
-                <div class="gif-container">
-                    <div class="gif-label">הפעלת Claude והתחברות לחשבון Anthropic</div>
-                    <img src="../gifs/step4_authenticate.gif" alt="התחברות ל-Claude" loading="lazy">
                 </div>
 
                 <details class="tip">
