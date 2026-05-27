@@ -184,6 +184,23 @@
             font-family: 'Heebo', sans-serif; font-weight: 600;
         }
         .code-block code { display: block; white-space: pre; }
+        .code-copy-btn {
+            position: absolute; top: -10px; right: 15px;
+            background: rgba(126, 231, 135, 0.15); color: #7ee787;
+            border: 1px solid rgba(126, 231, 135, 0.35); border-radius: 6px;
+            padding: 3px 10px; font-size: 0.7rem; font-weight: 600;
+            cursor: pointer; font-family: 'Heebo', sans-serif;
+            transition: all 0.2s; line-height: 1.4;
+        }
+        .code-copy-btn:hover {
+            background: rgba(126, 231, 135, 0.28);
+            transform: scale(1.04);
+        }
+        .code-copy-btn.copied {
+            background: rgba(76, 175, 80, 0.35);
+            border-color: rgba(76, 175, 80, 0.55);
+            color: white;
+        }
         details.tip, details.warning, details.info {
             border-radius: 12px 0 0 12px; margin: 20px 0; overflow: hidden;
         }
@@ -576,23 +593,25 @@
                         <details class="info">
                             <summary>🔑 מפתחות API ($25 גיבוי) — יישלחו במייל במהלך השבוע</summary>
                             <div class="callout-body">
-                                <p>במהלך השבוע נשלח לכם <strong>מפתח API של Anthropic</strong> במייל. זה ה-<strong>גיבוי</strong>: עבודה יומיומית על מנוי Claude Team, וכש-cap המנוי נגמר — מפעילים את ה-API key.</p>
-                                <p><strong>⚠️ ההקצאה שלכם: $25 לחודש בלבד.</strong> זה <strong>נשרף הרבה יותר מהר ממה שחושבים</strong> — יכול להיגמר תוך פחות מסשן עבודה של 5 שעות אם עובדים אינטנסיבית. שימו לב!</p>
-                                <p><strong>איך מפעילים:</strong></p>
+                                <p>במהלך השבוע נשלח לכם <strong>מפתח API של Anthropic ישירות במייל</strong> (יחד עם הזמנת ה-Team). זה ה-<strong>גיבוי</strong>: עבודה יומיומית על מנוי Claude Team, וכשמגיעים לתקרת ה-usage (שעה/שבוע) — מפעילים את ה-API key.</p>
+                                <p><strong>⚠️ ההקצאה שלכם: $25 לחודש קשיח (per workspace).</strong> זה <strong>נשרף מהר ממה שחושבים</strong> — יכול להיגמר תוך פחות מסשן עבודה של 5 שעות אם עובדים אינטנסיבית. שימו לב.</p>
+                                <p><strong>איך מפעילים — 3 צעדים בטרמינל (לא צריך להיכנס לאף אתר):</strong></p>
                                 <ol>
-                                    <li>היכנסו ל-<a href="https://claude.ai" target="_blank">claude.ai</a> (או Claude Desktop) → לשונית <strong>Usage</strong> → לחצו על <strong>Usage Credits</strong>. שם תראו את הקצבה ואת ה-key.</li>
-                                    <li>העתיקו את ה-key (נראה <code>sk-ant-api03-...</code>).</li>
+                                    <li>קחו את ה-key מהמייל שתקבלו (נראה <code>sk-ant-api03-...</code>).</li>
                                     <li>פתחו את הטרמינל הפנימי של VS Code (<code>Ctrl+`</code>) והדביקו:
                                         <div class="code-block"><code>export ANTHROPIC_API_KEY=sk-ant-api03-XXXX...</code></div>
                                     </li>
-                                    <li>מהרגע הזה — Claude Code מאומת מול ה-API שלכם, וכל שימוש שחורג מהמנוי ייגבה ממנו.</li>
+                                    <li>פתחו סשן Claude Code חדש. מהרגע הזה — האימות מול ה-API שלכם, וכל שימוש שחורג מה-Team ייגבה מ-$25 הסל.</li>
                                 </ol>
-                                <p><strong>בדיקת usage בכל זמן:</strong> בתוך סשן Claude Code, הקלידו <code>/cost</code> — תראו כמה נצרך.</p>
+                                <p><strong>בדיקת usage בכל זמן:</strong> בתוך סשן Claude Code הקלידו <code>/cost</code> — תראו כמה דולרים נצרכו.</p>
 
                                 <details class="tip" style="margin-top: 12px;">
-                                    <summary>💡 לקבע את ה-API key בלי לחזור על <code>export</code> בכל פעם</summary>
+                                    <summary>💡 (אופציונלי) לקבע את ה-API key לטרמינלים עתידיים</summary>
                                     <div class="callout-body">
-                                        <p><strong>Mac / Linux:</strong> פתחו את <code>~/.zshrc</code> (או <code>~/.bashrc</code>) והוסיפו את שורת ה-export בסוף הקובץ. הפעילו טרמינל חדש, או הריצו <code>source ~/.zshrc</code>.</p>
+                                        <p><strong>לא חובה.</strong> בלי הצעד הזה, ה-<code>export</code> תקף רק לטרמינל הנוכחי — כשתפתחו טרמינל חדש תצטרכו לחזור על השורה. אם אתם משתמשים ב-API key באופן קבוע, נוח לקבע אותו:</p>
+                                        <p><strong>Mac / Linux:</strong> פתחו את <code>~/.zshrc</code> (או <code>~/.bashrc</code>) והוסיפו את שורת ה-export בסוף הקובץ. הפעילו טרמינל חדש, או הריצו:
+                                            <div class="code-block"><code>source ~/.zshrc</code></div>
+                                        </p>
                                         <p><strong>Windows:</strong> Search → "Environment Variables" → <em>New System Variable</em> → Name: <code>ANTHROPIC_API_KEY</code> → Value: ה-key שלכם. סגרו ופתחו מחדש את VS Code.</p>
                                     </div>
                                 </details>
@@ -864,5 +883,29 @@ If you think otherwise, go with your strong opinion.</code></div>
     <footer>
         <p>GeoAI · RG Innovation · הזירה ההנדסית טכנולוגית בישראל · מודול 03 — ניהול נתוני־עתק גיאו־מרחביים</p>
     </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.code-block').forEach(block => {
+            const btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.type = 'button';
+            btn.textContent = '📋 העתק';
+            btn.addEventListener('click', () => {
+                const code = block.querySelector('code');
+                if (!code) return;
+                navigator.clipboard.writeText(code.textContent).then(() => {
+                    btn.textContent = '✓ הועתק';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = '📋 העתק';
+                        btn.classList.remove('copied');
+                    }, 1500);
+                });
+            });
+            block.appendChild(btn);
+        });
+    });
+    </script>
 </body>
 </html>
