@@ -305,7 +305,7 @@
             <div class="major-body">
 
                 <!-- ============ STEP 1: GitHub ============ -->
-                <details class="step" open>
+                <details class="step">
                     <summary>
                         <div class="step-number">1</div>
                         <div class="step-title-container">
@@ -343,7 +343,7 @@
                 </details>
 
                 <!-- ============ STEP 2: VS Code ============ -->
-                <details class="step" open>
+                <details class="step">
                     <summary>
                         <div class="step-number">2</div>
                         <div class="step-title-container">
@@ -374,7 +374,7 @@
                 </details>
 
                 <!-- ============ STEP 3: Git ============ -->
-                <details class="step" open>
+                <details class="step">
                     <summary>
                         <div class="step-number">3</div>
                         <div class="step-title-container">
@@ -425,7 +425,7 @@
                 </details>
 
                 <!-- ============ STEP 4: Verify ============ -->
-                <details class="step" open>
+                <details class="step">
                     <summary>
                         <div class="step-number">4</div>
                         <div class="step-title-container">
@@ -458,7 +458,7 @@
                 </details>
 
                 <!-- ============ STEP 5: Git config ============ -->
-                <details class="step" open>
+                <details class="step">
                     <summary>
                         <div class="step-number">5</div>
                         <div class="step-title-container">
@@ -499,7 +499,7 @@
                 </details>
 
                 <!-- ============ STEP 6: Claude Code extension ============ -->
-                <details class="step" open>
+                <details class="step">
                     <summary>
                         <div class="step-number">6</div>
                         <div class="step-title-container">
@@ -555,6 +555,52 @@
                             <summary>⚠️ אם הסוכן הציע פקודה לטרמינל</summary>
                             <div class="callout-body">הסוכן יבקש מכם הרשאה לכל פעולה — קראו לפני שאתם מאשרים. במיוחד בפקודות <code>git push</code>: <strong>תעדיפו לעשות commit + push דרך ה-Source Control GUI</strong> כדי שאתם בשליטה, לא הסוכן.</div>
                         </details>
+
+                        <details class="info">
+                            <summary>🔑 מפתחות API למשתמשים כבדים — יישלחו במייל במהלך השבוע</summary>
+                            <div class="callout-body">
+                                <p>במהלך השבוע נשלח לכם <strong>מפתח API של Anthropic</strong> במייל. ה-API key מאפשר <strong>לחרוג מהמגבלה של מנוי Claude Team</strong> — שימושי אם אתם עובדים אינטנסיבית עם הסוכן ונגמרים לכם ה-tokens.</p>
+                                <p><strong>איך לחבר את ה-API key לחשבון שלכם:</strong></p>
+                                <ol>
+                                    <li>היכנסו ל-<a href="https://claude.ai" target="_blank">claude.ai</a> או פתחו את <strong>Claude Desktop</strong>.</li>
+                                    <li>לחצו על אייקון הפרופיל (פינה ימנית-עליונה) → <strong>Settings</strong>.</li>
+                                    <li>חפשו את הסעיף של <strong>API Key</strong> / <strong>Developer</strong> / <strong>Billing</strong> (השם עשוי להשתנות בין גרסאות).</li>
+                                    <li>הדביקו את ה-key שקיבלתם במייל ושמרו.</li>
+                                    <li>מאותו רגע, שימוש שחורג מהמגבלה ייספר על ה-API key במקום על המנוי שלכם.</li>
+                                </ol>
+                                <p>אם אתם לא חורגים מהמגבלה הרגילה — אין צורך להגדיר עכשיו. תחזרו לכאן כשתקבלו הודעת usage מ-Claude.</p>
+                            </div>
+                        </details>
+
+                        <details class="tip">
+                            <summary>🔒 פרטיות — לבטל שימוש בשיחות שלכם לאימון</summary>
+                            <div class="callout-body">
+                                <p>כברירת מחדל, השיחות שלכם עם Claude עשויות לשמש לשיפור המודל. אם אתם מעדיפים פרטיות מלאה (במיוחד עם דאטה רגיש של חברה):</p>
+                                <ol>
+                                    <li>היכנסו ל-<a href="https://claude.ai" target="_blank">claude.ai</a> ולחצו על אייקון הפרופיל (פינה ימנית-עליונה).</li>
+                                    <li>בחרו <strong>Settings</strong> → לשונית <strong>Privacy</strong>.</li>
+                                    <li>כבו את <strong>"Help improve Claude"</strong>.</li>
+                                </ol>
+                                <p>מהרגע הזה — השיחות שלכם נשארות פרטיות ולא ישמשו לאימון.</p>
+                            </div>
+                        </details>
+
+                        <details class="tip">
+                            <summary>🎯 לגרום ל-Claude להיות יותר אובייקטיבי (פחות "חנפן")</summary>
+                            <div class="callout-body">
+                                <p>Claude נוטה להסכים עם המשתמש ולהחמיא — לפעמים יותר ממה שראוי. כדי לקבל ביקורת אמיתית ותשובות יותר ישירות:</p>
+                                <ol>
+                                    <li>ב-<a href="https://claude.ai" target="_blank">claude.ai</a> → <strong>Settings</strong> → לשונית <strong>Personalization</strong> (או <strong>Preferences</strong>).</li>
+                                    <li>בשדה <em>"What should Claude know about you?"</em> או <em>Custom instructions</em>, הוסיפו משהו כמו:
+                                        <div class="code-block" style="margin-top: 8px;"><code>Be direct and critical. Don't agree just to be agreeable.
+Point out flaws and tradeoffs explicitly.
+Push back when I'm wrong.</code></div>
+                                    </li>
+                                    <li>שמרו. כל השיחות החדשות יושפעו מההנחיה הזו.</li>
+                                </ol>
+                                <p>אותו עיקרון אפשר ליישם ב-<code>CLAUDE.md</code> של הפרויקט (ראו <strong>חלק 3</strong>) — שם זה ספציפי לפרויקט, ולא חוצה את כל השיחות.</p>
+                            </div>
+                        </details>
                     </div>
                 </details>
 
@@ -567,21 +613,78 @@
                 <span class="section-icon">🚀</span>
                 <div class="section-title-container">
                     <h2>חלק 2 · בחירת פרויקט + Push ראשון</h2>
-                    <div class="section-subtitle">~10 דקות · repo בארגון → Clone → Push ל-README</div>
+                    <div class="section-subtitle">שני סעיפים · ~15 דקות</div>
                 </div>
             </summary>
             <div class="major-body">
-                <div class="step-description">
-                    זה הרגע שבו הכל מתחבר: לוקחים repo שקיים תחת <strong>Geo-AI-Course</strong>, מורידים עותק למחשב, ודוחפים בחזרה את ה-README הראשון שלכם. <strong>הכל דרך ה-GUI של VS Code — לא טרמינל.</strong>
-                </div>
 
-                <div class="instructions">
-                    <h3>שלב 0 — לוודא שיש לכם repo בארגון:</h3>
-                    <ol class="instruction-list">
-                        <li>היכנסו ל-<a href="https://github.com/Geo-AI-Course" target="_blank">github.com/Geo-AI-Course</a> ובדקו אם יש לכם שם repo מוכן (זכר עשוי להקים מראש לכל זוג).</li>
-                        <li><strong>אין לכם repo?</strong> בדף הארגון, לחצו על הכפתור הירוק <strong>New repository</strong> (פינה ימנית-עליונה). שם תיאורי (לדוגמה <code>geoai-project-tlv-bike-flow</code>), בחירה Public/Private לפי הנחיית זכר, סמנו <strong>Add a README file</strong>, ולחצו <strong>Create repository</strong>.</li>
-                    </ol>
-                </div>
+                <!-- ============ SECTION 2.1: PROJECT + DATA SELECTION ============ -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">2.1</div>
+                        <div class="step-title-container">
+                            <h2>בחירת פרויקט + דאטה</h2>
+                            <div class="duration">~5 דקות לחשיבה</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            לפני שמתחילים לקודד — בוחרים נושא ודאטה. הקורס מציע <strong>שלוש רמות בשלות (data maturity)</strong>; בחרו את הרמה שמתאימה לזמן והשאיפות שלכם.
+                        </div>
+
+                        <div class="instructions">
+                            <h3>שלוש הרמות:</h3>
+                            <ol class="instruction-list">
+                                <li><strong>Descriptive — מתאר נתונים.</strong> EDA, dashboards, מפות. דוגמה: מפה של תאונות דרכים לפי אזור.</li>
+                                <li><strong>Predictive — חוזה עתיד.</strong> מודל ML שמנבא תוצאות. דוגמה: ניבוי איפה תאונות עתידיות יקרו.</li>
+                                <li><strong>Prescriptive — סוכן שעושה פעולות.</strong> מערכת אוטונומית שפועלת לטובת המטרה. דוגמה: שליטה ברמזורים בזמן אמת למניעת תאונות.</li>
+                            </ol>
+                        </div>
+
+                        <details class="tip">
+                            <summary>💡 איזה רמה לבחור?</summary>
+                            <div class="callout-body"><strong>שואפים ל-Level 2 כמינימום.</strong> אם זה מרגיש גדול מדי — Level 1 גם בסדר לחלוטין. <strong>המטרה: לתת ערך אמיתי למישהו אמיתי</strong> (אתם, עמית בעבודה, צוות, ארגון).</div>
+                        </details>
+
+                        <details class="info">
+                            <summary>ℹ️ צריכים עזרה במציאת רעיון או דאטה?</summary>
+                            <div class="callout-body">מחר נשתף כאן <strong>קישור לצ'אטבוט עזר</strong> שיעזור לכם לבחור נושא ולמצוא דאטה רלוונטי. בינתיים — חשבו על תחום שמעניין אתכם או על דאטה שיש לכם כבר (אקדמי, מעבודה, ציבורי).</div>
+                        </details>
+
+                        <details class="tip">
+                            <summary>💡 קריטריונים לדאטה טוב</summary>
+                            <div class="callout-body">
+                                <ul>
+                                    <li><strong>גיאוגרפי</strong> — קואורדינטות, גבולות, או מיקום מהותי לבעיה.</li>
+                                    <li><strong>מספיק שורות</strong> — לפחות כמה מאות לרמה 1, אלפים+ לרמה 2.</li>
+                                    <li><strong>אתם יכולים להסביר את המטרה</strong> — אם אתם לא יודעים מה אתם רוצים מהדאטה, גם הסוכן לא יידע.</li>
+                                </ul>
+                            </div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- ============ SECTION 2.2: FIRST PUSH ============ -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">2.2</div>
+                        <div class="step-title-container">
+                            <h2>הפוש הראשון לארגון</h2>
+                            <div class="duration">~10 דקות</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            זה הרגע שבו הכל מתחבר: לוקחים repo שקיים תחת <strong>Geo-AI-Course</strong>, מורידים עותק למחשב, ודוחפים בחזרה את ה-README הראשון שלכם. <strong>הכל דרך ה-GUI של VS Code — לא טרמינל.</strong>
+                        </div>
+
+                        <div class="instructions">
+                            <h3>שלב 0 — לוודא שיש לכם repo בארגון:</h3>
+                            <ol class="instruction-list">
+                                <li>היכנסו ל-<a href="https://github.com/Geo-AI-Course" target="_blank">github.com/Geo-AI-Course</a> ובדקו אם יש לכם שם repo מוכן (זכר עשוי להקים מראש לכל זוג).</li>
+                                <li><strong>אין לכם repo?</strong> בדף הארגון, לחצו על הכפתור הירוק <strong>New repository</strong> (פינה ימנית-עליונה). שם תיאורי (לדוגמה <code>geoai-project-tlv-bike-flow</code>), בחירה Public/Private לפי הנחיית זכר, סמנו <strong>Add a README file</strong>, ולחצו <strong>Create repository</strong>.</li>
+                            </ol>
+                        </div>
 
                 <div class="instructions" style="margin-top: 25px;">
                     <h3>Clone — להוריד את ה-repo למחשב:</h3>
@@ -667,22 +770,11 @@
                     <summary>💡 בפעם הראשונה — אימות GitHub</summary>
                     <div class="callout-body">בפעולה הראשונה מול GitHub (Clone / Sync), VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.</div>
                 </details>
+                    </div>
+                </details>
+
             </div>
         </details>
-
-        <div class="success-banner">
-            <h3>🎉 סיימתם את ההקמה!</h3>
-            <p>הסביבה שלכם מוכנה: חשבון GitHub + חברות בארגון, VS Code + Git + Claude Code extension מותקנים ומקונפגים, ו-repo משוייך שעובד מקצה לקצה.</p>
-        </div>
-
-        <div class="prerequisites">
-            <h2>נתקעתם? כאן עוזרים:</h2>
-            <ul>
-                <li><div class="icon">🙋</div><span>בסדנה — בקשו מזכר שיעבור אליכם</span></li>
-                <li><div class="icon">💬</div><span>WhatsApp לזכר: <a href="https://wa.me/972503533080" target="_blank">050-353-3080</a></span></li>
-                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachar.adn@gmail.com">zachar.adn@gmail.com</a></span></li>
-            </ul>
-        </div>
 
         <!-- ============ MAJOR 3: GOAL FOR NEXT SESSION ============ -->
         <details class="major-section">
@@ -726,6 +818,20 @@
                 </ul>
             </div>
         </details>
+
+        <div class="success-banner">
+            <h3>🎉 סיימתם את ההקמה — ואתם מוכנים למפגש הבא!</h3>
+            <p>הסביבה שלכם מוכנה: חשבון GitHub + חברות בארגון, VS Code + Git + Claude Code extension מותקנים ומקונפגים, ו-repo משוייך שעובד מקצה לקצה. נשאר רק להגיע עם השלושה מ-חלק 3.</p>
+        </div>
+
+        <div class="prerequisites">
+            <h2>נתקעתם? כאן עוזרים:</h2>
+            <ul>
+                <li><div class="icon">🙋</div><span>בסדנה — בקשו מזכר שיעבור אליכם</span></li>
+                <li><div class="icon">💬</div><span>WhatsApp לזכר: <a href="https://wa.me/972503533080" target="_blank">050-353-3080</a></span></li>
+                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachar.adn@gmail.com">zachar.adn@gmail.com</a></span></li>
+            </ul>
+        </div>
 
     </div>
 
