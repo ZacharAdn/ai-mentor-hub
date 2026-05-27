@@ -70,7 +70,8 @@
         }
         details.major-section {
             background: white; border-radius: 24px; margin-bottom: 30px;
-            overflow: hidden; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden; box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25);
+            border: 3px solid white;
         }
         details.major-section > summary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -555,30 +556,56 @@
                             <summary>⚠️ אם הסוכן הציע פקודה לטרמינל</summary>
                             <div class="callout-body">הסוכן יבקש מכם הרשאה לכל פעולה — קראו לפני שאתם מאשרים. במיוחד בפקודות <code>git push</code>: <strong>תעדיפו לעשות commit + push דרך ה-Source Control GUI</strong> כדי שאתם בשליטה, לא הסוכן.</div>
                         </details>
+                    </div>
+                </details>
+
+                <!-- ============ STEP 7: API + Privacy + Objectivity ============ -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">7</div>
+                        <div class="step-title-container">
+                            <h2>הגדרות מתקדמות — API key, פרטיות, אובייקטיביות</h2>
+                            <div class="duration">~5 דקות · אופציונלי</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            שלוש הגדרות שכדאי לדעת מהיום הראשון: איך משתמשים ב-API key הגיבוי, איך לבטל איסוף שיחות לאימון, ואיך לגרום ל-Claude להיות יותר ישר ולא חנפן.
+                        </div>
 
                         <details class="info">
-                            <summary>🔑 מפתחות API למשתמשים כבדים — יישלחו במייל במהלך השבוע</summary>
+                            <summary>🔑 מפתחות API ($25 גיבוי) — יישלחו במייל במהלך השבוע</summary>
                             <div class="callout-body">
-                                <p>במהלך השבוע נשלח לכם <strong>מפתח API של Anthropic</strong> במייל. ה-API key מאפשר <strong>לחרוג מהמגבלה של מנוי Claude Team</strong> — שימושי אם אתם עובדים אינטנסיבית עם הסוכן ונגמרים לכם ה-tokens.</p>
-                                <p><strong>איך לחבר את ה-API key לחשבון שלכם:</strong></p>
+                                <p>במהלך השבוע נשלח לכם <strong>מפתח API של Anthropic</strong> במייל. זה ה-<strong>גיבוי</strong>: עבודה יומיומית על מנוי Claude Team, וכש-cap המנוי נגמר — מפעילים את ה-API key.</p>
+                                <p><strong>⚠️ ההקצאה שלכם: $25 לחודש בלבד.</strong> זה <strong>נשרף הרבה יותר מהר ממה שחושבים</strong> — יכול להיגמר תוך פחות מסשן עבודה של 5 שעות אם עובדים אינטנסיבית. שימו לב!</p>
+                                <p><strong>איך מפעילים:</strong></p>
                                 <ol>
-                                    <li>היכנסו ל-<a href="https://claude.ai" target="_blank">claude.ai</a> או פתחו את <strong>Claude Desktop</strong>.</li>
-                                    <li>לחצו על אייקון הפרופיל (פינה ימנית-עליונה) → <strong>Settings</strong>.</li>
-                                    <li>חפשו את הסעיף של <strong>API Key</strong> / <strong>Developer</strong> / <strong>Billing</strong> (השם עשוי להשתנות בין גרסאות).</li>
-                                    <li>הדביקו את ה-key שקיבלתם במייל ושמרו.</li>
-                                    <li>מאותו רגע, שימוש שחורג מהמגבלה ייספר על ה-API key במקום על המנוי שלכם.</li>
+                                    <li>היכנסו ל-<a href="https://claude.ai" target="_blank">claude.ai</a> (או Claude Desktop) → לשונית <strong>Usage</strong> → לחצו על <strong>Usage Credits</strong>. שם תראו את הקצבה ואת ה-key.</li>
+                                    <li>העתיקו את ה-key (נראה <code>sk-ant-api03-...</code>).</li>
+                                    <li>פתחו את הטרמינל הפנימי של VS Code (<code>Ctrl+`</code>) והדביקו:
+                                        <div class="code-block"><code>export ANTHROPIC_API_KEY=sk-ant-api03-XXXX...</code></div>
+                                    </li>
+                                    <li>מהרגע הזה — Claude Code מאומת מול ה-API שלכם, וכל שימוש שחורג מהמנוי ייגבה ממנו.</li>
                                 </ol>
-                                <p>אם אתם לא חורגים מהמגבלה הרגילה — אין צורך להגדיר עכשיו. תחזרו לכאן כשתקבלו הודעת usage מ-Claude.</p>
+                                <p><strong>בדיקת usage בכל זמן:</strong> בתוך סשן Claude Code, הקלידו <code>/cost</code> — תראו כמה נצרך.</p>
+
+                                <details class="tip" style="margin-top: 12px;">
+                                    <summary>💡 לקבע את ה-API key בלי לחזור על <code>export</code> בכל פעם</summary>
+                                    <div class="callout-body">
+                                        <p><strong>Mac / Linux:</strong> פתחו את <code>~/.zshrc</code> (או <code>~/.bashrc</code>) והוסיפו את שורת ה-export בסוף הקובץ. הפעילו טרמינל חדש, או הריצו <code>source ~/.zshrc</code>.</p>
+                                        <p><strong>Windows:</strong> Search → "Environment Variables" → <em>New System Variable</em> → Name: <code>ANTHROPIC_API_KEY</code> → Value: ה-key שלכם. סגרו ופתחו מחדש את VS Code.</p>
+                                    </div>
+                                </details>
                             </div>
                         </details>
 
                         <details class="tip">
-                            <summary>🔒 פרטיות — לבטל שימוש בשיחות שלכם לאימון</summary>
+                            <summary>🔒 לבטל איסוף שיחות לאימון Claude</summary>
                             <div class="callout-body">
-                                <p>כברירת מחדל, השיחות שלכם עם Claude עשויות לשמש לשיפור המודל. אם אתם מעדיפים פרטיות מלאה (במיוחד עם דאטה רגיש של חברה):</p>
+                                <p>כברירת מחדל, השיחות שלכם עם Claude עשויות לשמש לשיפור המודל. אם אתם עובדים עם דאטה רגיש (חברה / לקוחות / סודי):</p>
                                 <ol>
                                     <li>היכנסו ל-<a href="https://claude.ai" target="_blank">claude.ai</a> ולחצו על אייקון הפרופיל (פינה ימנית-עליונה).</li>
-                                    <li>בחרו <strong>Settings</strong> → לשונית <strong>Privacy</strong>.</li>
+                                    <li><strong>Settings</strong> → לשונית <strong>Privacy</strong>.</li>
                                     <li>כבו את <strong>"Help improve Claude"</strong>.</li>
                                 </ol>
                                 <p>מהרגע הזה — השיחות שלכם נשארות פרטיות ולא ישמשו לאימון.</p>
@@ -586,19 +613,18 @@
                         </details>
 
                         <details class="tip">
-                            <summary>🎯 לגרום ל-Claude להיות יותר אובייקטיבי (פחות "חנפן")</summary>
+                            <summary>🎯 לקבל ביקורת אמיתית — להוריד את החנפנות</summary>
                             <div class="callout-body">
-                                <p>Claude נוטה להסכים עם המשתמש ולהחמיא — לפעמים יותר ממה שראוי. כדי לקבל ביקורת אמיתית ותשובות יותר ישירות:</p>
+                                <p>זו <strong>לא נטייה ייחודית של Claude</strong> — כל ה-LLMs נוטים להסכים עם המשתמש ולהחמיא (sycophancy). הדרך למזער את זה ב-Claude — שתי אפשרויות:</p>
                                 <ol>
-                                    <li>ב-<a href="https://claude.ai" target="_blank">claude.ai</a> → <strong>Settings</strong> → לשונית <strong>Personalization</strong> (או <strong>Preferences</strong>).</li>
-                                    <li>בשדה <em>"What should Claude know about you?"</em> או <em>Custom instructions</em>, הוסיפו משהו כמו:
-                                        <div class="code-block" style="margin-top: 8px;"><code>Be direct and critical. Don't agree just to be agreeable.
-Point out flaws and tradeoffs explicitly.
-Push back when I'm wrong.</code></div>
-                                    </li>
-                                    <li>שמרו. כל השיחות החדשות יושפעו מההנחיה הזו.</li>
+                                    <li><strong>בתוך שיחה עם Claude Code:</strong> תגידו לו לזכור את ההנחיה למטה תמיד — הוא יוסיף אותה ל-CLAUDE.md הגלובלי שלכם, וזה ישפיע על כל הסשנים העתידיים.</li>
+                                    <li><strong>ב-claude.ai או Claude Desktop:</strong> Settings → <strong>General</strong> → <strong>Instructions for Claude</strong> → הדביקו את ההנחיה.</li>
                                 </ol>
-                                <p>אותו עיקרון אפשר ליישם ב-<code>CLAUDE.md</code> של הפרויקט (ראו <strong>חלק 3</strong>) — שם זה ספציפי לפרויקט, ולא חוצה את כל השיחות.</p>
+                                <p><strong>ההנחיה (להעתקה):</strong></p>
+                                <div class="code-block"><code>Never tell me what I want to hear.
+I want you to look at things objectively,
+contradict me when needed.
+If you think otherwise, go with your strong opinion.</code></div>
                             </div>
                         </details>
                     </div>
