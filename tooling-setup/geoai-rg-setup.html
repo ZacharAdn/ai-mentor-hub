@@ -92,6 +92,21 @@
             font-size: 1.1rem; color: #666; margin-bottom: 25px; padding: 20px;
             background: #f8f9ff; border-radius: 12px; border-right: 4px solid #667eea;
         }
+        .gif-container {
+            margin: 20px 0; border-radius: 12px; overflow: hidden;
+            border: 2px solid #e0e0e0; background: #f5f5f5;
+        }
+        .gif-container img { width: 100%; display: block; }
+        .gif-label {
+            background: #1a1a2e; color: white; padding: 12px 20px;
+            font-size: 0.9rem; font-weight: 500;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .gif-label::before {
+            content: "צפו"; background: #667eea; padding: 3px 10px;
+            border-radius: 4px; font-size: 0.75rem; font-weight: 700;
+        }
+        details .gif-container { margin: 12px 0 4px; }
         .path-card {
             background: #fafbff; border: 2px solid #c8d0ff; border-radius: 16px;
             padding: 25px; margin: 20px 0;
@@ -346,6 +361,10 @@
                         <li><strong>Next-Next-Next</strong> — ברירות המחדל בסדר. <strong>חשוב:</strong> במסך "Adjusting your PATH" — בחרו <em>"Git from the command line and also from 3rd-party software"</em>.</li>
                         <li>סיימו את ההתקנה.</li>
                     </ol>
+                    <div class="gif-container">
+                        <div class="gif-label">הורדה והתקנה של Git לווינדוס</div>
+                        <img src="../gifs/step3_git.gif" alt="התקנת Git לווינדוס" loading="lazy">
+                    </div>
                 </details>
 
                 <details class="platform">
@@ -486,11 +505,25 @@
                         <li>לחצו <strong>🔄 Sync Changes</strong> — זה Pull + Push.</li>
                         <li>רעננו את דף ה-GitHub בדפדפן — הקובץ אמור להופיע ✅</li>
                     </ol>
+                    <div class="gif-container">
+                        <div class="gif-label">פאנל Source Control עם כפתור Stage (+)</div>
+                        <img src="../gifs/git-github/stage-plus.png" alt="VS Code Source Control עם כפתור Stage All Changes" loading="lazy">
+                    </div>
+                    <div class="gif-container">
+                        <div class="gif-label">תפריט ה-Commit עם אופציית Sync</div>
+                        <img src="../gifs/git-github/commit-sync.png" alt="תפריט ה-Commit כולל Commit, Commit Push, Commit Sync" loading="lazy">
+                    </div>
                 </div>
 
                 <details class="warning" style="margin-top: 25px;">
                     <summary>⚠️ Clone — לא Publish!</summary>
-                    <div class="callout-body">אם VS Code מציע <em>"Publish to GitHub"</em> — <strong>אל תלחצו.</strong> זה יוצר repo חדש בחשבון הפרטי שלכם, לא בארגון. בחזרה ל-<code>Cmd/Ctrl + Shift + P</code> וחפשו את <strong>"Git: Clone"</strong> במדויק.</div>
+                    <div class="callout-body">
+                        אם VS Code מציע <em>"Publish to GitHub"</em> — <strong>אל תלחצו.</strong> זה יוצר repo חדש בחשבון הפרטי שלכם, לא בארגון. בחזרה ל-<code>Cmd/Ctrl + Shift + P</code> וחפשו את <strong>"Git: Clone"</strong> במדויק.
+                        <div class="gif-container">
+                            <div class="gif-label">⛔ אל תלחצו על זה — Publish to GitHub יוצר ב-repo הפרטי שלכם</div>
+                            <img src="../gifs/git-github/publish-button.png" alt="Source Control עם כפתור Publish to GitHub" loading="lazy">
+                        </div>
+                    </div>
                 </details>
 
                 <details class="warning">
@@ -545,6 +578,21 @@
                         <li>לחצו עליו — VS Code יבקש מכם להתחבר. תאשרו, הוא יפתח דפדפן עם דף Anthropic, תאשרו, חוזרים ל-VS Code.</li>
                         <li>לסשן חדש: <code>Cmd/Ctrl + Esc</code> או לחצו על ה-icon של Claude.</li>
                     </ol>
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">חלונית Extensions עם התוסף Claude Code for VS Code</div>
+                    <img src="../gifs/step5b_extension.png" alt="חיפוש Claude Code ב-Extensions" loading="lazy">
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">אייקון Claude ב-VS Code אחרי ההתקנה</div>
+                    <img src="../gifs/step5c_icon.png" alt="אייקון Claude בסרגל העליון של העורך" loading="lazy">
+                </div>
+
+                <div class="gif-container">
+                    <div class="gif-label">הפעלת Claude והתחברות לחשבון Anthropic</div>
+                    <img src="../gifs/step4_authenticate.gif" alt="התחברות ל-Claude" loading="lazy">
                 </div>
 
                 <details class="tip">
