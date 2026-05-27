@@ -138,13 +138,8 @@
         }
         .gif-container img { width: 100%; display: block; }
         .gif-label {
-            background: #1a1a2e; color: white; padding: 12px 20px;
-            font-size: 0.9rem; font-weight: 500;
-            display: flex; align-items: center; gap: 10px;
-        }
-        .gif-label::before {
-            content: "צפו"; background: #667eea; padding: 3px 10px;
-            border-radius: 4px; font-size: 0.75rem; font-weight: 700;
+            background: #1a1a2e; color: white; padding: 10px 16px;
+            font-size: 0.85rem; font-weight: 500;
         }
         details:not(.major-section):not(.step) .gif-container { margin: 12px 0 4px; }
         .gif-x-frame { position: relative; line-height: 0; }
@@ -178,12 +173,7 @@
             margin: 15px 0; overflow-x: auto; position: relative;
             direction: ltr; text-align: left;
         }
-        .code-block::before {
-            content: "פקודה"; position: absolute; top: 8px; left: 12px;
-            background: #667eea; color: white; font-size: 0.7rem;
-            padding: 3px 10px; border-radius: 4px;
-            font-family: 'Heebo', sans-serif; font-weight: 600;
-        }
+        .instruction-list li .gif-container { margin: 14px 0 4px; }
         .code-block code { display: block; white-space: pre; }
         .code-copy-btn {
             position: absolute; top: 8px; right: 10px;
@@ -414,14 +404,15 @@
                             <summary>🪟 Windows</summary>
                             <ol class="instruction-list">
                                 <li>גשו ל-<strong><a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a></strong> — ההורדה תתחיל אוטומטית.</li>
-                                <li>פתחו את קובץ ההתקנה והריצו אותו.</li>
+                                <li>פתחו את קובץ ההתקנה והריצו אותו.
+                                    <div class="gif-container">
+                                        <div class="gif-label">הורדה והרצה של מתקין Git לווינדוס</div>
+                                        <img src="../gifs/step3_git.gif" alt="התקנת Git לווינדוס" loading="lazy">
+                                    </div>
+                                </li>
                                 <li><strong>Next-Next-Next</strong> — ברירות המחדל בסדר. <strong>חשוב:</strong> במסך "Adjusting your PATH" — בחרו <em>"Git from the command line and also from 3rd-party software"</em>.</li>
                                 <li>סיימו את ההתקנה.</li>
                             </ol>
-                            <div class="gif-container">
-                                <div class="gif-label">הורדה והתקנה של Git לווינדוס</div>
-                                <img src="../gifs/step3_git.gif" alt="התקנת Git לווינדוס" loading="lazy">
-                            </div>
                         </details>
 
                         <details class="platform">
@@ -537,21 +528,21 @@
                                 <li>קודם כל — וודאו שקיבלתם <strong>הזמנה ל-Anthropic Team</strong> במייל (זכר שלח). לחצו על הלינק במייל ואשרו רישום.</li>
                                 <li>ב-VS Code: לחצו על אייקון ה-<strong>Extensions</strong> בצד שמאל (4 ריבועים) או <code>Cmd/Ctrl + Shift + X</code>.</li>
                                 <li>בשורת החיפוש למעלה — חפשו <strong>"Claude Code"</strong>.</li>
-                                <li>בחרו את ה-extension הראשון (של <strong>Anthropic</strong>, סימן וי כחול ליד השם) ולחצו <strong>Install</strong>.</li>
-                                <li>אחרי ההתקנה תראו את ה-icon של Claude בעורך — <strong>אבל רק אחרי שתפתחו קובץ כלשהו</strong> (README, CSV, או כל קובץ אחר). פתחו קובץ קיים מ-Explorer, או צרו חדש (<strong>File → New File</strong>), והאייקון יופיע מיד.</li>
+                                <li>בחרו את ה-extension הראשון (של <strong>Anthropic</strong>, סימן וי כחול ליד השם) ולחצו <strong>Install</strong>.
+                                    <div class="gif-container">
+                                        <div class="gif-label">חלונית Extensions עם התוסף Claude Code for VS Code</div>
+                                        <img src="../gifs/step5b_extension.png" alt="חיפוש Claude Code ב-Extensions" loading="lazy">
+                                    </div>
+                                </li>
+                                <li>אחרי ההתקנה תראו את ה-icon של Claude בעורך — <strong>אבל רק אחרי שתפתחו קובץ כלשהו</strong> (README, CSV, או כל קובץ אחר). פתחו קובץ קיים מ-Explorer, או צרו חדש (<strong>File → New File</strong>), והאייקון יופיע מיד.
+                                    <div class="gif-container">
+                                        <div class="gif-label">אייקון Claude ב-VS Code (מופיע רק אחרי פתיחת קובץ)</div>
+                                        <img src="../gifs/step5c_icon.png" alt="אייקון Claude בסרגל העליון של העורך" loading="lazy">
+                                    </div>
+                                </li>
                                 <li>לחצו על האייקון — VS Code יבקש מכם להתחבר. תאשרו, הוא יפתח דפדפן עם דף Anthropic, תאשרו, חוזרים ל-VS Code.</li>
                                 <li>לסשן חדש: <code>Cmd/Ctrl + Esc</code> או לחצו על ה-icon של Claude.</li>
                             </ol>
-                        </div>
-
-                        <div class="gif-container">
-                            <div class="gif-label">חלונית Extensions עם התוסף Claude Code for VS Code</div>
-                            <img src="../gifs/step5b_extension.png" alt="חיפוש Claude Code ב-Extensions" loading="lazy">
-                        </div>
-
-                        <div class="gif-container">
-                            <div class="gif-label">אייקון Claude ב-VS Code (מופיע רק אחרי פתיחת קובץ)</div>
-                            <img src="../gifs/step5c_icon.png" alt="אייקון Claude בסרגל העליון של העורך" loading="lazy">
                         </div>
 
                         <details class="tip">
@@ -749,20 +740,22 @@ If you think otherwise, go with your strong opinion.</code></div>
                         <li>הוסיפו שורה: שם הפרויקט + משפט תיאור.</li>
                         <li>שמרו (<code>Cmd/Ctrl + S</code>).</li>
                         <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל). תראו את README תחת <strong>Changes</strong>.</li>
-                        <li>לחצו על <strong>+</strong> ליד הקובץ — Stage.</li>
+                        <li>לחצו על <strong>+</strong> ליד הקובץ — Stage.
+                            <div class="gif-container">
+                                <div class="gif-label">פאנל Source Control עם כפתור Stage (+)</div>
+                                <img src="../gifs/git-github/stage-plus.png" alt="VS Code Source Control עם כפתור Stage All Changes" loading="lazy">
+                            </div>
+                        </li>
                         <li>בשדה הטקסט למעלה — כתבו הודעת commit (למשל: <code>docs: add project description</code>).</li>
                         <li>לחצו <strong>✓ Commit</strong>.</li>
-                        <li>לחצו <strong>🔄 Sync Changes</strong> — זה Pull + Push.</li>
+                        <li>לחצו <strong>🔄 Sync Changes</strong> — זה Pull + Push.
+                            <div class="gif-container">
+                                <div class="gif-label">תפריט ה-Commit עם אופציית Sync</div>
+                                <img src="../gifs/git-github/commit-sync.png" alt="תפריט ה-Commit כולל Commit, Commit Push, Commit Sync" loading="lazy">
+                            </div>
+                        </li>
                         <li>רעננו את דף ה-GitHub בדפדפן — הקובץ אמור להופיע ✅</li>
                     </ol>
-                    <div class="gif-container">
-                        <div class="gif-label">פאנל Source Control עם כפתור Stage (+)</div>
-                        <img src="../gifs/git-github/stage-plus.png" alt="VS Code Source Control עם כפתור Stage All Changes" loading="lazy">
-                    </div>
-                    <div class="gif-container">
-                        <div class="gif-label">תפריט ה-Commit עם אופציית Sync</div>
-                        <img src="../gifs/git-github/commit-sync.png" alt="תפריט ה-Commit כולל Commit, Commit Push, Commit Sync" loading="lazy">
-                    </div>
                 </div>
 
                 <details class="warning" style="margin-top: 25px;">
