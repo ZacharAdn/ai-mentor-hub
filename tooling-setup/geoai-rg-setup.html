@@ -144,24 +144,56 @@
             background: #e8eaff; color: #667eea; padding: 6px 14px;
             border-radius: 6px; font-size: 0.85rem; font-weight: 600;
         }
-        .tip, .warning, .info {
-            padding: 20px; border-radius: 12px 0 0 12px; margin: 20px 0;
+        details.tip, details.warning, details.info {
+            border-radius: 12px 0 0 12px; margin: 20px 0; overflow: hidden;
         }
-        .tip {
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            border-right: 4px solid #4caf50;
+        details.tip { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-right: 4px solid #4caf50; }
+        details.warning { background: linear-gradient(135deg, #fff3e0, #ffe0b2); border-right: 4px solid #ff9800; }
+        details.info { background: linear-gradient(135deg, #e3f2fd, #bbdefb); border-right: 4px solid #2196f3; }
+        details > summary {
+            padding: 16px 20px; cursor: pointer; list-style: none;
+            font-weight: 600; user-select: none;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
         }
-        .warning {
-            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-            border-right: 4px solid #ff9800;
+        details > summary::-webkit-details-marker { display: none; }
+        details > summary::after {
+            content: "▼"; font-size: 0.75rem; opacity: 0.55;
+            transition: transform 0.2s ease; flex-shrink: 0;
         }
-        .info {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            border-right: 4px solid #2196f3;
+        details[open] > summary::after { transform: rotate(180deg); }
+        details.tip > summary { color: #2e7d32; }
+        details.warning > summary { color: #e65100; }
+        details.info > summary { color: #1565c0; }
+        details > .callout-body { padding: 0 20px 18px; color: #1a1a2e; }
+        details > .callout-body ol, details > .callout-body ul {
+            margin: 10px 22px 0;
         }
-        .tip-title { font-weight: 600; color: #2e7d32; margin-bottom: 8px; }
-        .warning-title { font-weight: 600; color: #e65100; margin-bottom: 8px; }
-        .info-title { font-weight: 600; color: #1565c0; margin-bottom: 8px; }
+        details > .callout-body ol > li, details > .callout-body ul > li { margin-bottom: 6px; }
+        details > .callout-body > p { margin-bottom: 10px; }
+        details > .callout-body > p:last-child { margin-bottom: 0; }
+        .goal-card {
+            background: white; border-radius: 20px; padding: 30px; margin: 30px 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); border-right: 6px solid #667eea;
+        }
+        .goal-card h2 {
+            font-size: 1.5rem; margin-bottom: 12px; color: #1a1a2e;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .goal-card > p { color: #555; margin-bottom: 20px; }
+        .goal-list { list-style: none; display: flex; flex-direction: column; gap: 18px; }
+        .goal-list > li {
+            display: flex; gap: 16px; padding: 18px;
+            background: #f8f9ff; border-radius: 12px;
+        }
+        .goal-list > li > div.goal-body { flex: 1; line-height: 1.7; }
+        .goal-list ul { margin: 8px 22px 0; color: #555; font-size: 0.95rem; list-style: disc; }
+        .goal-list ul li { margin-bottom: 4px; }
+        .goal-icon {
+            width: 48px; height: 48px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px; display: flex; align-items: center;
+            justify-content: center; color: white; font-size: 1.5rem; flex-shrink: 0;
+        }
         .success-banner {
             background: linear-gradient(135deg, #4caf50, #45a049);
             color: white; padding: 30px; border-radius: 20px;
@@ -229,15 +261,15 @@
                     </ol>
                 </div>
 
-                <div class="warning">
-                    <div class="warning-title">⚠️ למה דווקא המייל הרשום בקורס?</div>
-                    כל המערכות של הקורס (GitHub, Anthropic Team) מסונכרנות לפי המייל הזה. אם תירשמו עם מייל אחר — לא תקבלו את ההזמנות והרישיונות, ויהיה צורך לפתור ידנית.
-                </div>
+                <details class="warning">
+                    <summary>⚠️ למה דווקא המייל הרשום בקורס?</summary>
+                    <div class="callout-body">כל המערכות של הקורס (GitHub, Anthropic Team) מסונכרנות לפי המייל הזה. אם תירשמו עם מייל אחר — לא תקבלו את ההזמנות והרישיונות, ויהיה צורך לפתור ידנית.</div>
+                </details>
 
-                <div class="info">
-                    <div class="info-title">ℹ️ עוד לא קיבלתם הזמנה?</div>
-                    אם הגעתם למפגש הראשון בלי הזמנה במייל — אל תיתקעו. סיימו את שאר השלבים (VS Code + Git), וזכר יוסיף אתכם בלייב במהלך הסדנה.
-                </div>
+                <details class="info">
+                    <summary>ℹ️ עוד לא קיבלתם הזמנה?</summary>
+                    <div class="callout-body">אם הגעתם למפגש הראשון בלי הזמנה במייל — אל תיתקעו. סיימו את שאר השלבים (VS Code + Git), וזכר יוסיף אתכם בלייב במהלך הסדנה.</div>
+                </details>
             </div>
         </div>
 
@@ -265,10 +297,10 @@
                     </ol>
                 </div>
 
-                <div class="tip">
-                    <div class="tip-title">💡 הכרת הפאנלים</div>
-                    בצד שמאל יש כמה אייקונים: <strong>Explorer</strong> (קבצים) · <strong>Search</strong> (חיפוש) · <strong>Source Control</strong> (Git GUI, אייקון של ענף) · <strong>Extensions</strong> (תוספים). את הטרמינל התחתון פותחים עם <code>Ctrl+`</code> (בק-טיק).
-                </div>
+                <details class="tip">
+                    <summary>💡 הכרת הפאנלים</summary>
+                    <div class="callout-body">בצד שמאל יש כמה אייקונים: <strong>Explorer</strong> (קבצים) · <strong>Search</strong> (חיפוש) · <strong>Source Control</strong> (Git GUI, אייקון של ענף) · <strong>Extensions</strong> (תוספים). את הטרמינל התחתון פותחים עם <code>Ctrl+`</code> (בק-טיק).</div>
+                </details>
             </div>
         </div>
 
@@ -339,10 +371,10 @@
                     </ol>
                 </div>
 
-                <div class="warning">
-                    <div class="warning-title">⚠️ אם קיבלתם <code>command not found</code></div>
-                    סימן ש-Git לא מותקן או לא ב-PATH. <strong>Mac:</strong> חזרו לשלב 3, וודאו ש-<code>xcode-select --install</code> הסתיים. <strong>Windows:</strong> סגרו את VS Code, פתחו אותו מחדש — אם עדיין לא עובד, restart למחשב כדי שה-PATH יתעדכן.
-                </div>
+                <details class="warning">
+                    <summary>⚠️ אם קיבלתם <code>command not found</code></summary>
+                    <div class="callout-body">סימן ש-Git לא מותקן או לא ב-PATH. <strong>Mac:</strong> חזרו לשלב 3, וודאו ש-<code>xcode-select --install</code> הסתיים. <strong>Windows:</strong> סגרו את VS Code, פתחו אותו מחדש — אם עדיין לא עובד, restart למחשב כדי שה-PATH יתעדכן.</div>
+                </details>
             </div>
         </div>
 
@@ -375,15 +407,15 @@
                     </ol>
                 </div>
 
-                <div class="tip">
-                    <div class="tip-title">💡 למה <code>--global</code>?</div>
-                    <code>--global</code> אומר ל-Git להחיל את ההגדרה על כל ה-repos במחשב — פעם אחת לכל החיים, לא צריך לחזור על זה לכל פרויקט.
-                </div>
+                <details class="tip">
+                    <summary>💡 למה <code>--global</code>?</summary>
+                    <div class="callout-body"><code>--global</code> אומר ל-Git להחיל את ההגדרה על כל ה-repos במחשב — פעם אחת לכל החיים, לא צריך לחזור על זה לכל פרויקט.</div>
+                </details>
 
-                <div class="warning">
-                    <div class="warning-title">⚠️ חשוב</div>
-                    המייל חייב להיות זהה למייל שאיתו נרשמתם ל-GitHub. אם הוא שונה — ה-commits לא ייוחסו לכם בגרף התרומות.
-                </div>
+                <details class="warning">
+                    <summary>⚠️ המייל חייב להתאים ל-GitHub</summary>
+                    <div class="callout-body">המייל חייב להיות זהה למייל שאיתו נרשמתם ל-GitHub. אם הוא שונה — ה-commits לא ייוחסו לכם בגרף התרומות.</div>
+                </details>
             </div>
         </div>
 
@@ -424,15 +456,33 @@
                     </ol>
                 </div>
 
-                <div class="tip" style="margin-top: 25px;">
-                    <div class="tip-title">💡 בפעם הראשונה — אימות GitHub</div>
-                    בפעולה הראשונה מול GitHub, VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.
-                </div>
+                <details class="tip" style="margin-top: 25px;">
+                    <summary>💡 בפעם הראשונה — אימות GitHub</summary>
+                    <div class="callout-body">בפעולה הראשונה מול GitHub, VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.</div>
+                </details>
 
-                <div class="warning">
-                    <div class="warning-title">⚠️ אם לא רואים את הארגון Geo-AI-Course ברשימה</div>
-                    סימן שעוד אין לכם הרשאת יצירת repos בארגון, או שעוד לא קיבלתם הזמנה. בקשו מזכר להוסיף אתכם — הוא יוסיף בלייב במהלך הסדנה.
-                </div>
+                <details class="warning">
+                    <summary>⚠️ אם לא רואים את הארגון Geo-AI-Course ברשימה</summary>
+                    <div class="callout-body">סימן שעוד אין לכם הרשאת יצירת repos בארגון, או שעוד לא קיבלתם הזמנה. בקשו מזכר להוסיף אתכם — הוא יוסיף בלייב במהלך הסדנה.</div>
+                </details>
+
+                <details class="warning">
+                    <summary>⚠️ דחפתי בטעות לחשבון הפרטי שלי — מה עכשיו?</summary>
+                    <div class="callout-body">
+                        <p><strong>איך מזהים:</strong> הסתכלו על ה-URL של ה-repo בדפדפן. אם הוא <code>github.com/&lt;your-username&gt;/...</code> במקום <code>github.com/Geo-AI-Course/...</code> — ה-repo נחת בחשבון הפרטי שלכם, לא בארגון.</p>
+                        <p><strong>איך מתקנים (הדרך הקלה — מומלץ):</strong></p>
+                        <ol>
+                            <li>היכנסו ל-repo הפרטי שלכם ב-GitHub → לחצו על <strong>Settings</strong> (בלשונית העליונה).</li>
+                            <li>גוללים עד הסוף, לאזור <strong>Danger Zone</strong> → לחצו <strong>Delete this repository</strong>.</li>
+                            <li>אישור — מקלידים את שם ה-repo כדי לאשר את המחיקה.</li>
+                            <li>חוזרים ל-VS Code. פותחים את הטרמינל הפנימי (<code>Ctrl+`</code>) ומסירים את ה-remote הישן:
+                                <div class="code-block" style="margin: 8px 0;"><code>git remote remove origin</code></div>
+                            </li>
+                            <li>חוזרים ל-<code>Cmd/Ctrl + Shift + P</code> → <strong>"Publish to GitHub"</strong> → הפעם <strong>וודאו שאתם בוחרים Geo-AI-Course</strong> ברשימת החשבונות.</li>
+                        </ol>
+                        <p><strong>אלטרנטיבה (Transfer):</strong> ב-Settings של ה-repo הפרטי → <em>Transfer ownership</em> → הקלידו <code>Geo-AI-Course</code>. אבל פשוט יותר למחוק ולפרסם מחדש.</p>
+                    </div>
+                </details>
             </div>
         </div>
 
@@ -463,30 +513,66 @@
                     </ol>
                 </div>
 
-                <div class="tip">
-                    <div class="tip-title">💡 @-mention להקשר</div>
-                    בתוך השיחה עם Claude, אפשר להקליד <code>@</code> ולבחור קובץ — והסוכן יקרא אותו כהקשר. דוגמה: <code>@README.md תכתוב לי FEATURE_PLAN.md לפי הפרויקט הזה</code>.
-                </div>
+                <details class="tip">
+                    <summary>💡 @-mention להקשר</summary>
+                    <div class="callout-body">בתוך השיחה עם Claude, אפשר להקליד <code>@</code> ולבחור קובץ — והסוכן יקרא אותו כהקשר. דוגמה: <code>@README.md תכתוב לי FEATURE_PLAN.md לפי הפרויקט הזה</code>.</div>
+                </details>
 
-                <div class="tip">
-                    <div class="tip-title">💡 פרומפט ממוספר</div>
-                    כשמבקשים מהסוכן משהו מורכב, עדיף לפרק לרשימה ממוספרת:
-                    <div class="code-block" style="margin-top: 10px;"><code>תכתוב README:
+                <details class="tip">
+                    <summary>💡 פרומפט ממוספר</summary>
+                    <div class="callout-body">
+                        כשמבקשים מהסוכן משהו מורכב, עדיף לפרק לרשימה ממוספרת:
+                        <div class="code-block" style="margin-top: 10px;"><code>תכתוב README:
 1. שיהיה באנגלית
 2. שיכלול את הסעיפים: Problem, Target Users, Data Source, ML Approach
 3. שורת תיאור אחת בהתחלה</code></div>
-                </div>
+                    </div>
+                </details>
 
-                <div class="warning">
-                    <div class="warning-title">⚠️ אם הסוכן הציע פקודה לטרמינל</div>
-                    הסוכן יבקש מכם הרשאה לכל פעולה — קראו לפני שאתם מאשרים. במיוחד בפקודות <code>git push</code>: <strong>תעדיפו לעשות commit + push דרך ה-Source Control GUI</strong> כדי שאתם בשליטה, לא הסוכן.
-                </div>
+                <details class="warning">
+                    <summary>⚠️ אם הסוכן הציע פקודה לטרמינל</summary>
+                    <div class="callout-body">הסוכן יבקש מכם הרשאה לכל פעולה — קראו לפני שאתם מאשרים. במיוחד בפקודות <code>git push</code>: <strong>תעדיפו לעשות commit + push דרך ה-Source Control GUI</strong> כדי שאתם בשליטה, לא הסוכן.</div>
+                </details>
             </div>
         </div>
 
         <div class="success-banner">
-            <h3>🎉 סיימתם!</h3>
-            <p>הסביבה שלכם מוכנה: חשבון GitHub + חברות בארגון, VS Code + Git + Claude Code extension מותקנים ומקונפגים, ו-repo משוייך שעובד מקצה לקצה. עכשיו אפשר להתחיל לעבוד עם הסוכן על הפרויקט הראשון שלכם ב-GeoAI.</p>
+            <h3>🎉 סיימתם את ההקמה!</h3>
+            <p>הסביבה שלכם מוכנה: חשבון GitHub + חברות בארגון, VS Code + Git + Claude Code extension מותקנים ומקונפגים, ו-repo משוייך שעובד מקצה לקצה.</p>
+        </div>
+
+        <div class="goal-card">
+            <h2>🎯 המטרה — מה להגיע איתו למפגש הבא</h2>
+            <p>המפגש הראשון הקים לכם את הסביבה. עד המפגש הבא, ה-repo שלכם תחת <a href="https://github.com/Geo-AI-Course" target="_blank">Geo-AI-Course</a> צריך להכיל את שלושת אלה:</p>
+            <ul class="goal-list">
+                <li>
+                    <div class="goal-icon">📄</div>
+                    <div class="goal-body">
+                        <strong>README.md</strong> — שמתאר:
+                        <ul>
+                            <li>מה הפרויקט שלכם — בעיה, משתמשים, ערך</li>
+                            <li>איך אתם מתכננים להשתמש בכלים שאלי לימד (GeoPandas, CRS, spatial joins כמו ST_DWithin / Intersects / Distance)</li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="goal-icon">🤖</div>
+                    <div class="goal-body">
+                        <strong>CLAUDE.md</strong> — מסמך הנחיות לסוכן Claude עם ההקשר של הפרויקט. נוצר אוטומטית על ידי הפקודה <code>/init</code> בתוך סשן Claude Code (פקודות סלאש נכנסות עם <code>/</code> בתחילת השורה).
+                    </div>
+                </li>
+                <li>
+                    <div class="goal-icon">📊</div>
+                    <div class="goal-body">
+                        <strong>הדאטה</strong> שאתם הולכים להשתמש בו — רצוי בפורמט <strong>CSV</strong> (לא חובה, גם פורמטים אחרים בסדר). אם הדאטה <strong>חסוי / פרטי של החברה שלכם</strong> — אל תעלו אותו ל-GitHub. במקום זה, ציינו ב-README:
+                        <ul>
+                            <li>מקור הדאטה (חברת X, סקרים פנימיים, וכו')</li>
+                            <li>מבנה — אילו עמודות, סוגי נתונים, גודל משוער</li>
+                            <li>סטטוס "פרטי, לא ניתן להעלאה" — כדי שזכר ידע מה לא יראה ב-repo</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <div class="prerequisites" style="margin-top: 30px;">
