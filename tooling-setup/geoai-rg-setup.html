@@ -171,6 +171,22 @@
         details > .callout-body ol > li, details > .callout-body ul > li { margin-bottom: 6px; }
         details > .callout-body > p { margin-bottom: 10px; }
         details > .callout-body > p:last-child { margin-bottom: 0; }
+        details.platform { margin-bottom: 12px; }
+        details.platform > summary {
+            cursor: pointer; user-select: none;
+            display: inline-flex; align-items: center; gap: 10px;
+            background: #e8eaff; color: #667eea;
+            padding: 10px 16px; border-radius: 6px;
+            font-size: 0.95rem; font-weight: 600;
+            list-style: none;
+        }
+        details.platform > summary::-webkit-details-marker { display: none; }
+        details.platform > summary::after {
+            content: "▼"; font-size: 0.7rem; opacity: 0.55;
+            transition: transform 0.2s ease;
+        }
+        details.platform[open] > summary::after { transform: rotate(180deg); }
+        details.platform > .instruction-list { margin-top: 12px; }
         .goal-card {
             background: white; border-radius: 20px; padding: 30px; margin: 30px 0;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1); border-right: 6px solid #667eea;
@@ -322,26 +338,32 @@
                     <h3>בחרו את מערכת ההפעלה שלכם:</h3>
                 </div>
 
-                <div class="platform-tabs"><div class="platform-tab">🍎 Mac</div></div>
-                <ol class="instruction-list">
-                    <li>פתחו טרמינל (Spotlight → Terminal). הקלידו:
-                        <div class="code-block"><code>xcode-select --install</code></div>
-                    </li>
-                    <li>ייפתח דיאלוג של Apple — לחצו <strong>Install</strong> וחכו לסיום (3-5 דק').</li>
-                </ol>
+                <details class="platform" open>
+                    <summary>🪟 Windows</summary>
+                    <ol class="instruction-list">
+                        <li>גשו ל-<strong><a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a></strong> — ההורדה תתחיל אוטומטית.</li>
+                        <li>פתחו את קובץ ההתקנה והריצו אותו.</li>
+                        <li><strong>Next-Next-Next</strong> — ברירות המחדל בסדר. <strong>חשוב:</strong> במסך "Adjusting your PATH" — בחרו <em>"Git from the command line and also from 3rd-party software"</em>.</li>
+                        <li>סיימו את ההתקנה.</li>
+                    </ol>
+                </details>
 
-                <div class="platform-tabs" style="margin-top: 25px;"><div class="platform-tab">🪟 Windows</div></div>
-                <ol class="instruction-list">
-                    <li>גשו ל-<strong><a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a></strong> — ההורדה תתחיל אוטומטית.</li>
-                    <li>פתחו את קובץ ההתקנה והריצו אותו.</li>
-                    <li><strong>Next-Next-Next</strong> — ברירות המחדל בסדר. <strong>חשוב:</strong> במסך "Adjusting your PATH" — בחרו <em>"Git from the command line and also from 3rd-party software"</em>.</li>
-                    <li>סיימו את ההתקנה.</li>
-                </ol>
+                <details class="platform">
+                    <summary>🍎 Mac</summary>
+                    <ol class="instruction-list">
+                        <li>פתחו טרמינל (Spotlight → Terminal). הקלידו:
+                            <div class="code-block"><code>xcode-select --install</code></div>
+                        </li>
+                        <li>ייפתח דיאלוג של Apple — לחצו <strong>Install</strong> וחכו לסיום (3-5 דק').</li>
+                    </ol>
+                </details>
 
-                <div class="platform-tabs" style="margin-top: 25px;"><div class="platform-tab">🐧 Linux</div></div>
-                <ol class="instruction-list">
-                    <li>פתחו טרמינל. Ubuntu/Debian: <code>sudo apt install git</code>. Fedora: <code>sudo dnf install git</code></li>
-                </ol>
+                <details class="platform">
+                    <summary>🐧 Linux</summary>
+                    <ol class="instruction-list">
+                        <li>פתחו טרמינל. Ubuntu/Debian: <code>sudo apt install git</code>. Fedora: <code>sudo dnf install git</code></li>
+                    </ol>
+                </details>
             </div>
         </div>
 
@@ -430,58 +452,70 @@
             </div>
             <div class="step-content">
                 <div class="step-description">
-                    זה הרגע שבו הכל מתחבר: יוצרים פרויקט מקומי, עושים commit ראשון, ודוחפים ל-GitHub תחת הארגון <strong>Geo-AI-Course</strong> בלחיצה אחת. <strong>הכל דרך ה-GUI של VS Code — לא טרמינל.</strong>
+                    זה הרגע שבו הכל מתחבר: לוקחים repo שקיים תחת <strong>Geo-AI-Course</strong>, מורידים עותק למחשב, ודוחפים בחזרה את ה-README הראשון שלכם. <strong>הכל דרך ה-GUI של VS Code — לא טרמינל.</strong>
                 </div>
 
                 <div class="instructions">
-                    <h3>יצירת פרויקט מקומי:</h3>
+                    <h3>שלב 0 — לוודא שיש לכם repo בארגון:</h3>
                     <ol class="instruction-list">
-                        <li>במחשב — צרו תיקייה חדשה במקום נוח (Desktop / Documents). שם לדוגמה: <code>my-first-geoai</code>.</li>
-                        <li>ב-VS Code: <strong>File → Open Folder</strong> → בחרו את התיקייה שיצרתם.</li>
-                        <li>ב-Explorer (סרגל שמאל) → לחצו על אייקון <strong>New File</strong> → שם הקובץ: <code>README.md</code>.</li>
-                        <li>הוסיפו שורה: שם הפרויקט + משפט תיאור. שמרו (<code>Cmd/Ctrl + S</code>).</li>
+                        <li>היכנסו ל-<a href="https://github.com/Geo-AI-Course" target="_blank">github.com/Geo-AI-Course</a> ובדקו אם יש לכם שם repo מוכן (זכר עשוי להקים מראש לכל זוג).</li>
+                        <li><strong>אין לכם repo?</strong> בדף הארגון, לחצו על הכפתור הירוק <strong>New repository</strong> (פינה ימנית-עליונה). שם תיאורי (לדוגמה <code>geoai-project-tlv-bike-flow</code>), בחירה Public/Private לפי הנחיית זכר, סמנו <strong>Add a README file</strong>, ולחצו <strong>Create repository</strong>.</li>
                     </ol>
                 </div>
 
                 <div class="instructions" style="margin-top: 25px;">
-                    <h3>Publish ל-GitHub תחת הארגון:</h3>
+                    <h3>Clone — להוריד את ה-repo למחשב:</h3>
                     <ol class="instruction-list">
-                        <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל).</li>
-                        <li>לחצו <strong>Initialize Repository</strong> — זה יוצר git מקומי.</li>
-                        <li>תראו את README תחת <strong>Changes</strong>. לחצו <strong>+</strong> ליד הקובץ (Stage), כתבו הודעת commit (למשל: <code>initial commit</code>), ולחצו <strong>✓ Commit</strong>.</li>
-                        <li><code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Publish to GitHub"</strong>.</li>
-                        <li><strong>חשוב:</strong> כשנשאלים לאיזה חשבון לפרסם — בחרו <strong>Geo-AI-Course</strong> (לא את החשבון הפרטי שלכם).</li>
-                        <li>בחרו <strong>"Publish to GitHub public repository"</strong> או <strong>private</strong> לפי הנחיית זכר.</li>
-                        <li>VS Code יפתח את ה-repo בדפדפן ✅</li>
+                        <li>בדף ה-repo ב-<code>Geo-AI-Course</code>, לחצו על הכפתור הירוק <code>Code</code> → העתיקו את ה-HTTPS URL.</li>
+                        <li>ב-VS Code: <code>Cmd/Ctrl + Shift + P</code> → הקלידו <strong>"Git: Clone"</strong> → הדביקו את ה-URL.</li>
+                        <li>בחרו תיקיית יעד במחשב (Desktop / Documents — מה שנוח).</li>
+                        <li>כשהורדה הסתיימה, לחצו <strong>Open Folder</strong>. התיקייה תיטען ב-Explorer.</li>
                     </ol>
                 </div>
 
-                <details class="tip" style="margin-top: 25px;">
-                    <summary>💡 בפעם הראשונה — אימות GitHub</summary>
-                    <div class="callout-body">בפעולה הראשונה מול GitHub, VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.</div>
+                <div class="instructions" style="margin-top: 25px;">
+                    <h3>עריכה + commit + push דרך ה-GUI:</h3>
+                    <ol class="instruction-list">
+                        <li>פתחו את <code>README.md</code> ב-Editor (אם אין — צרו חדש: <strong>File → New File</strong>, שמרו כ-<code>README.md</code>).</li>
+                        <li>הוסיפו שורה: שם הפרויקט + משפט תיאור.</li>
+                        <li>שמרו (<code>Cmd/Ctrl + S</code>).</li>
+                        <li>פתחו את <strong>Source Control</strong> (אייקון הענף בצד שמאל). תראו את README תחת <strong>Changes</strong>.</li>
+                        <li>לחצו על <strong>+</strong> ליד הקובץ — Stage.</li>
+                        <li>בשדה הטקסט למעלה — כתבו הודעת commit (למשל: <code>docs: add project description</code>).</li>
+                        <li>לחצו <strong>✓ Commit</strong>.</li>
+                        <li>לחצו <strong>🔄 Sync Changes</strong> — זה Pull + Push.</li>
+                        <li>רעננו את דף ה-GitHub בדפדפן — הקובץ אמור להופיע ✅</li>
+                    </ol>
+                </div>
+
+                <details class="warning" style="margin-top: 25px;">
+                    <summary>⚠️ Clone — לא Publish!</summary>
+                    <div class="callout-body">אם VS Code מציע <em>"Publish to GitHub"</em> — <strong>אל תלחצו.</strong> זה יוצר repo חדש בחשבון הפרטי שלכם, לא בארגון. בחזרה ל-<code>Cmd/Ctrl + Shift + P</code> וחפשו את <strong>"Git: Clone"</strong> במדויק.</div>
                 </details>
 
                 <details class="warning">
-                    <summary>⚠️ אם לא רואים את הארגון Geo-AI-Course ברשימה</summary>
-                    <div class="callout-body">סימן שעוד אין לכם הרשאת יצירת repos בארגון, או שעוד לא קיבלתם הזמנה. בקשו מזכר להוסיף אתכם — הוא יוסיף בלייב במהלך הסדנה.</div>
+                    <summary>⚠️ אין לי הרשאת יצירת repos בארגון</summary>
+                    <div class="callout-body">כשתלחצו <strong>New repository</strong> ב-<code>Geo-AI-Course</code> — אם הארגון לא מופיע כבעלים אפשרי, סימן שעוד לא קיבלתם הרשאה. בקשו מזכר להוסיף אתכם — הוא יוסיף בלייב במהלך הסדנה.</div>
                 </details>
 
                 <details class="warning">
                     <summary>⚠️ דחפתי בטעות לחשבון הפרטי שלי — מה עכשיו?</summary>
                     <div class="callout-body">
-                        <p><strong>איך מזהים:</strong> הסתכלו על ה-URL של ה-repo בדפדפן. אם הוא <code>github.com/&lt;your-username&gt;/...</code> במקום <code>github.com/Geo-AI-Course/...</code> — ה-repo נחת בחשבון הפרטי שלכם, לא בארגון.</p>
+                        <p><strong>איך מזהים:</strong> הסתכלו על ה-URL של ה-repo בדפדפן. אם הוא <code>github.com/&lt;your-username&gt;/...</code> במקום <code>github.com/Geo-AI-Course/...</code> — ה-repo נחת בחשבון הפרטי שלכם, לא בארגון. זה קורה אם לחצתם <em>"Publish to GitHub"</em> במקום <strong>"Git: Clone"</strong>.</p>
                         <p><strong>איך מתקנים (הדרך הקלה — מומלץ):</strong></p>
                         <ol>
-                            <li>היכנסו ל-repo הפרטי שלכם ב-GitHub → לחצו על <strong>Settings</strong> (בלשונית העליונה).</li>
-                            <li>גוללים עד הסוף, לאזור <strong>Danger Zone</strong> → לחצו <strong>Delete this repository</strong>.</li>
-                            <li>אישור — מקלידים את שם ה-repo כדי לאשר את המחיקה.</li>
-                            <li>חוזרים ל-VS Code. פותחים את הטרמינל הפנימי (<code>Ctrl+`</code>) ומסירים את ה-remote הישן:
-                                <div class="code-block" style="margin: 8px 0;"><code>git remote remove origin</code></div>
-                            </li>
-                            <li>חוזרים ל-<code>Cmd/Ctrl + Shift + P</code> → <strong>"Publish to GitHub"</strong> → הפעם <strong>וודאו שאתם בוחרים Geo-AI-Course</strong> ברשימת החשבונות.</li>
+                            <li>היכנסו ל-repo הפרטי ב-GitHub → לחצו <strong>Settings</strong>.</li>
+                            <li>גוללים לסוף, לאזור <strong>Danger Zone</strong> → <strong>Delete this repository</strong>.</li>
+                            <li>אישור — מקלידים את שם ה-repo.</li>
+                            <li>חוזרים לדף הארגון <a href="https://github.com/Geo-AI-Course" target="_blank">Geo-AI-Course</a>, יוצרים repo חדש שם (כפי שמתואר בשלב 0 למעלה), ועושים <strong>Git: Clone</strong> ב-VS Code.</li>
                         </ol>
-                        <p><strong>אלטרנטיבה (Transfer):</strong> ב-Settings של ה-repo הפרטי → <em>Transfer ownership</em> → הקלידו <code>Geo-AI-Course</code>. אבל פשוט יותר למחוק ולפרסם מחדש.</p>
+                        <p><strong>אלטרנטיבה (Transfer):</strong> ב-Settings של ה-repo הפרטי → <em>Transfer ownership</em> → הקלידו <code>Geo-AI-Course</code>. אבל פשוט יותר למחוק ולהתחיל מחדש בארגון.</p>
                     </div>
+                </details>
+
+                <details class="tip" style="margin-top: 25px;">
+                    <summary>💡 בפעם הראשונה — אימות GitHub</summary>
+                    <div class="callout-body">בפעולה הראשונה מול GitHub (Clone / Sync), VS Code יפתח דפדפן ויבקש לאשר את החיבור. תאשרו פעם אחת — מאותו רגע, החיבור פעיל.</div>
                 </details>
             </div>
         </div>
@@ -579,7 +613,8 @@
             <h2>נתקעתם? כאן עוזרים:</h2>
             <ul>
                 <li><div class="icon">🙋</div><span>בסדנה — בקשו מזכר שיעבור אליכם</span></li>
-                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zahar214@gmail.com">zahar214@gmail.com</a></span></li>
+                <li><div class="icon">💬</div><span>WhatsApp לזכר: <a href="https://wa.me/972503533080" target="_blank">050-353-3080</a></span></li>
+                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachar.adn@gmail.com">zachar.adn@gmail.com</a></span></li>
             </ul>
         </div>
     </div>
