@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Logistic Regression — המודל הליניארי הראשון</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f172a;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
+.lang-toggle{position:fixed;top:1.2rem;right:1.5rem;z-index:1000;display:flex;background:rgba(30,41,59,0.95);backdrop-filter:blur(12px);border-radius:12px;border:1px solid #334155;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+[dir="ltr"] .lang-toggle{right:auto;left:1.5rem}
+.lang-btn{background:none;border:none;color:#94a3b8;padding:0.6rem 1rem;cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.lang-btn.active{color:#fff;background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+section{max-width:900px;margin:0 auto;padding:3rem 1.5rem}
+.hero{text-align:center;padding:4rem 1.5rem 2rem}
+.hero h1{font-size:2.6rem;background:linear-gradient(135deg,#f59e0b,#ef4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem}
+.hero p{color:#94a3b8;font-size:1.1rem;max-width:640px;margin:0 auto}
+.card{background:#1e293b;border-radius:16px;padding:2rem;margin:1.5rem 0;border:1px solid #334155;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+h2{color:#c084fc;font-size:1.8rem;margin-bottom:1rem}
+h3{color:#f472b6;font-size:1.2rem;margin-bottom:0.8rem}
+
+/* Scatter Plot */
+.plot-container{text-align:center;margin:1rem 0}
+canvas{border-radius:12px;border:1px solid #334155;max-width:100%;cursor:crosshair}
+.controls{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.control-group{display:flex;flex-direction:column;align-items:center;gap:0.3rem}
+.control-group label{font-size:0.85rem;color:#94a3b8}
+.control-group input[type=range]{width:200px;height:6px;-webkit-appearance:none;background:#334155;border-radius:3px;outline:none}
+.control-group input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#818cf8;cursor:grab}
+.control-val{font-size:1.1rem;font-weight:700;color:#818cf8}
+
+/* Sigmoid */
+.sigmoid-area{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:2rem 0;align-items:start}
+.sigmoid-svg{max-width:100%;height:auto}
+.sigmoid-explain{color:#94a3b8;font-size:0.95rem}
+.formula{font-family:'Courier New',monospace;background:#0f172a;padding:0.8rem 1.2rem;border-radius:8px;border:1px solid #334155;color:#818cf8;font-size:0.9rem;margin:0.8rem 0;display:inline-block}
+
+/* Metrics */
+.live-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:0.8rem;margin:1.5rem 0}
+.live-metric{background:#0f172a;border-radius:10px;padding:0.8rem;text-align:center;border:1px solid #334155}
+.live-metric-val{font-size:1.4rem;font-weight:800}
+.live-metric-label{font-size:0.75rem;color:#94a3b8}
+
+/* Insight */
+.insight-box{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:1.2rem 1.5rem;margin-top:1rem;font-size:0.95rem;color:#cbd5e1}
+
+/* Comparison */
+.comparison{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+.comp-card{background:#0f172a;border-radius:12px;padding:1.5rem;border:1px solid #334155;text-align:center}
+.comp-card h3{margin-bottom:0.5rem}
+.comp-good{border-color:rgba(34,197,94,0.3)}
+.comp-bad{border-color:rgba(239,68,68,0.3)}
+
+/* SVM "widest street" diagram */
+.svm-area{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin:1.5rem 0;align-items:center}
+.svm-svg{max-width:100%;height:auto;border-radius:12px;border:1px solid #334155;background:#0f172a}
+.svm-explain{color:#cbd5e1;font-size:0.95rem}
+.svm-explain ul{list-style:none;padding:0;margin:0.6rem 0}
+.svm-explain li{padding:0.35rem 0}
+.pill{display:inline-block;font-size:0.7rem;font-weight:700;padding:0.15rem 0.6rem;border-radius:6px;background:rgba(99,102,241,0.15);color:#818cf8;margin-bottom:0.4rem}
+
+/* Cousins table */
+.cousins{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin:1.5rem 0}
+.cousin{background:#0f172a;border-radius:12px;padding:1.3rem 1.5rem;border:1px solid #334155}
+.cousin h3{margin-bottom:0.5rem}
+.cousin ul{list-style:none;padding:0;margin:0}
+.cousin li{padding:0.3rem 0;font-size:0.9rem;color:#94a3b8}
+.cousin-logreg{border-color:rgba(245,158,11,0.35)}
+.cousin-svm{border-color:rgba(129,140,248,0.35)}
+
+/* Takeaways */
+.takeaway{display:flex;gap:1rem;align-items:flex-start;padding:0.8rem 0;border-bottom:1px solid #1e293b}
+.takeaway:last-child{border-bottom:none}
+.takeaway-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.takeaway-text{color:#cbd5e1;font-size:0.95rem}
+.takeaway-text strong{color:#e2e8f0}
+
+@media(max-width:768px){
+  .hero h1{font-size:2rem}
+  .sigmoid-area{grid-template-columns:1fr}
+  .svm-area{grid-template-columns:1fr}
+  .cousins{grid-template-columns:1fr}
+  .live-metrics{grid-template-columns:repeat(2,1fr)}
+  .comparison{grid-template-columns:1fr}
+  section{padding:2rem 1rem}
+  .lang-toggle{top:0.8rem;right:0.8rem}
+  [dir="ltr"] .lang-toggle{left:0.8rem}
+}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn active" id="btn-he" onclick="setLang('he')">HE</button>
+</div>
+
+<div class="hero">
+  <h1 data-i18n="hero_title">Logistic Regression</h1>
+  <p data-i18n="hero_subtitle">המודל הליניארי הראשון: קו ישר אחד שמפריד בין משתמשים שיפקידו למשתמשים שלא, ופונקציית sigmoid שהופכת מרחק מהקו להסתברות הפקדה.</p>
+</div>
+
+<!-- Section 1: Interactive Scatter Plot -->
+<section>
+  <h2 data-i18n="scatter_title">גרור את קו ההפרדה</h2>
+  <p data-i18n="scatter_desc" style="color:#94a3b8;margin-bottom:1rem">כל נקודה היא משתמש שנרשם. ירוק = הפקיד תוך 7 ימים. אפור = לא הפקיד. הזז את הקו כדי להפריד ביניהם לפי ההתנהגות ב-48 השעות הראשונות.</p>
+
+  <div class="plot-container">
+    <canvas id="scatterCanvas" width="600" height="400"></canvas>
+  </div>
+
+  <div class="controls">
+    <div class="control-group">
+      <label data-i18n="angle_label">זווית הקו</label>
+      <input type="range" id="angleSlider" min="-90" max="90" value="30" step="1">
+      <span class="control-val" id="angleVal">30</span>
+    </div>
+    <div class="control-group">
+      <label data-i18n="offset_label">מיקום הקו</label>
+      <input type="range" id="offsetSlider" min="-150" max="150" value="0" step="1">
+      <span class="control-val" id="offsetVal">0</span>
+    </div>
+  </div>
+
+  <div class="live-metrics">
+    <div class="live-metric"><div class="live-metric-val" style="color:#22c55e" id="lmPrec">--</div><div class="live-metric-label">Precision</div></div>
+    <div class="live-metric"><div class="live-metric-val" style="color:#3b82f6" id="lmRec">--</div><div class="live-metric-label">Recall</div></div>
+    <div class="live-metric"><div class="live-metric-val" style="color:#f472b6" id="lmAcc">--</div><div class="live-metric-label">Accuracy</div></div>
+    <div class="live-metric"><div class="live-metric-val" style="color:#f59e0b" id="lmMis">--</div><div class="live-metric-label" data-i18n="misclass">טעויות</div></div>
+  </div>
+
+  <div class="insight-box" id="insightBox" data-i18n="scatter_insight">הזז את הקו ונסה להפריד בין המפקידים (ירוק) ללא-מפקידים (אפור). שים לב: קו ישר אחד לא תמיד מצליח להפריד בצורה מושלמת — וזה בסדר.</div>
+</section>
+
+<!-- Section 2: The Math -->
+<section>
+  <h2 data-i18n="math_title">המתמטיקה — איך נוצר הקו</h2>
+
+  <div class="card">
+    <h3 data-i18n="math_step1_title" style="color:#f59e0b">שלב 1: ציון לכל משתמש</h3>
+    <p data-i18n="math_step1_desc" style="color:#94a3b8;margin-bottom:0.8rem">המודל לומד משקל (weight) לכל פיצ'ר — בדיוק כמו משקל בנוסחה — ומחבר הכל לציון אחד:</p>
+    <div class="formula" style="font-size:1.05rem;text-align:center;display:block">
+      z = w₁ · active_days_d02 + w₂ · bets_025_plus_d02 + b
+    </div>
+    <p data-i18n="math_step1_explain" style="color:#94a3b8;margin-top:0.8rem">
+      <strong style="color:#818cf8">w₁, w₂</strong> = המשקלים שהמודל למד מהדאטה. פיצ'ר שמנבא היטב הפקדה = משקל גבוה.<br>
+      <strong style="color:#818cf8">b</strong> = bias (הזזה). קובע איפה הקו עובר.<br>
+      <strong style="color:#818cf8">z</strong> = הציון. גבוה = סביר שיפקיד. נמוך = סביר שלא.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="math_step2_title" style="color:#f59e0b">שלב 2: הקו = איפה z שווה 0</h3>
+    <p data-i18n="math_step2_desc" style="color:#94a3b8;margin-bottom:0.8rem">קו ההפרדה שהזזת למעלה? אלה בדיוק כל הנקודות שבהן הציון מתאפס:</p>
+    <div class="formula" style="font-size:1.05rem;text-align:center;display:block">
+      w₁ · active_days_d02 + w₂ · bets_025_plus_d02 + b = 0
+    </div>
+    <p data-i18n="math_step2_explain" style="color:#94a3b8;margin-top:0.8rem">
+      זה בדיוק <strong style="color:#e2e8f0">y = ax + b</strong> — משוואת קו ישר שאתה מכיר מהאקסל.<br>
+      סליידר <strong style="color:#f59e0b">הזווית</strong> שינה את היחס בין w₁ ל-w₂.<br>
+      סליידר <strong style="color:#f59e0b">המיקום</strong> שינה את b.
+    </p>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="math_step3_title" style="color:#f59e0b">שלב 3: Sigmoid הופכת z להסתברות הפקדה</h3>
+    <p data-i18n="math_step3_desc" style="color:#94a3b8">
+      z גבוה? הסתברות גבוהה שיפקיד.<br>
+      z קרוב ל-0? המודל לא בטוח (50/50).<br>
+      z נמוך? כנראה לא יפקיד.
+    </p>
+    <div class="formula" style="font-size:1.05rem;text-align:center;display:block">
+      P(deposit) = 1 / (1 + e<sup style="font-size:0.8em">-z</sup>)
+    </div>
+  </div>
+
+  <div class="insight-box" data-i18n="math_summary">
+    <strong>לסיכום:</strong> המודל לומד משקל לכל פיצ'ר. המשקלים מגדירים קו ישר אחד. Sigmoid הופכת את המרחק מהקו להסתברות הפקדה. עם 2 פיצ'רים זה ממש y=ax+b על מסך. עם 11 הפיצ'רים שלך זה אותו עיקרון בדיוק, רק במרחב של 11 ממדים שאי אפשר לצייר.
+  </div>
+</section>
+
+<!-- Section 3: Sigmoid -->
+<section>
+  <h2 data-i18n="sigmoid_title">Sigmoid: ממרחק להסתברות</h2>
+
+  <div class="sigmoid-area">
+    <div>
+      <svg class="sigmoid-svg" viewBox="0 0 350 220">
+        <rect x="0" y="0" width="350" height="220" fill="#0f172a" rx="12"/>
+        <!-- Grid -->
+        <line x1="50" y1="190" x2="330" y2="190" stroke="#334155"/>
+        <line x1="50" y1="190" x2="50" y2="15" stroke="#334155"/>
+        <line x1="50" y1="102" x2="330" y2="102" stroke="#334155" stroke-dasharray="4" opacity="0.5"/>
+        <!-- Labels -->
+        <text x="190" y="212" fill="#94a3b8" text-anchor="middle" font-size="11" data-i18n-svg="sig_x">distance from line</text>
+        <text x="12" y="105" fill="#94a3b8" text-anchor="middle" font-size="11" transform="rotate(-90,12,105)">P(deposit)</text>
+        <text x="45" y="195" fill="#64748b" text-anchor="end" font-size="9">0</text>
+        <text x="45" y="107" fill="#64748b" text-anchor="end" font-size="9">0.5</text>
+        <text x="45" y="22" fill="#64748b" text-anchor="end" font-size="9">1.0</text>
+        <text x="50" y="207" fill="#64748b" text-anchor="middle" font-size="9">-5</text>
+        <text x="190" y="207" fill="#64748b" text-anchor="middle" font-size="9">0</text>
+        <text x="330" y="207" fill="#64748b" text-anchor="middle" font-size="9">+5</text>
+        <!-- Sigmoid curve -->
+        <path d="" id="sigmoidPath" fill="none" stroke="#f59e0b" stroke-width="3"/>
+        <!-- 0.5 line label -->
+        <text x="335" y="98" fill="#94a3b8" font-size="9">50%</text>
+        <!-- Zones -->
+        <rect x="50" y="15" width="140" height="175" fill="rgba(148,163,184,0.05)" rx="4"/>
+        <rect x="190" y="15" width="140" height="175" fill="rgba(34,197,94,0.05)" rx="4"/>
+        <text x="120" y="35" fill="#94a3b8" font-size="10" text-anchor="middle" opacity="0.8" data-i18n-svg="sig_no">No deposit</text>
+        <text x="260" y="35" fill="#22c55e" font-size="10" text-anchor="middle" opacity="0.8" data-i18n-svg="sig_yes">Deposit</text>
+      </svg>
+    </div>
+    <div class="sigmoid-explain">
+      <p data-i18n="sig_explain1"><strong style="color:#f59e0b">Sigmoid</strong> היא הפונקציה שלוקחת את המרחק מקו ההפרדה והופכת אותו להסתברות בין 0 ל-1.</p>
+      <div class="formula">P(deposit) = 1 / (1 + e^(-z))</div>
+      <p data-i18n="sig_explain2" style="margin-top:0.8rem">משתמש <strong>רחוק מהקו בצד המפקידים</strong> = הסתברות גבוהה (קרוב ל-1).<br>משתמש <strong>קרוב לקו</strong> = המודל לא בטוח (קרוב ל-0.5).<br>משתמש <strong>רחוק בצד הלא-מפקידים</strong> = הסתברות נמוכה (קרוב ל-0).</p>
+      <p data-i18n="sig_explain3" style="margin-top:0.8rem;color:#818cf8">ה-sigmoid היא הסיבה ש-Logistic Regression נותנת הסתברות ("70% שיפקיד") ולא רק כן/לא. וזה בדיוק מה שמאפשר לך אחר כך להזיז threshold ולבחור כמה אגרסיבי לסמן.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Section 3.5: SVM — the linear cousin -->
+<section>
+  <h2 data-i18n="svm_title">בן הדוד הליניארי: SVM</h2>
+  <p data-i18n="svm_intro" style="color:#94a3b8;margin-bottom:1.5rem">LogReg הוא לא המודל הליניארי היחיד. יש לו בן דוד מאותה משפחה — <strong style="color:#818cf8">SVM</strong> (Support Vector Machine). גם הוא מפריד בין מפקידים ללא-מפקידים עם קו ישר אחד, אבל הוא בוחר את הקו בצורה שונה.</p>
+
+  <div class="svm-area">
+    <div>
+      <svg class="svm-svg" viewBox="0 0 360 300">
+        <rect x="0" y="0" width="360" height="300" fill="#0f172a" rx="12"/>
+        <!-- The "street" (margin) -->
+        <polygon points="20,250 300,40 340,90 60,300" fill="rgba(129,140,248,0.12)"/>
+        <!-- Margin edges -->
+        <line x1="40" y1="275" x2="320" y2="65" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.7"/>
+        <line x1="40" y1="225" x2="320" y2="15" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.7"/>
+        <!-- The decision line (center of street) -->
+        <line x1="40" y1="250" x2="320" y2="40" stroke="#f59e0b" stroke-width="3"/>
+        <!-- No-deposit dots (gray, bottom-left) -->
+        <circle cx="70" cy="270" r="6" fill="#94a3b8" opacity="0.8"/>
+        <circle cx="110" cy="255" r="6" fill="#94a3b8" opacity="0.8"/>
+        <circle cx="95" cy="285" r="6" fill="#94a3b8" opacity="0.8"/>
+        <circle cx="150" cy="280" r="6" fill="#94a3b8" opacity="0.8"/>
+        <!-- support vector (gray, on margin) -->
+        <circle cx="120" cy="248" r="7" fill="#94a3b8" stroke="#fff" stroke-width="2"/>
+        <!-- Deposit dots (green, top-right) -->
+        <circle cx="250" cy="70" r="6" fill="#22c55e" opacity="0.85"/>
+        <circle cx="285" cy="55" r="6" fill="#22c55e" opacity="0.85"/>
+        <circle cx="270" cy="95" r="6" fill="#22c55e" opacity="0.85"/>
+        <circle cx="300" cy="110" r="6" fill="#22c55e" opacity="0.85"/>
+        <!-- support vector (green, on margin) -->
+        <circle cx="225" cy="100" r="7" fill="#22c55e" stroke="#fff" stroke-width="2"/>
+        <!-- Margin arrows label -->
+        <text x="180" y="160" fill="#818cf8" font-size="12" text-anchor="middle" font-weight="700" data-i18n-svg="svm_street">the widest street</text>
+      </svg>
+    </div>
+    <div class="svm-explain">
+      <span class="pill" data-i18n="svm_pill">אותה משפחה, בחירה אחרת</span>
+      <p data-i18n="svm_explain1">בין כל הקווים שמפרידים בין הקבוצות, SVM בוחר את זה שמשאיר את <strong style="color:#818cf8">הרחוב הרחב ביותר</strong> בין המפקידים ללא-מפקידים — את ה-margin הכי גדול.</p>
+      <ul data-i18n="svm_explain2">
+        <li>הקו הכתום באמצע = גבול ההחלטה.</li>
+        <li>שני הקווים המקווקווים = שולי הרחוב.</li>
+        <li>הנקודות עם המסגרת הלבנה = ה-support vectors: המשתמשים הקרובים ביותר לגבול, שעליהם "נשען" הקו כולו.</li>
+      </ul>
+      <p data-i18n="svm_explain3" style="color:#cbd5e1;margin-top:0.6rem">האינטואיציה: רחוב רחב = ביטחון גבוה יותר. משתמש שנופל עמוק בתוך צד אחד הוא סיווג בטוח; מי שנופל בתוך הרחוב הוא הגבולי שקשה להכריע.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="svm_kernel_title" style="color:#818cf8">ומה אם הגבול לא ישר?</h3>
+    <p data-i18n="svm_kernel" style="font-size:1rem;color:#cbd5e1">ל-SVM יש טריק שנקרא <strong style="color:#818cf8">kernel</strong>: הוא יכול לעקם את הגבול כדי לתפוס הפרדות לא-ליניאריות. לא נצלול לזה היום — רק שתדע שזה קיים. אנחנו נשארים בעולם הליניארי.</p>
+  </div>
+
+  <div class="cousins">
+    <div class="cousin cousin-logreg">
+      <h3 style="color:#f59e0b" data-i18n="cousin_lr_title">LogReg — הבחירה שלך</h3>
+      <ul data-i18n="cousin_lr_list">
+        <li>נותן <strong style="color:#e2e8f0">הסתברות</strong> ("63% שיפקיד") — קריטי כשרוצים threshold</li>
+        <li>כל פיצ'ר = מקדם מוסבר — אפשר לומר ל-stakeholder מה השפיע</li>
+        <li>מהיר, יציב, ה-baseline המושלם — וכבר רץ אצלך</li>
+      </ul>
+    </div>
+    <div class="cousin cousin-svm">
+      <h3 style="color:#818cf8" data-i18n="cousin_svm_title">SVM — בן הדוד</h3>
+      <ul data-i18n="cousin_svm_list">
+        <li>בוחר את הקו עם ה-margin הרחב ביותר</li>
+        <li>עם kernel יכול לעקם את הגבול</li>
+        <li>פחות טבעי להוציא ממנו הסתברות; חזק כשהדאטה נקי ומופרד</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <p data-i18n="cousin_verdict" style="font-size:1rem"><strong style="color:#f59e0b">לטבלאי שלך — LogReg עדיף.</strong> ההסתברויות והמקדמים המוסברים שווים זהב כשאתה מנטר ערוצים ואפיליאייטים. SVM הוא בן משפחה שכדאי להכיר, אבל לא נקודת ההתחלה כאן.</p>
+  </div>
+</section>
+
+<!-- Section 4: Strengths & Limits -->
+<section>
+  <h2 data-i18n="comp_title">מתי LogReg מספיק ומתי לא</h2>
+  <div class="comparison">
+    <div class="comp-card comp-good">
+      <h3 style="color:#22c55e" data-i18n="comp_good_title">מתי מספיק</h3>
+      <ul style="text-align:start;color:#94a3b8;font-size:0.9rem;list-style:none;padding:0">
+        <li data-i18n="good1" style="padding:0.3rem 0">כ-baseline מהיר לפני שמריצים מודלים מורכבים — וכבר יש לך אותו</li>
+        <li data-i18n="good2" style="padding:0.3rem 0">כשהקשר בין פיצ'רים להפקדה הוא בערך ליניארי</li>
+        <li data-i18n="good3" style="padding:0.3rem 0">כשצריך interpretability מלאה (כל פיצ'ר = מקדם)</li>
+        <li data-i18n="good4" style="padding:0.3rem 0">כשרוצים הסתברות לכל משתמש כדי לדרג איכות traffic</li>
+      </ul>
+    </div>
+    <div class="comp-card comp-bad">
+      <h3 style="color:#ef4444" data-i18n="comp_bad_title">מתי לא מספיק</h3>
+      <ul style="text-align:start;color:#94a3b8;font-size:0.9rem;list-style:none;padding:0">
+        <li data-i18n="bad1" style="padding:0.3rem 0">כשיש אינטראקציות בין פיצ'רים (active_days גבוה רק יחד עם max_bet גבוה)</li>
+        <li data-i18n="bad2" style="padding:0.3rem 0">כשהגבול בין מפקידים ללא-מפקידים מתעקל (non-linear)</li>
+        <li data-i18n="bad3" style="padding:0.3rem 0">כשה-48% שלא שיחקו מוסיפים רעש ומנפחים מדדים</li>
+        <li data-i18n="bad4" style="padding:0.3rem 0">כשרוצים לסחוט עוד דיוק — שם נכנס LightGBM</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="text-align:center">
+    <p data-i18n="baseline_msg" style="font-size:1rem"><strong style="color:#f59e0b">LogReg הוא תמיד הצעד הראשון.</strong> אם הוא מספיק — אין צורך במודל מורכב. אם לא — אתה יודע שאתה צריך מודל שתופס אינטראקציות וגבולות מעוקלים. בשביל זה יש <strong style="color:#22c55e">Decision Trees ו-LightGBM</strong>.</p>
+  </div>
+</section>
+
+<!-- Takeaways -->
+<section>
+  <h2 data-i18n="takeaways_title">נקודות מפתח</h2>
+  <div class="card">
+    <div class="takeaway">
+      <div class="takeaway-num">1</div>
+      <div class="takeaway-text" data-i18n="tk1"><strong>LogReg = קו ישר + sigmoid.</strong> הקו מפריד מפקידים מלא-מפקידים, ה-sigmoid הופכת מרחק להסתברות. פשוט ושקוף.</div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-num">2</div>
+      <div class="takeaway-text" data-i18n="tk2"><strong>LogReg הוא ה-baseline.</strong> תמיד מריצים אותו ראשון. אם מספיק — מצוין. אם לא — עוברים למודל חזק יותר.</div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-num">3</div>
+      <div class="takeaway-text" data-i18n="tk3"><strong>SVM הוא בן הדוד הליניארי.</strong> אותה משפחה, אבל בוחר את הקו עם הרחוב הרחב ביותר בין הקבוצות. עם kernel גם יכול לעקם את הגבול.</div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-num">4</div>
+      <div class="takeaway-text" data-i18n="tk4"><strong>כל פיצ'ר = מקדם מוסבר.</strong> אפשר לומר "is_sms_verified מעלה את הסתברות ההפקדה ב-X%". שקיפות מלאה — וזו הסיבה שבטבלאי LogReg עדיף על SVM.</div>
+    </div>
+  </div>
+</section>
+
+<div style="text-align:center;padding:2rem;color:#475569;font-size:0.8rem">Bonim Bina | Logistic Regression Explorer</div>
+
+<script>
+// ===== TRANSLATIONS =====
+const T = {
+  he: {
+    hero_title:'Logistic Regression',
+    hero_subtitle:'המודל הליניארי הראשון: קו ישר אחד שמפריד בין משתמשים שיפקידו למשתמשים שלא, ופונקציית sigmoid שהופכת מרחק מהקו להסתברות הפקדה.',
+    scatter_title:'גרור את קו ההפרדה',
+    scatter_desc:'כל נקודה היא משתמש שנרשם. ירוק = הפקיד תוך 7 ימים. אפור = לא הפקיד. הזז את הקו כדי להפריד ביניהם לפי ההתנהגות ב-48 השעות הראשונות.',
+    angle_label:'זווית הקו',offset_label:'מיקום הקו',misclass:'טעויות',
+    scatter_insight:'הזז את הקו ונסה להפריד בין המפקידים (ירוק) ללא-מפקידים (אפור). שים לב: קו ישר אחד לא תמיד מצליח להפריד בצורה מושלמת — וזה בסדר.',
+    math_title:'המתמטיקה — איך נוצר הקו',
+    math_step1_title:'שלב 1: ציון לכל משתמש',
+    math_step1_desc:'המודל לומד משקל (weight) לכל פיצ\'ר — בדיוק כמו משקל בנוסחה — ומחבר הכל לציון אחד:',
+    math_step1_explain:'<strong style="color:#818cf8">w₁, w₂</strong> = המשקלים שהמודל למד מהדאטה. פיצ\'ר שמנבא היטב הפקדה = משקל גבוה.<br><strong style="color:#818cf8">b</strong> = bias (הזזה). קובע איפה הקו עובר.<br><strong style="color:#818cf8">z</strong> = הציון. גבוה = סביר שיפקיד. נמוך = סביר שלא.',
+    math_step2_title:'שלב 2: הקו = איפה z שווה 0',
+    math_step2_desc:'קו ההפרדה שהזזת למעלה? אלה בדיוק כל הנקודות שבהן הציון מתאפס:',
+    math_step2_explain:'זה בדיוק <strong style="color:#e2e8f0">y = ax + b</strong> — משוואת קו ישר שאתה מכיר מהאקסל.<br>סליידר <strong style="color:#f59e0b">הזווית</strong> שינה את היחס בין w₁ ל-w₂.<br>סליידר <strong style="color:#f59e0b">המיקום</strong> שינה את b.',
+    math_step3_title:'שלב 3: Sigmoid הופכת z להסתברות הפקדה',
+    math_step3_desc:'z גבוה? הסתברות גבוהה שיפקיד.<br>z קרוב ל-0? המודל לא בטוח (50/50).<br>z נמוך? כנראה לא יפקיד.',
+    math_summary:'<strong>לסיכום:</strong> המודל לומד משקל לכל פיצ\'ר. המשקלים מגדירים קו ישר אחד. Sigmoid הופכת את המרחק מהקו להסתברות הפקדה. עם 2 פיצ\'רים זה ממש y=ax+b על מסך. עם 11 הפיצ\'רים שלך זה אותו עיקרון בדיוק, רק במרחב של 11 ממדים שאי אפשר לצייר.',
+    sigmoid_title:'Sigmoid: ממרחק להסתברות',
+    sig_explain1:'<strong style="color:#f59e0b">Sigmoid</strong> היא הפונקציה שלוקחת את המרחק מקו ההפרדה והופכת אותו להסתברות בין 0 ל-1.',
+    sig_explain2:'משתמש <strong>רחוק מהקו בצד המפקידים</strong> = הסתברות גבוהה (קרוב ל-1).<br>משתמש <strong>קרוב לקו</strong> = המודל לא בטוח (קרוב ל-0.5).<br>משתמש <strong>רחוק בצד הלא-מפקידים</strong> = הסתברות נמוכה (קרוב ל-0).',
+    sig_explain3:'ה-sigmoid היא הסיבה ש-Logistic Regression נותנת הסתברות ("70% שיפקיד") ולא רק כן/לא. וזה בדיוק מה שמאפשר לך אחר כך להזיז threshold ולבחור כמה אגרסיבי לסמן.',
+    svm_title:'בן הדוד הליניארי: SVM',
+    svm_intro:'LogReg הוא לא המודל הליניארי היחיד. יש לו בן דוד מאותה משפחה — <strong style="color:#818cf8">SVM</strong> (Support Vector Machine). גם הוא מפריד בין מפקידים ללא-מפקידים עם קו ישר אחד, אבל הוא בוחר את הקו בצורה שונה.',
+    svm_pill:'אותה משפחה, בחירה אחרת',
+    svm_explain1:'בין כל הקווים שמפרידים בין הקבוצות, SVM בוחר את זה שמשאיר את <strong style="color:#818cf8">הרחוב הרחב ביותר</strong> בין המפקידים ללא-מפקידים — את ה-margin הכי גדול.',
+    svm_explain2:'<li>הקו הכתום באמצע = גבול ההחלטה.</li><li>שני הקווים המקווקווים = שולי הרחוב.</li><li>הנקודות עם המסגרת הלבנה = ה-support vectors: המשתמשים הקרובים ביותר לגבול, שעליהם "נשען" הקו כולו.</li>',
+    svm_explain3:'האינטואיציה: רחוב רחב = ביטחון גבוה יותר. משתמש שנופל עמוק בתוך צד אחד הוא סיווג בטוח; מי שנופל בתוך הרחוב הוא הגבולי שקשה להכריע.',
+    svm_kernel_title:'ומה אם הגבול לא ישר?',
+    svm_kernel:'ל-SVM יש טריק שנקרא <strong style="color:#818cf8">kernel</strong>: הוא יכול לעקם את הגבול כדי לתפוס הפרדות לא-ליניאריות. לא נצלול לזה היום — רק שתדע שזה קיים. אנחנו נשארים בעולם הליניארי.',
+    cousin_lr_title:'LogReg — הבחירה שלך',
+    cousin_lr_list:'<li>נותן <strong style="color:#e2e8f0">הסתברות</strong> ("63% שיפקיד") — קריטי כשרוצים threshold</li><li>כל פיצ\'ר = מקדם מוסבר — אפשר לומר ל-stakeholder מה השפיע</li><li>מהיר, יציב, ה-baseline המושלם — וכבר רץ אצלך</li>',
+    cousin_svm_title:'SVM — בן הדוד',
+    cousin_svm_list:'<li>בוחר את הקו עם ה-margin הרחב ביותר</li><li>עם kernel יכול לעקם את הגבול</li><li>פחות טבעי להוציא ממנו הסתברות; חזק כשהדאטה נקי ומופרד</li>',
+    cousin_verdict:'<strong style="color:#f59e0b">לטבלאי שלך — LogReg עדיף.</strong> ההסתברויות והמקדמים המוסברים שווים זהב כשאתה מנטר ערוצים ואפיליאייטים. SVM הוא בן משפחה שכדאי להכיר, אבל לא נקודת ההתחלה כאן.',
+    comp_title:'מתי LogReg מספיק ומתי לא',
+    comp_good_title:'מתי מספיק',comp_bad_title:'מתי לא מספיק',
+    good1:'כ-baseline מהיר לפני שמריצים מודלים מורכבים — וכבר יש לך אותו',
+    good2:'כשהקשר בין פיצ\'רים להפקדה הוא בערך ליניארי',
+    good3:'כשצריך interpretability מלאה (כל פיצ\'ר = מקדם)',
+    good4:'כשרוצים הסתברות לכל משתמש כדי לדרג איכות traffic',
+    bad1:'כשיש אינטראקציות בין פיצ\'רים (active_days גבוה רק יחד עם max_bet גבוה)',
+    bad2:'כשהגבול בין מפקידים ללא-מפקידים מתעקל (non-linear)',
+    bad3:'כשה-48% שלא שיחקו מוסיפים רעש ומנפחים מדדים',
+    bad4:'כשרוצים לסחוט עוד דיוק — שם נכנס LightGBM',
+    baseline_msg:'<strong style="color:#f59e0b">LogReg הוא תמיד הצעד הראשון.</strong> אם הוא מספיק — אין צורך במודל מורכב. אם לא — אתה יודע שאתה צריך מודל שתופס אינטראקציות וגבולות מעוקלים. בשביל זה יש <strong style="color:#22c55e">Decision Trees ו-LightGBM</strong>.',
+    takeaways_title:'נקודות מפתח',
+    tk1:'<strong>LogReg = קו ישר + sigmoid.</strong> הקו מפריד מפקידים מלא-מפקידים, ה-sigmoid הופכת מרחק להסתברות. פשוט ושקוף.',
+    tk2:'<strong>LogReg הוא ה-baseline.</strong> תמיד מריצים אותו ראשון. אם מספיק — מצוין. אם לא — עוברים למודל חזק יותר.',
+    tk3:'<strong>SVM הוא בן הדוד הליניארי.</strong> אותה משפחה, אבל בוחר את הקו עם הרחוב הרחב ביותר בין הקבוצות. עם kernel גם יכול לעקם את הגבול.',
+    tk4:'<strong>כל פיצ\'ר = מקדם מוסבר.</strong> אפשר לומר "is_sms_verified מעלה את הסתברות ההפקדה ב-X%". שקיפות מלאה — וזו הסיבה שבטבלאי LogReg עדיף על SVM.',
+    insight_good:'הפרדה טובה! שים לב שחלק מהנקודות עדיין בצד הלא נכון. קו ישר אחד לא פותר הכל — וזה בדיוק למה יש מודלים מורכבים יותר.',
+    insight_ok:'סביר. חלק מהמפקידים חמקו לצד הלא נכון. נסה לסובב את הקו.',
+    insight_bad:'הפרדה גרועה. רוב המפקידים בצד הלא נכון. הקו הזה לא עובד — תמשיך לשחק עם הסליידרים.',
+    sig_x_svg:'distance from line',sig_no_svg:'No deposit',sig_yes_svg:'Deposit',svm_street_svg:'הרחוב הרחב ביותר',
+  },
+  en: {
+    hero_title:'Logistic Regression',
+    hero_subtitle:'The first linear model: one straight line separating users who will deposit from those who won\'t, plus a sigmoid turning distance-from-line into a deposit probability.',
+    scatter_title:'Drag the Decision Boundary',
+    scatter_desc:'Each dot is a registered user. Green = deposited within 7 days. Gray = did not. Move the line to separate them by their first-48h behavior.',
+    angle_label:'Line Angle',offset_label:'Line Position',misclass:'Misclassified',
+    scatter_insight:'Move the line and try to separate depositors (green) from non-depositors (gray). Notice: one straight line can\'t always separate them perfectly — and that\'s fine.',
+    math_title:'The Math — How the Line is Formed',
+    math_step1_title:'Step 1: Score each user',
+    math_step1_desc:'The model learns a weight for each feature — just like a weight in a formula — and sums them into a single score:',
+    math_step1_explain:'<strong style="color:#818cf8">w₁, w₂</strong> = weights the model learned from data. A feature that predicts deposits well = high weight.<br><strong style="color:#818cf8">b</strong> = bias (offset). Determines where the line passes.<br><strong style="color:#818cf8">z</strong> = the score. High = likely to deposit. Low = likely not.',
+    math_step2_title:'Step 2: The line = where z equals 0',
+    math_step2_desc:'The decision boundary you moved above? It\'s exactly all points where the score is zero:',
+    math_step2_explain:'This is exactly <strong style="color:#e2e8f0">y = ax + b</strong> — the straight-line equation you know from Excel.<br>The <strong style="color:#f59e0b">angle</strong> slider changed the ratio between w₁ and w₂.<br>The <strong style="color:#f59e0b">position</strong> slider changed b.',
+    math_step3_title:'Step 3: Sigmoid converts z to deposit probability',
+    math_step3_desc:'z high? High probability of depositing.<br>z close to 0? Model uncertain (50/50).<br>z low? Probably won\'t deposit.',
+    math_summary:'<strong>Summary:</strong> The model learns a weight per feature. The weights define one straight line. Sigmoid turns distance-from-line into a deposit probability. With 2 features it\'s literally y=ax+b on screen. With your 11 features it\'s the exact same principle, just in an 11-dimensional space you can\'t draw.',
+    sigmoid_title:'Sigmoid: Distance to Probability',
+    sig_explain1:'<strong style="color:#f59e0b">Sigmoid</strong> takes the distance from the decision boundary and turns it into a probability between 0 and 1.',
+    sig_explain2:'User <strong>far from the line on the depositor side</strong> = high probability (close to 1).<br>User <strong>close to the line</strong> = model uncertain (close to 0.5).<br>User <strong>far on the non-depositor side</strong> = low probability (close to 0).',
+    sig_explain3:'Sigmoid is why Logistic Regression outputs a probability ("70% to deposit"), not just yes/no. That\'s exactly what lets you later move a threshold and choose how aggressively to flag.',
+    svm_title:'The Linear Cousin: SVM',
+    svm_intro:'LogReg isn\'t the only linear model. It has a cousin from the same family — <strong style="color:#818cf8">SVM</strong> (Support Vector Machine). It also separates depositors from non-depositors with one straight line, but it picks the line differently.',
+    svm_pill:'Same family, different choice',
+    svm_explain1:'Among all the lines that separate the groups, SVM picks the one that leaves the <strong style="color:#818cf8">widest street</strong> between depositors and non-depositors — the largest margin.',
+    svm_explain2:'<li>The orange center line = the decision boundary.</li><li>The two dashed lines = the edges of the street.</li><li>The dots with white outlines = the support vectors: the users closest to the boundary, on which the whole line "leans".</li>',
+    svm_explain3:'The intuition: a wider street = higher confidence. A user deep inside one side is a safe call; a user inside the street is the borderline case that\'s hard to decide.',
+    svm_kernel_title:'And if the boundary isn\'t straight?',
+    svm_kernel:'SVM has a trick called the <strong style="color:#818cf8">kernel</strong>: it can curve the boundary to capture non-linear separations. We won\'t dive into it today — just know it exists. We\'re staying in the linear world.',
+    cousin_lr_title:'LogReg — Your Choice',
+    cousin_lr_list:'<li>Gives a <strong style="color:#e2e8f0">probability</strong> ("63% to deposit") — critical when you want a threshold</li><li>Each feature = an explainable coefficient — you can tell a stakeholder what mattered</li><li>Fast, stable, the perfect baseline — and already running for you</li>',
+    cousin_svm_title:'SVM — The Cousin',
+    cousin_svm_list:'<li>Picks the line with the widest margin</li><li>With a kernel, can curve the boundary</li><li>Less natural to get a probability from it; strong when data is clean and well-separated</li>',
+    cousin_verdict:'<strong style="color:#f59e0b">For your tabular data — LogReg wins.</strong> The probabilities and explainable coefficients are worth gold when you monitor channels and affiliates. SVM is a family member worth knowing, but not the starting point here.',
+    comp_title:'When LogReg is Enough and When It\'s Not',
+    comp_good_title:'When It\'s Enough',comp_bad_title:'When It\'s Not',
+    good1:'As a fast baseline before running complex models — and you already have it',
+    good2:'When the feature-to-deposit relationship is roughly linear',
+    good3:'When you need full interpretability (each feature = a coefficient)',
+    good4:'When you want a probability per user to rank traffic quality',
+    bad1:'When there are feature interactions (active_days matters only together with high max_bet)',
+    bad2:'When the boundary between depositors and non-depositors curves (non-linear)',
+    bad3:'When the 48% who never played add noise and inflate metrics',
+    bad4:'When you want to squeeze out more accuracy — that\'s where LightGBM comes in',
+    baseline_msg:'<strong style="color:#f59e0b">LogReg is always the first step.</strong> If it\'s enough, no need for complexity. If not, you know you need a model that captures interactions and curved boundaries. That\'s what <strong style="color:#22c55e">Decision Trees and LightGBM</strong> are for.',
+    takeaways_title:'Key Takeaways',
+    tk1:'<strong>LogReg = straight line + sigmoid.</strong> The line separates depositors from non-depositors, sigmoid turns distance into probability. Simple and transparent.',
+    tk2:'<strong>LogReg is the baseline.</strong> Always run it first. If it\'s enough, great. If not, move to a stronger model.',
+    tk3:'<strong>SVM is the linear cousin.</strong> Same family, but picks the line with the widest street between the groups. With a kernel it can also curve the boundary.',
+    tk4:'<strong>Every feature = an explainable coefficient.</strong> You can say "is_sms_verified raises deposit probability by X%". Full transparency — and that\'s why on tabular data LogReg beats SVM.',
+    insight_good:'Good separation! Notice some points are still on the wrong side. One straight line can\'t solve everything — exactly why more complex models exist.',
+    insight_ok:'Decent. Some depositors slipped to the wrong side. Try rotating the line.',
+    insight_bad:'Poor separation. Most depositors are on the wrong side. This line doesn\'t work — keep playing with the sliders.',
+    sig_x_svg:'distance from line',sig_no_svg:'No deposit',sig_yes_svg:'Deposit',svm_street_svg:'the widest street',
+  }
+};
+
+let currentLang = 'he';
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-he').classList.toggle('active', lang === 'he');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (T[lang][k]) el.innerHTML = T[lang][k];
+  });
+  // SVG text labels (innerHTML won't reach <text> reliably across browsers via data-i18n on body text; handle explicitly)
+  document.querySelectorAll('[data-i18n-svg]').forEach(el => {
+    const k = el.getAttribute('data-i18n-svg') + '_svg';
+    if (T[lang][k]) el.textContent = T[lang][k];
+  });
+  drawScatter();
+}
+
+// ===== DATA =====
+// Seeded pseudo-random
+function seededRandom(seed) {
+  let s = seed;
+  return function() {
+    s = (s * 16807 + 0) % 2147483647;
+    return s / 2147483647;
+  };
+}
+
+const rand = seededRandom(42);
+const points = [];
+// Non-depositors (gray) — cluster bottom-left (low active_days, low bets)
+for (let i = 0; i < 80; i++) {
+  points.push({
+    x: 80 + rand() * 250,
+    y: 120 + rand() * 230,
+    label: 0
+  });
+}
+// Depositors (green) — cluster top-right (more active days, more bets), with some overlap
+for (let i = 0; i < 20; i++) {
+  points.push({
+    x: 250 + rand() * 280,
+    y: 30 + rand() * 200,
+    label: 1
+  });
+}
+// Some noisy non-depositors in the depositor zone
+for (let i = 0; i < 10; i++) {
+  points.push({
+    x: 300 + rand() * 200,
+    y: 50 + rand() * 150,
+    label: 0
+  });
+}
+// Some noisy depositors in the non-depositor zone
+for (let i = 0; i < 5; i++) {
+  points.push({
+    x: 100 + rand() * 200,
+    y: 150 + rand() * 200,
+    label: 1
+  });
+}
+
+const canvas = document.getElementById('scatterCanvas');
+const ctx = canvas.getContext('2d');
+const angleSlider = document.getElementById('angleSlider');
+const offsetSlider = document.getElementById('offsetSlider');
+
+function drawScatter() {
+  const W = canvas.width, H = canvas.height;
+  const angle = parseInt(angleSlider.value);
+  const offset = parseInt(offsetSlider.value);
+  document.getElementById('angleVal').textContent = angle + '°';
+  document.getElementById('offsetVal').textContent = offset;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  ctx.fillStyle = '#0f172a';
+  ctx.fillRect(0, 0, W, H);
+
+  // Shade sides
+  const rad = angle * Math.PI / 180;
+  const cx = W / 2 + offset * Math.cos(rad + Math.PI / 2);
+  const cy = H / 2 + offset * Math.sin(rad + Math.PI / 2);
+  // Light shading: green = deposit side, gray = no-deposit side
+  ctx.save();
+  ctx.globalAlpha = 0.04;
+  ctx.fillStyle = '#22c55e';
+  ctx.beginPath();
+  ctx.moveTo(cx - Math.cos(rad) * 500, cy - Math.sin(rad) * 500);
+  ctx.lineTo(cx + Math.cos(rad) * 500, cy + Math.sin(rad) * 500);
+  ctx.lineTo(cx + Math.cos(rad) * 500 + Math.cos(rad + Math.PI / 2) * 500, cy + Math.sin(rad) * 500 + Math.sin(rad + Math.PI / 2) * 500);
+  ctx.lineTo(cx - Math.cos(rad) * 500 + Math.cos(rad + Math.PI / 2) * 500, cy - Math.sin(rad) * 500 + Math.sin(rad + Math.PI / 2) * 500);
+  ctx.fill();
+  ctx.fillStyle = '#94a3b8';
+  ctx.beginPath();
+  ctx.moveTo(cx - Math.cos(rad) * 500, cy - Math.sin(rad) * 500);
+  ctx.lineTo(cx + Math.cos(rad) * 500, cy + Math.sin(rad) * 500);
+  ctx.lineTo(cx + Math.cos(rad) * 500 - Math.cos(rad + Math.PI / 2) * 500, cy + Math.sin(rad) * 500 - Math.sin(rad + Math.PI / 2) * 500);
+  ctx.lineTo(cx - Math.cos(rad) * 500 - Math.cos(rad + Math.PI / 2) * 500, cy - Math.sin(rad) * 500 - Math.sin(rad + Math.PI / 2) * 500);
+  ctx.fill();
+  ctx.restore();
+
+  // Decision boundary line
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([8, 4]);
+  ctx.beginPath();
+  ctx.moveTo(cx - Math.cos(rad) * 500, cy - Math.sin(rad) * 500);
+  ctx.lineTo(cx + Math.cos(rad) * 500, cy + Math.sin(rad) * 500);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Classify points and draw
+  let tp = 0, fp = 0, fn = 0, tn = 0, mis = 0;
+  const nx = Math.cos(rad + Math.PI / 2);
+  const ny = Math.sin(rad + Math.PI / 2);
+
+  for (const p of points) {
+    // Distance from line (positive = "deposit side")
+    const dist = (p.x - cx) * nx + (p.y - cy) * ny;
+    const predicted = dist > 0 ? 1 : 0;
+
+    if (p.label === 1 && predicted === 1) tp++;
+    else if (p.label === 0 && predicted === 1) fp++;
+    else if (p.label === 1 && predicted === 0) fn++;
+    else tn++;
+
+    const wrong = predicted !== p.label;
+    if (wrong) mis++;
+
+    // Draw point: green = depositor, gray = non-depositor
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, wrong ? 7 : 5, 0, Math.PI * 2);
+    ctx.fillStyle = p.label === 1 ? '#22c55e' : '#94a3b8';
+    ctx.globalAlpha = wrong ? 1 : 0.7;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+
+    // Wrong marker
+    if (wrong) {
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 9, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  // Axis labels
+  ctx.fillStyle = '#64748b';
+  ctx.font = '12px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('active_days_d02', W / 2, H - 5);
+  ctx.save();
+  ctx.translate(15, H / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('bets_025_plus_d02', 0, 0);
+  ctx.restore();
+
+  // Update metrics
+  const prec = (tp + fp) === 0 ? 0 : tp / (tp + fp);
+  const rec = tp / (tp + fn || 1);
+  const acc = (tp + tn) / points.length;
+  document.getElementById('lmPrec').textContent = (prec * 100).toFixed(0) + '%';
+  document.getElementById('lmRec').textContent = (rec * 100).toFixed(0) + '%';
+  document.getElementById('lmAcc').textContent = (acc * 100).toFixed(0) + '%';
+  document.getElementById('lmMis').textContent = mis + '/' + points.length;
+
+  // Insight
+  const ins = T[currentLang];
+  if (prec > 0.6 && rec > 0.5) document.getElementById('insightBox').textContent = ins.insight_good;
+  else if (prec > 0.3 || rec > 0.3) document.getElementById('insightBox').textContent = ins.insight_ok;
+  else document.getElementById('insightBox').textContent = ins.insight_bad;
+}
+
+angleSlider.addEventListener('input', drawScatter);
+offsetSlider.addEventListener('input', drawScatter);
+
+// Draw sigmoid curve
+function drawSigmoid() {
+  const padL = 50, padR = 20, padT = 15, padB = 30;
+  const w = 280, h = 175;
+  let d = '';
+  for (let i = 0; i <= 100; i++) {
+    const t = (i / 100) * 10 - 5; // -5 to +5
+    const sig = 1 / (1 + Math.exp(-t));
+    const x = padL + (i / 100) * w;
+    const y = padT + (1 - sig) * h;
+    d += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1);
+  }
+  document.getElementById('sigmoidPath').setAttribute('d', d);
+}
+
+// Apply initial Hebrew SVG labels
+document.querySelectorAll('[data-i18n-svg]').forEach(el => {
+  const k = el.getAttribute('data-i18n-svg') + '_svg';
+  if (T[currentLang][k]) el.textContent = T[currentLang][k];
+});
+
+drawScatter();
+drawSigmoid();
+</script>
+</body>
+</html>

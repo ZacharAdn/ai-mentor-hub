@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decision Tree & Random Forest</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0f172a;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
+.lang-toggle{position:fixed;top:1.2rem;right:1.5rem;z-index:1000;display:flex;background:rgba(30,41,59,0.95);backdrop-filter:blur(12px);border-radius:12px;border:1px solid #334155;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.4)}
+[dir="ltr"] .lang-toggle{right:auto;left:1.5rem}
+.lang-btn{background:none;border:none;color:#94a3b8;padding:0.6rem 1rem;cursor:pointer;font-size:0.9rem;transition:all 0.2s}
+.lang-btn.active{color:#fff;background:linear-gradient(135deg,#6366f1,#8b5cf6)}
+section{max-width:900px;margin:0 auto;padding:3rem 1.5rem}
+.hero{text-align:center;padding:4rem 1.5rem 2rem}
+.hero h1{font-size:2.6rem;background:linear-gradient(135deg,#22c55e,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.5rem}
+.hero p{color:#94a3b8;font-size:1.1rem;max-width:600px;margin:0 auto}
+.card{background:#1e293b;border-radius:16px;padding:2rem;margin:1.5rem 0;border:1px solid #334155;box-shadow:0 4px 24px rgba(0,0,0,0.3)}
+h2{color:#c084fc;font-size:1.8rem;margin-bottom:1rem}
+h3{color:#f472b6;font-size:1.2rem;margin-bottom:0.8rem}
+
+/* Tree Visualization */
+.tree-container{text-align:center;overflow-x:auto;padding:1rem 0}
+.tree-svg{max-width:100%}
+.tree-node{cursor:default}
+.tree-node rect{rx:8;ry:8;stroke-width:2;transition:all 0.3s}
+.tree-node text{font-size:11px;fill:#e2e8f0;font-family:inherit}
+.tree-edge{stroke:#475569;stroke-width:2;fill:none}
+
+/* Depth Slider */
+.depth-control{text-align:center;margin:2rem 0}
+.depth-display{font-size:2rem;font-weight:800;color:#818cf8}
+.depth-control input[type=range]{width:100%;max-width:500px;height:8px;-webkit-appearance:none;background:linear-gradient(90deg,#22c55e,#f59e0b,#ef4444);border-radius:4px;outline:none;margin:1rem 0}
+.depth-control input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;cursor:grab;box-shadow:0 2px 8px rgba(0,0,0,0.4)}
+.depth-labels{display:flex;justify-content:space-between;font-size:0.85rem;color:#94a3b8;max-width:500px;margin:0 auto}
+
+/* Overfitting Chart */
+.chart-area{margin:2rem 0}
+.bars-container{display:flex;align-items:flex-end;justify-content:center;gap:3rem;height:250px;padding:0 2rem}
+.bar-group{display:flex;flex-direction:column;align-items:center;gap:0.5rem}
+.bar-wrapper{display:flex;align-items:flex-end;gap:8px;height:200px}
+.bar{width:60px;border-radius:8px 8px 0 0;transition:height 0.5s ease,background 0.5s ease;position:relative;min-height:4px}
+.bar-val{position:absolute;top:-25px;left:50%;transform:translateX(-50%);font-weight:700;font-size:0.9rem;white-space:nowrap}
+.bar-train{background:linear-gradient(180deg,#22c55e,#16a34a)}
+.bar-test{background:linear-gradient(180deg,#3b82f6,#2563eb)}
+.bar-label{font-size:0.85rem;color:#94a3b8;margin-top:0.3rem}
+.legend{display:flex;gap:2rem;justify-content:center;margin-top:1.5rem}
+.legend-item{display:flex;align-items:center;gap:0.5rem;font-size:0.9rem;color:#94a3b8}
+.legend-dot{width:14px;height:14px;border-radius:4px}
+
+/* Insight */
+.insight-box{background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:12px;padding:1.2rem 1.5rem;margin-top:1.5rem;font-size:0.95rem;color:#cbd5e1;min-height:60px;transition:all 0.3s}
+.overfit-warning{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#fca5a5}
+
+/* How it works */
+.split-demo{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin:1.5rem 0}
+.split-box{background:#0f172a;border-radius:12px;padding:1.5rem;border:1px solid #334155;text-align:center}
+.split-arrow{font-size:1.5rem;color:#818cf8}
+.split-condition{font-size:1rem;font-weight:600;color:#f59e0b;padding:0.5rem 1rem;background:rgba(245,158,11,0.1);border-radius:8px;border:1px solid rgba(245,158,11,0.3)}
+.players-viz{display:flex;gap:4px;flex-wrap:wrap;justify-content:center;margin:0.5rem 0}
+.player-dot{width:10px;height:10px;border-radius:50%;transition:all 0.3s}
+.dot-abuser{background:#22c55e}
+.dot-normal{background:#94a3b8}
+
+/* Random Forest voting */
+.rf-trees{display:flex;gap:0.8rem;justify-content:center;flex-wrap:wrap;margin:1.5rem 0}
+.rf-tree{background:#0f172a;border:1px solid #334155;border-radius:12px;padding:0.9rem 0.7rem;width:130px;text-align:center;transition:all 0.4s}
+.rf-tree-emoji{font-size:1.6rem}
+.rf-tree-sub{font-size:0.68rem;color:#64748b;margin-top:0.1rem}
+.rf-tree-vote{margin-top:0.5rem;font-weight:800;font-size:0.95rem;border-radius:8px;padding:0.25rem 0;transition:all 0.4s}
+.rf-vote-deposit{background:rgba(34,197,94,0.15);color:#22c55e;border:1px solid rgba(34,197,94,0.3)}
+.rf-vote-no{background:rgba(148,163,184,0.12);color:#94a3b8;border:1px solid rgba(148,163,184,0.3)}
+.rf-tally{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin:1.5rem 0;flex-wrap:wrap}
+.rf-tally-box{text-align:center}
+.rf-tally-num{font-size:2.2rem;font-weight:800}
+.rf-tally-label{font-size:0.8rem;color:#94a3b8}
+.rf-result{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:12px;padding:1rem 1.5rem;text-align:center;font-size:1rem;color:#cbd5e1;margin-top:1rem}
+.rf-result strong{color:#22c55e}
+.rf-btn{display:block;margin:0 auto;padding:0.7rem 1.6rem;border-radius:10px;border:none;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;font-weight:600;font-size:0.95rem;cursor:pointer;font-family:inherit;transition:opacity 0.2s}
+.rf-btn:hover{opacity:0.9}
+.rf-vs{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;text-align:center;margin-top:1.5rem}
+
+/* Takeaways */
+.takeaway{display:flex;gap:1rem;align-items:flex-start;padding:0.8rem 0;border-bottom:1px solid #1e293b}
+.takeaway:last-child{border-bottom:none}
+.takeaway-num{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.takeaway-text{color:#cbd5e1;font-size:0.95rem}
+.takeaway-text strong{color:#e2e8f0}
+
+@media(max-width:768px){
+  .hero h1{font-size:2rem}
+  .split-demo{grid-template-columns:1fr}
+  .bars-container{gap:1.5rem}
+  .bar{width:40px}
+  .rf-vs{grid-template-columns:1fr}
+  section{padding:2rem 1rem}
+  .lang-toggle{top:0.8rem;right:0.8rem}
+  [dir="ltr"] .lang-toggle{left:0.8rem}
+}
+
+/* Section 1.5: Step-by-step tree builder */
+.builder-layout{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin:1.5rem 0}
+.builder-panel{background:#0f172a;border-radius:12px;border:1px solid #334155;padding:1rem;position:relative;min-height:400px}
+.builder-panel-title{font-size:0.85rem;color:#94a3b8;text-align:center;margin-bottom:0.5rem;font-weight:600}
+#builderScatter{width:100%;height:350px;display:block;border-radius:8px}
+.builder-tree-area{overflow-x:auto;overflow-y:auto;min-height:350px;max-height:450px}
+.builder-controls{display:flex;gap:0.8rem;justify-content:center;margin:1.5rem 0;flex-wrap:wrap}
+.builder-btn{padding:0.6rem 1.4rem;border-radius:10px;border:1px solid #334155;background:#1e293b;color:#e2e8f0;font-size:0.95rem;cursor:pointer;transition:all 0.2s;font-family:inherit}
+.builder-btn:hover{border-color:#818cf8;background:#263354}
+.builder-btn:disabled{opacity:0.4;cursor:not-allowed}
+.builder-btn-primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);border-color:transparent;color:#fff;font-weight:600}
+.builder-btn-primary:hover{opacity:0.9;border-color:transparent}
+.builder-btn-reset{border-color:rgba(239,68,68,0.4);color:#fca5a5}
+.builder-btn-reset:hover{background:rgba(239,68,68,0.15);border-color:#ef4444}
+.builder-btn-auto{border-color:rgba(34,197,94,0.4);color:#86efac}
+.builder-btn-auto:hover{background:rgba(34,197,94,0.15);border-color:#22c55e}
+.builder-info{background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:12px;padding:1rem 1.2rem;margin-top:1rem;font-size:0.9rem;color:#cbd5e1;min-height:50px;transition:all 0.3s}
+.builder-overfit-warn{background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);color:#fca5a5}
+.builder-step-label{text-align:center;font-size:0.85rem;color:#94a3b8;margin-bottom:0.5rem}
+/* Tree diagram nodes */
+.bt-node{position:absolute;background:#1e293b;border:2px solid #334155;border-radius:10px;padding:6px 10px;text-align:center;font-size:0.75rem;color:#e2e8f0;transition:all 0.4s ease;min-width:90px}
+.bt-node.bt-leaf{border-color:#818cf8}
+.bt-node.bt-split{border-color:#f59e0b}
+.bt-node-label{font-weight:600;margin-bottom:2px;font-size:0.72rem}
+.bt-node-counts{font-size:0.7rem;color:#94a3b8}
+.bt-purity-bar{width:100%;height:6px;background:#334155;border-radius:3px;margin-top:4px;overflow:hidden}
+.bt-purity-fill{height:100%;border-radius:3px;transition:width 0.4s,background 0.4s}
+.bt-edge{position:absolute;pointer-events:none}
+.bt-edge line{stroke:#475569;stroke-width:2}
+.bt-edge-label{font-size:0.65rem;fill:#94a3b8}
+
+@media(max-width:768px){
+  .builder-layout{grid-template-columns:1fr}
+  .builder-panel{min-height:280px}
+  #builderScatter{height:260px}
+  .builder-tree-area{min-height:280px}
+  .bt-node{min-width:70px;font-size:0.65rem;padding:4px 6px}
+}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn active" id="btn-he" onclick="setLang('he')">HE</button>
+</div>
+
+<div class="hero">
+  <h1 data-i18n="hero_title">Decision Tree & Random Forest</h1>
+  <p data-i18n="hero_subtitle">המודל שואל שאלות כן/לא על המשתמש ולומד כללים לבד. מה קורה כשעץ בודד נהיה עמוק מדי — ואיך Random Forest פותר את זה?</p>
+</div>
+
+<!-- Section 1: How a tree works -->
+<section>
+  <h2 data-i18n="how_title">איך עץ החלטה עובד</h2>
+  <p data-i18n="how_desc" style="color:#94a3b8;margin-bottom:1.5rem">העץ שואל שאלות כן/לא על הפיצ'רים ומפצל את המשתמשים לקבוצות. כמו רצף כללי if/else שאתה מכיר — רק שהמודל לומד אותם לבד מהדאטה.</p>
+
+  <div class="split-demo">
+    <div class="split-box">
+      <div style="font-weight:600;margin-bottom:0.5rem" data-i18n="all_players">כל המשתמשים</div>
+      <div class="players-viz" id="allPlayers"></div>
+      <div style="font-size:0.8rem;color:#94a3b8;margin-top:0.5rem" data-i18n="mix_label">100 משתמשים, ~8 מפקידים</div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0.5rem">
+      <div class="split-condition" data-i18n="split_q">active_days_d02 ≥ 2?</div>
+      <div class="split-arrow">{ }</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:1rem">
+      <div class="split-box" style="border-color:rgba(34,197,94,0.3)">
+        <div style="font-weight:600;color:#22c55e;margin-bottom:0.5rem" data-i18n="yes_split">כן (פעילים)</div>
+        <div class="players-viz" id="yesSplit"></div>
+        <div style="font-size:0.8rem;color:#94a3b8;margin-top:0.5rem" data-i18n="yes_label">18 משתמשים, 6 מפקידים</div>
+      </div>
+      <div class="split-box" style="border-color:rgba(148,163,184,0.3)">
+        <div style="font-weight:600;color:#94a3b8;margin-bottom:0.5rem" data-i18n="no_split">לא (לא פעילים)</div>
+        <div class="players-viz" id="noSplit"></div>
+        <div style="font-size:0.8rem;color:#94a3b8;margin-top:0.5rem" data-i18n="no_label">82 משתמשים, 2 מפקידים</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <h3 data-i18n="split_how_title" style="margin-bottom:0.8rem">איך העץ בוחר איפה לפצל?</h3>
+    <p data-i18n="tree_connect" style="font-size:1rem">העץ בודק <strong style="color:#f59e0b">כל פיצ'ר וכל ערך אפשרי</strong> ושואל: "איזה פיצול ייתן לי את הקבוצות הכי נקיות?" — קבוצה אחת עם כמה שיותר מפקידים, והשנייה עם כמה שפחות. הוא בוחר את הפיצול שממקסם את <strong style="color:#818cf8">ההפרדה בין הקבוצות</strong>, ואז חוזר שוב ושוב על כל תת-קבוצה. בדיוק כמו ההיוריסטיקה שלך (active_days ≥ 2) — אבל המכונה מוצאת את הכלל לבד.</p>
+  </div>
+</section>
+
+<!-- Section 1.5: Step-by-step tree builder -->
+<section style="max-width:1100px">
+  <h2 data-i18n="builder_title">בנה עץ צעד אחרי צעד</h2>
+  <p data-i18n="builder_desc" style="color:#94a3b8;margin-bottom:1.5rem">צפה בעץ ההחלטה נבנה מול העיניים. בכל צעד, האלגוריתם בוחר את הפיצול הכי טוב. זה בדיוק מה שקורה בתוך model.fit() — לולאת בנייה צעד-אחר-צעד.</p>
+
+  <div class="builder-step-label" id="builderStepLabel" data-i18n="builder_step0_label">צעד 0: כל המשתמשים בקבוצה אחת</div>
+
+  <div class="builder-layout">
+    <div class="builder-panel">
+      <div class="builder-panel-title" data-i18n="builder_scatter_title">מפת משתמשים</div>
+      <canvas id="builderScatter"></canvas>
+    </div>
+    <div class="builder-panel">
+      <div class="builder-panel-title" data-i18n="builder_tree_title">עץ ההחלטה</div>
+      <div class="builder-tree-area" id="builderTreeArea"></div>
+    </div>
+  </div>
+
+  <div class="builder-controls">
+    <button class="builder-btn builder-btn-primary" id="btnNextSplit" onclick="builderNextSplit()" data-i18n="builder_next">פיצול הבא</button>
+    <button class="builder-btn builder-btn-auto" id="btnAutoBuild" onclick="builderAutoBuild()" data-i18n="builder_auto">בנייה אוטומטית</button>
+    <button class="builder-btn builder-btn-reset" id="btnReset" onclick="builderReset()" data-i18n="builder_reset">אתחול</button>
+  </div>
+
+  <div class="builder-info" id="builderInfo" data-i18n="builder_info_initial">לחץ על "פיצול הבא" כדי להתחיל לבנות את העץ. בכל צעד, האלגוריתם ימצא את הפיצול שיוצר את הקבוצות הכי נקיות.</div>
+</section>
+
+<!-- Section 2: Depth & Overfitting -->
+<section>
+  <h2 data-i18n="overfit_title">עומק העץ = Overfitting</h2>
+  <p data-i18n="overfit_desc" style="color:#94a3b8;margin-bottom:1rem">ככל שהעץ עמוק יותר, הוא לומד יותר כללים. אבל מתי הוא מתחיל לשנן את הדאטה במקום ללמוד דפוסים אמיתיים? <strong>שנן = שינן בעל פה</strong> — הוא זוכר כל משתמש ספציפי במקום להבין מה כללי לגביו.</p>
+
+  <div class="depth-control">
+    <div><span data-i18n="depth_label">עומק מקסימלי:</span> <span class="depth-display" id="depthDisplay">5</span></div>
+    <input type="range" id="depthSlider" min="1" max="20" value="5" step="1">
+    <div class="depth-labels">
+      <span data-i18n="depth_shallow">פשוט (underfitting)</span>
+      <span data-i18n="depth_good">מאוזן</span>
+      <span data-i18n="depth_deep">מורכב (overfitting)</span>
+    </div>
+  </div>
+
+  <div class="chart-area">
+    <h3 data-i18n="chart_title" style="text-align:center;margin-bottom:1rem">Precision & Recall: Train מול Test</h3>
+    <div class="bars-container">
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar bar-train" id="barTrain" style="height:100px">
+            <div class="bar-val" id="valTrain" style="color:#22c55e">50%</div>
+          </div>
+          <div class="bar bar-test" id="barTest" style="height:90px">
+            <div class="bar-val" id="valTest" style="color:#3b82f6">45%</div>
+          </div>
+        </div>
+        <div class="bar-label">Precision</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar bar-train" id="barTrainR" style="height:100px">
+            <div class="bar-val" id="valTrainR" style="color:#22c55e">50%</div>
+          </div>
+          <div class="bar bar-test" id="barTestR" style="height:90px">
+            <div class="bar-val" id="valTestR" style="color:#3b82f6">45%</div>
+          </div>
+        </div>
+        <div class="bar-label">Recall</div>
+      </div>
+      <div class="bar-group">
+        <div class="bar-wrapper">
+          <div class="bar" id="barGap" style="height:10px;background:linear-gradient(180deg,#f59e0b,#ea580c)">
+            <div class="bar-val" id="valGap" style="color:#f59e0b">5%</div>
+          </div>
+        </div>
+        <div class="bar-label" data-i18n="gap_label">פער (Overfitting)</div>
+      </div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div><span>Train</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div><span>Test</span></div>
+      <div class="legend-item"><div class="legend-dot" style="background:#f59e0b"></div><span data-i18n="legend_gap">פער</span></div>
+    </div>
+  </div>
+
+  <div class="insight-box" id="insightBox"></div>
+</section>
+
+<!-- Section 3: The Solution — Random Forest -->
+<section>
+  <h2 data-i18n="solution_title">הפתרון: Random Forest (יער של עצים)</h2>
+  <p data-i18n="solution_intro" style="color:#94a3b8;margin-bottom:1rem">עץ בודד עמוק משנן. הרעיון של <strong style="color:#22c55e">Random Forest</strong> פשוט: במקום עץ אחד — נבנה <strong>הרבה עצים</strong>, כל אחד על <strong>תת-קבוצה אקראית</strong> של משתמשים ושל פיצ'רים. כל עץ "רואה" משהו קצת אחר, אז כל אחד טועה במקום אחר. ואז כולם <strong>מצביעים</strong>, ורוב הקולות מנצח.</p>
+
+  <div class="card">
+    <h3 data-i18n="rf_demo_title" style="text-align:center;margin-bottom:0.5rem">משתמש חדש מגיע — היער מצביע</h3>
+    <p data-i18n="rf_demo_desc" style="color:#94a3b8;text-align:center;margin-bottom:1rem;font-size:0.9rem">לחץ על הכפתור: כל עץ מסתכל על המשתמש מזווית קצת אחרת ונותן קול — "יפקיד" או "לא יפקיד".</p>
+
+    <div class="rf-trees" id="rfTrees"></div>
+
+    <button class="rf-btn" id="rfVoteBtn" onclick="rfVote()" data-i18n="rf_vote_btn">תן ליער להצביע</button>
+
+    <div class="rf-tally" id="rfTally" style="display:none">
+      <div class="rf-tally-box">
+        <div class="rf-tally-num" style="color:#22c55e" id="rfYesCount">0</div>
+        <div class="rf-tally-label" data-i18n="rf_yes_label">קולות "יפקיד"</div>
+      </div>
+      <div style="font-size:1.5rem;color:#475569">|</div>
+      <div class="rf-tally-box">
+        <div class="rf-tally-num" style="color:#94a3b8" id="rfNoCount">0</div>
+        <div class="rf-tally-label" data-i18n="rf_no_label">קולות "לא יפקיד"</div>
+      </div>
+    </div>
+
+    <div class="rf-result" id="rfResult" style="display:none"></div>
+  </div>
+
+  <div class="rf-vs">
+    <div>
+      <h3 data-i18n="single_tree">עץ בודד</h3>
+      <p style="color:#94a3b8;font-size:0.9rem" data-i18n="single_desc">עץ עמוק = משנן.<br>עץ רדוד = פשטני מדי.<br>גבול ההחלטה מלא "שיניים".</p>
+      <div style="font-size:2rem;margin-top:0.5rem">🌳</div>
+    </div>
+    <div style="font-size:2rem;color:#818cf8">VS</div>
+    <div>
+      <h3 style="color:#22c55e" data-i18n="rf_name">Random Forest</h3>
+      <p style="color:#94a3b8;font-size:0.9rem" data-i18n="rf_desc">הרבה עצים, כל אחד על תת-קבוצה אקראית.<br>מצביעים → גבול חלק ויציב יותר.<br>הרבה פחות overfitting.</p>
+      <div style="font-size:1.4rem;margin-top:0.5rem">🌳🌳🌳🌳🌳</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem">
+    <p data-i18n="rf_why" style="font-size:1rem;text-align:center"><strong style="color:#22c55e">למה זה עובד:</strong> כל עץ לבד הוא "דעה" קצת מוטה. אבל כשממצעים הרבה דעות שטועות במקומות שונים — הטעויות מתקזזות, והממוצע יציב ומדויק יותר. זה אותו עיקרון של "חוכמת ההמונים".</p>
+  </div>
+
+  <div class="card" style="text-align:center">
+    <p data-i18n="rf_vs_boost" style="font-size:0.95rem;color:#94a3b8"><strong style="color:#818cf8">ובהמשך:</strong> <strong>Gradient Boosting (LightGBM)</strong> הוא בן דוד של Random Forest — גם הוא הרבה עצים, אבל במקום שכולם יצביעו במקביל, הם נבנים <strong>בטור</strong>: כל עץ מתקן את הטעויות של הקודם. זה בדרך כלל המודל הכי חזק לטבלאי — והצעד הבא שלך.</p>
+  </div>
+</section>
+
+<!-- Takeaways -->
+<section>
+  <h2 data-i18n="takeaways_title">נקודות מפתח</h2>
+  <div class="card">
+    <div class="takeaway">
+      <div class="takeaway-num">1</div>
+      <div class="takeaway-text" data-i18n="tk1"><strong>Decision Tree = כללי if/else אוטומטיים.</strong> כמו ההיוריסטיקה שלך (active_days ≥ 2), אבל המכונה בוחרת את הכללים מהדאטה.</div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-num">2</div>
+      <div class="takeaway-text" data-i18n="tk2"><strong>עומק = סיבוכיות.</strong> עץ רדוד מפספס דפוסים. עץ עמוק משנן. צריך למצוא את האמצע.</div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-num">3</div>
+      <div class="takeaway-text" data-i18n="tk3"><strong>הפער בין Train ל-Test הוא הסימן.</strong> Train=100% ו-Test=25%? העץ שינן את הדאטה במקום ללמוד דפוסים.</div>
+    </div>
+    <div class="takeaway">
+      <div class="takeaway-num">4</div>
+      <div class="takeaway-text" data-i18n="tk4"><strong>Random Forest פותר את ה-overfitting.</strong> במקום עץ אחד עמוק — הרבה עצים על תת-קבוצות אקראיות, מצביעים יחד. גבול חלק, יציב, ברירת מחדל בטוחה כמעט בלי כוונון.</div>
+    </div>
+  </div>
+</section>
+
+<div style="text-align:center;padding:2rem;color:#475569;font-size:0.8rem">Bonim Bina | Decision Tree & Random Forest Explorer</div>
+
+<script>
+// Simulate realistic train/test metrics per depth
+// At low depth: both are moderate, small gap
+// At medium depth: both improve, gap starts
+// At high depth: train perfect, test degrades
+function getMetrics(depth) {
+  // Train precision: improves smoothly to 100%
+  const trainPrec = Math.min(100, 25 + depth * 5 + Math.pow(depth, 1.3));
+  // Test precision: improves until depth~5-6, then degrades
+  const peak = 45;
+  const testPrec = depth <= 6
+    ? 20 + depth * (peak - 20) / 6
+    : Math.max(10, peak - (depth - 6) * 3.5);
+  // Train recall
+  const trainRec = Math.min(100, 20 + depth * 5.5 + Math.pow(depth, 1.2));
+  // Test recall
+  const testRec = depth <= 7
+    ? 15 + depth * (50 - 15) / 7
+    : Math.max(8, 50 - (depth - 7) * 4);
+  return {
+    trainPrec: Math.round(Math.min(100, trainPrec)),
+    testPrec: Math.round(Math.max(5, testPrec)),
+    trainRec: Math.round(Math.min(100, trainRec)),
+    testRec: Math.round(Math.max(5, testRec)),
+  };
+}
+
+const T = {
+  he: {
+    hero_title:'Decision Tree & Random Forest',
+    hero_subtitle:'המודל שואל שאלות כן/לא על המשתמש ולומד כללים לבד. מה קורה כשעץ בודד נהיה עמוק מדי — ואיך Random Forest פותר את זה?',
+    how_title:'איך עץ החלטה עובד',
+    how_desc:'העץ שואל שאלות כן/לא על הפיצ\'רים ומפצל את המשתמשים לקבוצות. כמו רצף כללי if/else שאתה מכיר — רק שהמודל לומד אותם לבד מהדאטה.',
+    all_players:'כל המשתמשים',mix_label:'100 משתמשים, ~8 מפקידים',
+    split_q:'active_days_d02 ≥ 2?',
+    yes_split:'כן (פעילים)',yes_label:'18 משתמשים, 6 מפקידים',
+    no_split:'לא (לא פעילים)',no_label:'82 משתמשים, 2 מפקידים',
+    split_how_title:'איך העץ בוחר איפה לפצל?',
+    tree_connect:'העץ בודק <strong style="color:#f59e0b">כל פיצ\'ר וכל ערך אפשרי</strong> ושואל: "איזה פיצול ייתן לי את הקבוצות הכי נקיות?" — קבוצה אחת עם כמה שיותר מפקידים, והשנייה עם כמה שפחות. הוא בוחר את הפיצול שממקסם את <strong style="color:#818cf8">ההפרדה בין הקבוצות</strong>, ואז חוזר שוב ושוב על כל תת-קבוצה. בדיוק כמו ההיוריסטיקה שלך (active_days ≥ 2) — אבל המכונה מוצאת את הכלל לבד.',
+    overfit_title:'עומק העץ = Overfitting',
+    overfit_desc:'ככל שהעץ עמוק יותר, הוא לומד יותר כללים. אבל מתי הוא מתחיל לשנן את הדאטה במקום ללמוד דפוסים אמיתיים? <strong>שנן = שינן בעל פה</strong> — הוא זוכר כל משתמש ספציפי במקום להבין מה כללי לגביו.',
+    depth_label:'עומק מקסימלי:',
+    depth_shallow:'פשוט (underfitting)',depth_good:'מאוזן',depth_deep:'מורכב (overfitting)',
+    chart_title:'Precision & Recall: Train מול Test',
+    gap_label:'פער (Overfitting)',legend_gap:'פער',
+    solution_title:'הפתרון: Random Forest (יער של עצים)',
+    solution_intro:'עץ בודד עמוק משנן. הרעיון של <strong style="color:#22c55e">Random Forest</strong> פשוט: במקום עץ אחד — נבנה <strong>הרבה עצים</strong>, כל אחד על <strong>תת-קבוצה אקראית</strong> של משתמשים ושל פיצ\'רים. כל עץ "רואה" משהו קצת אחר, אז כל אחד טועה במקום אחר. ואז כולם <strong>מצביעים</strong>, ורוב הקולות מנצח.',
+    rf_demo_title:'משתמש חדש מגיע — היער מצביע',
+    rf_demo_desc:'לחץ על הכפתור: כל עץ מסתכל על המשתמש מזווית קצת אחרת ונותן קול — "יפקיד" או "לא יפקיד".',
+    rf_vote_btn:'תן ליער להצביע',
+    rf_yes_label:'קולות "יפקיד"',
+    rf_no_label:'קולות "לא יפקיד"',
+    single_tree:'עץ בודד',single_desc:'עץ עמוק = משנן.<br>עץ רדוד = פשטני מדי.<br>גבול ההחלטה מלא "שיניים".',
+    rf_name:'Random Forest',rf_desc:'הרבה עצים, כל אחד על תת-קבוצה אקראית.<br>מצביעים → גבול חלק ויציב יותר.<br>הרבה פחות overfitting.',
+    rf_why:'<strong style="color:#22c55e">למה זה עובד:</strong> כל עץ לבד הוא "דעה" קצת מוטה. אבל כשממצעים הרבה דעות שטועות במקומות שונים — הטעויות מתקזזות, והממוצע יציב ומדויק יותר. זה אותו עיקרון של "חוכמת ההמונים".',
+    rf_vs_boost:'<strong style="color:#818cf8">ובהמשך:</strong> <strong>Gradient Boosting (LightGBM)</strong> הוא בן דוד של Random Forest — גם הוא הרבה עצים, אבל במקום שכולם יצביעו במקביל, הם נבנים <strong>בטור</strong>: כל עץ מתקן את הטעויות של הקודם. זה בדרך כלל המודל הכי חזק לטבלאי — והצעד הבא שלך.',
+    takeaways_title:'נקודות מפתח',
+    tk1:'<strong>Decision Tree = כללי if/else אוטומטיים.</strong> כמו ההיוריסטיקה שלך (active_days ≥ 2), אבל המכונה בוחרת את הכללים מהדאטה.',
+    tk2:'<strong>עומק = סיבוכיות.</strong> עץ רדוד מפספס דפוסים. עץ עמוק משנן. צריך למצוא את האמצע.',
+    tk3:'<strong>הפער בין Train ל-Test הוא הסימן.</strong> Train=100% ו-Test=25%? העץ שינן את הדאטה במקום ללמוד דפוסים.',
+    tk4:'<strong>Random Forest פותר את ה-overfitting.</strong> במקום עץ אחד עמוק — הרבה עצים על תת-קבוצות אקראיות, מצביעים יחד. גבול חלק, יציב, ברירת מחדל בטוחה כמעט בלי כוונון.',
+    insights:{
+      shallow:'עומק 1-2: העץ פשוט מדי. כלל אחד או שניים לא מספיקים לתפוס מי יפקיד. Train ו-Test דומים, אבל שניהם נמוכים.',
+      good:'עומק 4-6: האזור האופטימלי. העץ לומד כללים משמעותיים. הפער בין Train ל-Test קטן. כאן ה-performance הכי טוב על משתמשים חדשים.',
+      starting:'עומק 7-10: התחלת overfitting. Train עולה אבל Test מתחיל לרדת. העץ מתחיל לשנן משתמשים ספציפיים בדאטה.',
+      bad:'עומק 11+: overfitting חמור! Train מתקרב ל-100% (שינון מושלם) אבל Test צונח. העץ למד "רעש" בדאטה, לא דפוסים אמיתיים. כל משתמש הפך לכלל ייחודי. כאן בדיוק Random Forest מציל.',
+    },
+    rf_result_deposit:'רוב העצים הצביעו <strong>"יפקיד"</strong> ({yes} מתוך {total}). זו תחזית היער. שים לב: גם אם עץ אחד או שניים טעו — הרוב מתקן אותם.',
+    rf_result_no:'רוב העצים הצביעו <strong>"לא יפקיד"</strong> ({no} מתוך {total}). זו תחזית היער. שים לב: גם אם עץ אחד או שניים טעו — הרוב מתקן אותם.',
+    rf_tree_label:'עץ',
+    builder_title:'בנה עץ צעד אחרי צעד',
+    builder_desc:'צפה בעץ ההחלטה נבנה מול העיניים. בכל צעד, האלגוריתם בוחר את הפיצול הכי טוב. זה בדיוק מה שקורה בתוך model.fit() — לולאת בנייה צעד-אחר-צעד.',
+    builder_scatter_title:'מפת משתמשים',
+    builder_tree_title:'עץ ההחלטה',
+    builder_next:'פיצול הבא',
+    builder_auto:'בנייה אוטומטית',
+    builder_reset:'אתחול',
+    builder_info_initial:'לחץ על "פיצול הבא" כדי להתחיל לבנות את העץ. בכל צעד, האלגוריתם ימצא את הפיצול שיוצר את הקבוצות הכי נקיות.',
+    builder_step0_label:'צעד 0: כל המשתמשים בקבוצה אחת',
+    builder_step_label_prefix:'צעד',
+    builder_info_split:'האלגוריתם בדק את כל הפיצולים האפשריים ובחר: <strong style="color:#f59e0b">FEAT COMP VAL</strong>. הפיצול הזה יוצר את הקבוצות הכי נקיות.',
+    builder_info_done:'העץ הושלם! כל העלים טהורים או שהגענו לעומק מקסימלי. שים לב לאזורים המלבניים בגרף — ככה בדיוק עץ החלטה מחלק את המרחב.',
+    builder_info_overfit:'אזהרה: העץ כבר בעומק DEPTH. ככל שממשיכים לפצל, העץ מתחיל לשנן את הדאטה במקום ללמוד דפוסים כלליים. זה overfitting!',
+    builder_root_label:'כל המשתמשים',
+    builder_players:'משתמשים',
+    builder_abusers:'מפקידים',
+    builder_axis_bonus:'active_days_d02',
+    builder_axis_deposit:'bets_025_plus_d02',
+  },
+  en: {
+    hero_title:'Decision Tree & Random Forest',
+    hero_subtitle:'The model asks yes/no questions about a user and learns rules on its own. What happens when a single tree goes too deep — and how does Random Forest fix it?',
+    how_title:'How a Decision Tree Works',
+    how_desc:'The tree asks yes/no questions about features and splits users into groups. Like a chain of if/else rules you know — except the model learns them itself from data.',
+    all_players:'All Users',mix_label:'100 users, ~8 depositors',
+    split_q:'active_days_d02 ≥ 2?',
+    yes_split:'Yes (Active)',yes_label:'18 users, 6 depositors',
+    no_split:'No (Inactive)',no_label:'82 users, 2 depositors',
+    split_how_title:'How does the tree choose where to split?',
+    tree_connect:'The tree checks <strong style="color:#f59e0b">every feature and every possible value</strong> and asks: "which split gives me the cleanest groups?" — one group with as many depositors as possible, the other with as few. It picks the split that maximizes <strong style="color:#818cf8">separation between groups</strong>, then repeats on each sub-group. Just like your heuristic (active_days ≥ 2) — but the machine finds the rule on its own.',
+    overfit_title:'Tree Depth = Overfitting',
+    overfit_desc:'The deeper the tree, the more rules it learns. But when does it start memorizing the data instead of learning real patterns? <strong>Memorize = learn by heart</strong> — it remembers each specific user instead of understanding what\'s general about them.',
+    depth_label:'Max Depth:',
+    depth_shallow:'Simple (underfitting)',depth_good:'Balanced',depth_deep:'Complex (overfitting)',
+    chart_title:'Precision & Recall: Train vs Test',
+    gap_label:'Gap (Overfitting)',legend_gap:'Gap',
+    solution_title:'The Solution: Random Forest',
+    solution_intro:'A single deep tree memorizes. The idea of <strong style="color:#22c55e">Random Forest</strong> is simple: instead of one tree — build <strong>many trees</strong>, each on a <strong>random subset</strong> of users and of features. Each tree "sees" something slightly different, so each errs in a different place. Then they all <strong>vote</strong>, and the majority wins.',
+    rf_demo_title:'A New User Arrives — the Forest Votes',
+    rf_demo_desc:'Click the button: each tree looks at the user from a slightly different angle and casts a vote — "deposit" or "no deposit".',
+    rf_vote_btn:'Let the Forest Vote',
+    rf_yes_label:'"deposit" votes',
+    rf_no_label:'"no deposit" votes',
+    single_tree:'Single Tree',single_desc:'Deep tree = memorizes.<br>Shallow tree = too simple.<br>Decision boundary full of "teeth".',
+    rf_name:'Random Forest',rf_desc:'Many trees, each on a random subset.<br>They vote → smoother, more stable boundary.<br>Far less overfitting.',
+    rf_why:'<strong style="color:#22c55e">Why it works:</strong> each tree alone is a slightly biased "opinion". But when you average many opinions that err in different places — the errors cancel out, and the average is more stable and accurate. Same principle as the "wisdom of the crowd".',
+    rf_vs_boost:'<strong style="color:#818cf8">And later:</strong> <strong>Gradient Boosting (LightGBM)</strong> is a cousin of Random Forest — also many trees, but instead of voting in parallel, they\'re built <strong>in sequence</strong>: each tree corrects the previous one\'s mistakes. It\'s usually the strongest model for tabular data — and your next step.',
+    takeaways_title:'Key Takeaways',
+    tk1:'<strong>Decision Tree = automatic if/else rules.</strong> Like your heuristic (active_days ≥ 2), but the machine picks the rules from data.',
+    tk2:'<strong>Depth = complexity.</strong> Shallow tree misses patterns. Deep tree memorizes. Find the middle ground.',
+    tk3:'<strong>The Train/Test gap is the signal.</strong> Train=100% and Test=25%? The tree memorized data instead of learning patterns.',
+    tk4:'<strong>Random Forest fixes overfitting.</strong> Instead of one deep tree — many trees on random subsets, voting together. Smooth, stable boundary, a safe default with almost no tuning.',
+    insights:{
+      shallow:'Depth 1-2: tree too simple. One or two rules can\'t capture who will deposit. Train and Test are similar, but both low.',
+      good:'Depth 4-6: the optimal zone. The tree learns meaningful rules. Train/Test gap is small. Best performance on new users.',
+      starting:'Depth 7-10: overfitting begins. Train rises but Test starts dropping. The tree memorizes specific users in the data.',
+      bad:'Depth 11+: severe overfitting! Train approaches 100% (perfect memorization) but Test plummets. The tree learned noise, not patterns. Each user became a unique rule. This is exactly where Random Forest saves the day.',
+    },
+    rf_result_deposit:'Most trees voted <strong>"deposit"</strong> ({yes} of {total}). That\'s the forest\'s prediction. Notice: even if one or two trees were wrong — the majority corrects them.',
+    rf_result_no:'Most trees voted <strong>"no deposit"</strong> ({no} of {total}). That\'s the forest\'s prediction. Notice: even if one or two trees were wrong — the majority corrects them.',
+    rf_tree_label:'Tree',
+    builder_title:'Build a Tree Step by Step',
+    builder_desc:'Watch a decision tree being built before your eyes. At each step, the algorithm picks the best split. This is exactly what happens inside model.fit() — a step-by-step build loop.',
+    builder_scatter_title:'User Map',
+    builder_tree_title:'Decision Tree',
+    builder_next:'Next Split',
+    builder_auto:'Auto Build',
+    builder_reset:'Reset',
+    builder_info_initial:'Click "Next Split" to start building the tree. At each step, the algorithm finds the split that creates the purest groups.',
+    builder_step0_label:'Step 0: All users in one group',
+    builder_step_label_prefix:'Step',
+    builder_info_split:'The algorithm checked all possible splits and chose: <strong style="color:#f59e0b">FEAT COMP VAL</strong>. This split creates the purest groups.',
+    builder_info_done:'Tree complete! All leaves are pure or we reached max depth. Notice the rectangular regions on the chart — that\'s exactly how a decision tree partitions space.',
+    builder_info_overfit:'Warning: The tree is already at depth DEPTH. The more we split, the more the tree memorizes data instead of learning general patterns. This is overfitting!',
+    builder_root_label:'All Users',
+    builder_players:'users',
+    builder_abusers:'depositors',
+    builder_axis_bonus:'active_days_d02',
+    builder_axis_deposit:'bets_025_plus_d02',
+  }
+};
+
+let currentLang = 'he';
+function setLang(lang) {
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang === 'he' ? 'rtl' : 'ltr';
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-he').classList.toggle('active', lang === 'he');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (T[lang][k]) el.innerHTML = T[lang][k];
+  });
+  updateDepth();
+  rfInitTrees();
+  // Re-render builder if it exists
+  if(typeof builderReset==='function'&&document.getElementById('builderTreeArea')){
+    // Redraw tree to update labels
+    if(window._builderRedraw) window._builderRedraw();
+  }
+}
+
+// Generate player dots
+function initDots() {
+  const all = document.getElementById('allPlayers');
+  const yes = document.getElementById('yesSplit');
+  const no = document.getElementById('noSplit');
+  all.innerHTML = '';yes.innerHTML = '';no.innerHTML = '';
+  // 100 users, 8 depositors (green) — matches Guy's ~8.4% base rate
+  for (let i = 0; i < 100; i++) {
+    const d = document.createElement('div');
+    d.className = 'player-dot ' + (i < 8 ? 'dot-abuser' : 'dot-normal');
+    all.appendChild(d);
+  }
+  // Yes (active) split: 6 depositors + 12 non
+  for (let i = 0; i < 18; i++) {
+    const d = document.createElement('div');
+    d.className = 'player-dot ' + (i < 6 ? 'dot-abuser' : 'dot-normal');
+    yes.appendChild(d);
+  }
+  // No (inactive) split: 2 depositors + 80 non
+  for (let i = 0; i < 82; i++) {
+    const d = document.createElement('div');
+    d.className = 'player-dot ' + (i < 2 ? 'dot-abuser' : 'dot-normal');
+    no.appendChild(d);
+  }
+}
+
+const depthSlider = document.getElementById('depthSlider');
+
+function updateDepth() {
+  const depth = parseInt(depthSlider.value);
+  document.getElementById('depthDisplay').textContent = depth;
+  const m = getMetrics(depth);
+  const maxH = 200;
+
+  document.getElementById('barTrain').style.height = (m.trainPrec / 100 * maxH) + 'px';
+  document.getElementById('barTest').style.height = (m.testPrec / 100 * maxH) + 'px';
+  document.getElementById('valTrain').textContent = m.trainPrec + '%';
+  document.getElementById('valTest').textContent = m.testPrec + '%';
+
+  document.getElementById('barTrainR').style.height = (m.trainRec / 100 * maxH) + 'px';
+  document.getElementById('barTestR').style.height = (m.testRec / 100 * maxH) + 'px';
+  document.getElementById('valTrainR').textContent = m.trainRec + '%';
+  document.getElementById('valTestR').textContent = m.testRec + '%';
+
+  const gap = m.trainPrec - m.testPrec;
+  document.getElementById('barGap').style.height = Math.max(4, gap / 100 * maxH) + 'px';
+  document.getElementById('valGap').textContent = gap + '%';
+
+  // Color the gap bar based on severity
+  const gapBar = document.getElementById('barGap');
+  if (gap < 15) gapBar.style.background = 'linear-gradient(180deg,#22c55e,#16a34a)';
+  else if (gap < 40) gapBar.style.background = 'linear-gradient(180deg,#f59e0b,#ea580c)';
+  else gapBar.style.background = 'linear-gradient(180deg,#ef4444,#dc2626)';
+
+  // Insight
+  const ins = T[currentLang].insights;
+  const box = document.getElementById('insightBox');
+  let insight;
+  if (depth <= 2) { insight = ins.shallow; box.className = 'insight-box'; }
+  else if (depth <= 6) { insight = ins.good; box.className = 'insight-box'; }
+  else if (depth <= 10) { insight = ins.starting; box.className = 'insight-box overfit-warning'; }
+  else { insight = ins.bad; box.className = 'insight-box overfit-warning'; }
+  box.textContent = insight;
+}
+
+depthSlider.addEventListener('input', updateDepth);
+initDots();
+updateDepth();
+
+// ============================================================
+// Random Forest voting demo
+// ============================================================
+const RF_N = 7; // number of trees in the demo forest
+// Each tree gives a vote for the same incoming user. Predefined so the
+// majority lands on "deposit" but a couple of trees disagree (shows error-cancelling).
+const RF_VOTES = [1,1,0,1,1,0,1]; // 5 deposit, 2 no-deposit
+function rfInitTrees(){
+  const wrap = document.getElementById('rfTrees');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  const treeLabel = T[currentLang].rf_tree_label || 'Tree';
+  for(let i=0;i<RF_N;i++){
+    const div=document.createElement('div');
+    div.className='rf-tree';
+    div.id='rfTree'+i;
+    div.innerHTML='<div class="rf-tree-emoji">🌳</div>'+
+      '<div class="rf-tree-sub">'+treeLabel+' '+(i+1)+'</div>'+
+      '<div class="rf-tree-vote" id="rfVote'+i+'" style="opacity:0.25">?</div>';
+    wrap.appendChild(div);
+  }
+  // Reset tally + result on re-init
+  const tally=document.getElementById('rfTally');
+  const result=document.getElementById('rfResult');
+  if(tally) tally.style.display='none';
+  if(result) result.style.display='none';
+}
+
+let rfTimer=null;
+function rfVote(){
+  if(rfTimer) return; // already running
+  rfInitTrees();
+  let yes=0,no=0,shown=0;
+  const btn=document.getElementById('rfVoteBtn');
+  if(btn) btn.disabled=true;
+  rfTimer=setInterval(function(){
+    const i=shown;
+    const voteEl=document.getElementById('rfVote'+i);
+    const v=RF_VOTES[i];
+    if(v===1){yes++; voteEl.textContent='✓'; voteEl.className='rf-tree-vote rf-vote-deposit';}
+    else {no++; voteEl.textContent='✕'; voteEl.className='rf-tree-vote rf-vote-no';}
+    voteEl.style.opacity='1';
+    document.getElementById('rfYesCount').textContent=yes;
+    document.getElementById('rfNoCount').textContent=no;
+    document.getElementById('rfTally').style.display='flex';
+    shown++;
+    if(shown>=RF_N){
+      clearInterval(rfTimer); rfTimer=null;
+      if(btn) btn.disabled=false;
+      const result=document.getElementById('rfResult');
+      const tpl = yes>no ? (T[currentLang].rf_result_deposit||'') : (T[currentLang].rf_result_no||'');
+      result.innerHTML = tpl.replace('{yes}',yes).replace('{no}',no).replace('{total}',RF_N);
+      result.style.display='block';
+    }
+  },420);
+}
+rfInitTrees();
+
+// ============================================================
+// Section 1.5: Interactive step-by-step tree builder
+// ============================================================
+(function(){
+  'use strict';
+
+  // --- Seeded random for reproducibility ---
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+  const rng=mulberry32(42);
+
+  // --- Generate 100 users: ~8 depositors (green), 92 non-depositors (gray) ---
+  // Internal field names kept as bonus/deposit to preserve split logic;
+  // they MAP to active_days_d02 (x) and bets_025_plus_d02 (y) in all labels.
+  const players=[];
+  // Depositors: more active days + more qualifying bets
+  for(let i=0;i<8;i++){
+    players.push({
+      bonus: 500 + rng()*500,    // 500-1000  -> high active_days region
+      deposit: 15 + rng()*15,     // 15-30     -> high bets region
+      abuser: true                // "abuser" flag == "depositor" here
+    });
+  }
+  // Non-depositors: spread across lower range, mostly
+  for(let i=0;i<92;i++){
+    const bonus = rng()*800 + 50;   // 50-850
+    const deposit = rng()*25 + 1;   // 1-26
+    players.push({ bonus, deposit, abuser: false });
+  }
+
+  // --- Tree data structures ---
+  let treeNodes=[];  // {id,parentId,isLeft,indices,splitFeature,splitValue,leftId,rightId,depth}
+  let nextNodeId=0;
+  let splitLines=[];  // {feature,value,region} for scatter plot
+  let currentStep=0;
+  let autoInterval=null;
+  const MAX_DEPTH=8;
+
+  // --- Gini impurity ---
+  function gini(indices){
+    if(indices.length===0) return 0;
+    const abCount=indices.filter(i=>players[i].abuser).length;
+    const p=abCount/indices.length;
+    return 2*p*(1-p);
+  }
+
+  // --- Find best split for a set of indices ---
+  function findBestSplit(indices){
+    if(indices.length<=1) return null;
+    const currentGini=gini(indices);
+    if(currentGini===0) return null; // already pure
+
+    let bestGain=-1, bestFeature=null, bestValue=null;
+
+    for(const feat of ['bonus','deposit']){
+      const vals=indices.map(i=>players[i][feat]).sort((a,b)=>a-b);
+      // Try median split
+      const median=vals[Math.floor(vals.length/2)];
+      const leftIdx=indices.filter(i=>players[i][feat]<=median);
+      const rightIdx=indices.filter(i=>players[i][feat]>median);
+      if(leftIdx.length===0||rightIdx.length===0) continue;
+      const wGini=(leftIdx.length*gini(leftIdx)+rightIdx.length*gini(rightIdx))/indices.length;
+      const gain=currentGini-wGini;
+      if(gain>bestGain){bestGain=gain;bestFeature=feat;bestValue=median;}
+    }
+    // Also try quartile splits for better separation
+    for(const feat of ['bonus','deposit']){
+      const vals=indices.map(i=>players[i][feat]).sort((a,b)=>a-b);
+      for(const q of [0.25,0.75]){
+        const threshold=vals[Math.floor(vals.length*q)];
+        const leftIdx=indices.filter(i=>players[i][feat]<=threshold);
+        const rightIdx=indices.filter(i=>players[i][feat]>threshold);
+        if(leftIdx.length===0||rightIdx.length===0) continue;
+        const wGini=(leftIdx.length*gini(leftIdx)+rightIdx.length*gini(rightIdx))/indices.length;
+        const gain=currentGini-wGini;
+        if(gain>bestGain){bestGain=gain;bestFeature=feat;bestValue=threshold;}
+      }
+    }
+    if(bestGain<=0) return null;
+    return {feature:bestFeature, value:bestValue, gain:bestGain};
+  }
+
+  // --- Find the most impure leaf ---
+  function findMostImpureLeaf(){
+    let worst=null, worstGini=-1;
+    for(const node of treeNodes){
+      if(node.leftId!=null) continue; // not a leaf
+      if(node.depth>=MAX_DEPTH) continue;
+      const g=gini(node.indices);
+      if(g>worstGini){worstGini=g;worst=node;}
+    }
+    if(worstGini<=0) return null;
+    return worst;
+  }
+
+  // --- Initialize tree ---
+  function initTree(){
+    nextNodeId=0;
+    treeNodes=[];
+    splitLines=[];
+    currentStep=0;
+    const allIndices=players.map((_,i)=>i);
+    treeNodes.push({
+      id:nextNodeId++,
+      parentId:null,
+      isLeft:null,
+      indices:allIndices,
+      splitFeature:null,
+      splitValue:null,
+      leftId:null,
+      rightId:null,
+      depth:0
+    });
+  }
+
+  // --- Perform one split ---
+  function doOneSplit(){
+    const leaf=findMostImpureLeaf();
+    if(!leaf) return false;
+    const best=findBestSplit(leaf.indices);
+    if(!best) return false;
+
+    leaf.splitFeature=best.feature;
+    leaf.splitValue=best.value;
+
+    const leftIndices=leaf.indices.filter(i=>players[i][best.feature]<=best.value);
+    const rightIndices=leaf.indices.filter(i=>players[i][best.feature]>best.value);
+
+    const leftNode={
+      id:nextNodeId++,parentId:leaf.id,isLeft:true,
+      indices:leftIndices,splitFeature:null,splitValue:null,
+      leftId:null,rightId:null,depth:leaf.depth+1
+    };
+    const rightNode={
+      id:nextNodeId++,parentId:leaf.id,isLeft:false,
+      indices:rightIndices,splitFeature:null,splitValue:null,
+      leftId:null,rightId:null,depth:leaf.depth+1
+    };
+    leaf.leftId=leftNode.id;
+    leaf.rightId=rightNode.id;
+    treeNodes.push(leftNode);
+    treeNodes.push(rightNode);
+
+    // Record split line for scatter
+    splitLines.push({feature:best.feature, value:best.value, nodeId:leaf.id});
+
+    currentStep++;
+    return {feature:best.feature, value:best.value, depth:leaf.depth+1};
+  }
+
+  // --- Draw scatter plot ---
+  const canvas=document.getElementById('builderScatter');
+  const ctx=canvas.getContext('2d');
+
+  function drawScatter(){
+    const rect=canvas.parentElement.getBoundingClientRect();
+    const dpr=window.devicePixelRatio||1;
+    canvas.width=canvas.offsetWidth*dpr;
+    canvas.height=canvas.offsetHeight*dpr;
+    ctx.scale(dpr,dpr);
+    const W=canvas.offsetWidth;
+    const H=canvas.offsetHeight;
+    const pad={top:20,right:20,bottom:40,left:55};
+    const plotW=W-pad.left-pad.right;
+    const plotH=H-pad.top-pad.bottom;
+
+    ctx.clearRect(0,0,W,H);
+
+    // Axis ranges
+    const minB=0, maxB=1100;
+    const minD=0, maxD=35;
+    function xPos(v){return pad.left+((v-minB)/(maxB-minB))*plotW}
+    function yPos(v){return pad.top+plotH-((v-minD)/(maxD-minD))*plotH}
+
+    // Draw grid
+    ctx.strokeStyle='#1e293b';ctx.lineWidth=1;
+    for(let v=0;v<=1000;v+=200){
+      const x=xPos(v);
+      ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+plotH);ctx.stroke();
+    }
+    for(let v=0;v<=30;v+=5){
+      const y=yPos(v);
+      ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+plotW,y);ctx.stroke();
+    }
+
+    // Draw split lines
+    for(const sl of splitLines){
+      ctx.strokeStyle='rgba(245,158,11,0.6)';
+      ctx.lineWidth=2;
+      ctx.setLineDash([6,4]);
+      if(sl.feature==='bonus'){
+        const x=xPos(sl.value);
+        ctx.beginPath();ctx.moveTo(x,pad.top);ctx.lineTo(x,pad.top+plotH);ctx.stroke();
+      } else {
+        const y=yPos(sl.value);
+        ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+plotW,y);ctx.stroke();
+      }
+      ctx.setLineDash([]);
+    }
+
+    // Draw axis borders
+    ctx.strokeStyle='#334155';ctx.lineWidth=1;
+    ctx.beginPath();
+    ctx.moveTo(pad.left,pad.top);ctx.lineTo(pad.left,pad.top+plotH);ctx.lineTo(pad.left+plotW,pad.top+plotH);
+    ctx.stroke();
+
+    // Draw axis tick labels
+    ctx.fillStyle='#94a3b8';ctx.font='11px -apple-system,sans-serif';ctx.textAlign='center';
+    for(let v=0;v<=1000;v+=200){
+      ctx.fillText(v,xPos(v),pad.top+plotH+16);
+    }
+    ctx.textAlign='right';
+    for(let v=0;v<=30;v+=10){
+      ctx.fillText(v,pad.left-8,yPos(v)+4);
+    }
+
+    // Axis titles (Guy's features)
+    ctx.fillStyle='#94a3b8';ctx.font='12px -apple-system,sans-serif';
+    ctx.textAlign='center';
+    ctx.fillText('active_days_d02',pad.left+plotW/2,H-4);
+    ctx.save();
+    ctx.translate(14,pad.top+plotH/2);
+    ctx.rotate(-Math.PI/2);
+    ctx.fillText('bets_025_plus_d02',0,0);
+    ctx.restore();
+
+    // Draw dots: green = depositor, gray = non-depositor
+    for(const p of players){
+      const x=xPos(p.bonus);
+      const y=yPos(p.deposit);
+      ctx.beginPath();
+      ctx.arc(x,y,p.abuser?6:4,0,Math.PI*2);
+      ctx.fillStyle=p.abuser?'#22c55e':'#94a3b8';
+      ctx.globalAlpha=p.abuser?1:0.6;
+      ctx.fill();
+      if(p.abuser){
+        ctx.strokeStyle='#86efac';ctx.lineWidth=1.5;ctx.stroke();
+      }
+    }
+    ctx.globalAlpha=1;
+
+    // Legend in top corner
+    ctx.font='11px -apple-system,sans-serif';
+    const legendX=pad.left+8, legendY=pad.top+14;
+    const depLabel=T[currentLang].builder_abusers||'depositors';
+    ctx.fillStyle='#22c55e';ctx.beginPath();ctx.arc(legendX,legendY,4,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#94a3b8';ctx.textAlign='left';ctx.fillText(currentLang==='he'?'מפקיד':'Depositor',legendX+10,legendY+4);
+    ctx.fillStyle='#94a3b8';ctx.globalAlpha=0.6;ctx.beginPath();ctx.arc(legendX,legendY+16,4,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;
+    ctx.fillStyle='#94a3b8';ctx.fillText(currentLang==='he'?'לא מפקיד':'No deposit',legendX+10,legendY+20);
+  }
+
+  // --- Draw tree diagram ---
+  function drawTree(){
+    const area=document.getElementById('builderTreeArea');
+    area.innerHTML='';
+
+    if(treeNodes.length===0) return;
+
+    // Calculate layout: BFS level-order
+    const maxDepth=Math.max(...treeNodes.map(n=>n.depth));
+    const levelNodes={};
+    for(const n of treeNodes){
+      if(!levelNodes[n.depth]) levelNodes[n.depth]=[];
+      levelNodes[n.depth].push(n);
+    }
+
+    // Assign positions
+    const nodeW=100, nodeH=55, hGap=12, vGap=40;
+    const positions={};
+
+    // Bottom-up: calculate widths
+    function subtreeWidth(nodeId){
+      const node=treeNodes.find(n=>n.id===nodeId);
+      if(!node||node.leftId==null) return nodeW;
+      return subtreeWidth(node.leftId)+hGap+subtreeWidth(node.rightId);
+    }
+
+    function layoutNode(nodeId,x,y){
+      const node=treeNodes.find(n=>n.id===nodeId);
+      if(!node) return;
+      if(node.leftId==null){
+        positions[nodeId]={x:x,y:y,w:nodeW};
+        return;
+      }
+      const lw=subtreeWidth(node.leftId);
+      const rw=subtreeWidth(node.rightId);
+      const totalW=lw+hGap+rw;
+      positions[nodeId]={x:x,y:y,w:totalW};
+      layoutNode(node.leftId, x, y+nodeH+vGap);
+      layoutNode(node.rightId, x+lw+hGap, y+nodeH+vGap);
+    }
+
+    const rootWidth=subtreeWidth(0);
+    layoutNode(0, 0, 10);
+
+    // Calculate container size
+    let maxX=0, maxY=0;
+    for(const id in positions){
+      const p=positions[id];
+      const node=treeNodes.find(n=>n.id===parseInt(id));
+      const w=(node&&node.leftId!=null)?p.w:nodeW;
+      if(p.x+w>maxX) maxX=p.x+w;
+      if(p.y+nodeH>maxY) maxY=p.y+nodeH;
+    }
+    area.style.position='relative';
+    area.style.minHeight=(maxY+20)+'px';
+    area.style.minWidth=(maxX+20)+'px';
+
+    // Draw edges first (SVG)
+    const svgNS='http://www.w3.org/2000/svg';
+    const svg=document.createElementNS(svgNS,'svg');
+    svg.style.position='absolute';svg.style.top='0';svg.style.left='0';
+    svg.style.width='100%';svg.style.height='100%';svg.style.pointerEvents='none';
+    svg.setAttribute('width',maxX+20);svg.setAttribute('height',maxY+20);
+
+    for(const node of treeNodes){
+      if(node.parentId==null) continue;
+      const parent=treeNodes.find(n=>n.id===node.parentId);
+      if(!parent||!positions[parent.id]||!positions[node.id]) continue;
+
+      const parentPos=positions[parent.id];
+      const childPos=positions[node.id];
+
+      // Parent center bottom
+      const pCenterX=parentPos.x+(parent.leftId!=null?parentPos.w:nodeW)/2;
+      const pBottomY=parentPos.y+nodeH;
+      // Child center top
+      const cCenterX=childPos.x+(node.leftId!=null?childPos.w:nodeW)/2;
+      const cTopY=childPos.y;
+
+      const line=document.createElementNS(svgNS,'line');
+      line.setAttribute('x1',pCenterX);line.setAttribute('y1',pBottomY);
+      line.setAttribute('x2',cCenterX);line.setAttribute('y2',cTopY);
+      line.setAttribute('stroke','#475569');line.setAttribute('stroke-width','2');
+      svg.appendChild(line);
+
+      // Edge label
+      const label=document.createElementNS(svgNS,'text');
+      const midX=(pCenterX+cCenterX)/2;
+      const midY=(pBottomY+cTopY)/2;
+      label.setAttribute('x',midX);label.setAttribute('y',midY-4);
+      label.setAttribute('text-anchor','middle');
+      label.setAttribute('fill','#94a3b8');label.setAttribute('font-size','10');
+      label.textContent=node.isLeft?'≤':'>';
+      svg.appendChild(label);
+    }
+    area.appendChild(svg);
+
+    // Draw nodes
+    for(const node of treeNodes){
+      if(!positions[node.id]) continue;
+      const pos=positions[node.id];
+
+      const div=document.createElement('div');
+      div.className='bt-node '+(node.leftId==null?'bt-leaf':'bt-split');
+
+      // Center the node box within its allocated width
+      const allocW=node.leftId!=null?pos.w:nodeW;
+      const leftOffset=pos.x+(allocW-nodeW)/2;
+      div.style.left=leftOffset+'px';
+      div.style.top=pos.y+'px';
+      div.style.width=nodeW+'px';
+
+      const abCount=node.indices.filter(i=>players[i].abuser).length;
+      const total=node.indices.length;
+
+      // Label
+      const labelDiv=document.createElement('div');
+      labelDiv.className='bt-node-label';
+      if(node.splitFeature){
+        const featName=node.splitFeature==='bonus'?'active_days':'bets_025';
+        labelDiv.textContent=featName+' ≤ '+Math.round(node.splitValue);
+        labelDiv.style.color='#f59e0b';
+      } else {
+        labelDiv.style.color='#818cf8';
+        if(total===players.length&&currentStep===0){
+          labelDiv.textContent=T[currentLang].builder_root_label||'All Users';
+        } else {
+          const dep=(currentLang==='he')?'מפקיד':'Deposit';
+          const nodep=(currentLang==='he')?'לא מפקיד':'No deposit';
+          labelDiv.textContent=(abCount>total/2)?dep:nodep;
+        }
+      }
+      div.appendChild(labelDiv);
+
+      // Counts
+      const countsDiv=document.createElement('div');
+      countsDiv.className='bt-node-counts';
+      countsDiv.textContent=total+' '+(T[currentLang].builder_players||'users')+', '+abCount+' '+(T[currentLang].builder_abusers||'depositors');
+      div.appendChild(countsDiv);
+
+      // Purity bar
+      const purityBar=document.createElement('div');
+      purityBar.className='bt-purity-bar';
+      const purityFill=document.createElement('div');
+      purityFill.className='bt-purity-fill';
+      const majority=Math.max(abCount,total-abCount);
+      const purity=total>0?majority/total:1;
+      purityFill.style.width=(purity*100)+'%';
+      if(purity>0.95) purityFill.style.background='#22c55e';
+      else if(purity>0.8) purityFill.style.background='#86efac';
+      else if(purity>0.6) purityFill.style.background='#f59e0b';
+      else purityFill.style.background='#ef4444';
+      purityBar.appendChild(purityFill);
+      div.appendChild(purityBar);
+
+      area.appendChild(div);
+    }
+  }
+
+  // --- Update info panel ---
+  function updateInfo(splitResult){
+    const info=document.getElementById('builderInfo');
+    const stepLabel=document.getElementById('builderStepLabel');
+    const prefix=T[currentLang].builder_step_label_prefix||'Step';
+
+    if(!splitResult){
+      // Done or initial
+      if(currentStep===0){
+        info.innerHTML=T[currentLang].builder_info_initial||'Click "Next Split" to start building the tree.';
+        stepLabel.textContent=prefix+' 0';
+        info.className='builder-info';
+      } else {
+        info.innerHTML=T[currentLang].builder_info_done||'Tree complete!';
+        stepLabel.textContent=prefix+' '+currentStep;
+        info.className='builder-info';
+      }
+      return;
+    }
+
+    stepLabel.textContent=prefix+' '+currentStep;
+    const featLabel=splitResult.feature==='bonus'?'active_days_d02':'bets_025_plus_d02';
+    let msg=(T[currentLang].builder_info_split||'')
+      .replace('FEAT',featLabel)
+      .replace('COMP','≤')
+      .replace('VAL',Math.round(splitResult.value));
+    info.innerHTML=msg;
+    info.className='builder-info';
+
+    if(splitResult.depth>=5){
+      const warnMsg=(T[currentLang].builder_info_overfit||'').replace('DEPTH',splitResult.depth);
+      info.innerHTML+=('<br><br>'+warnMsg);
+      info.className='builder-info builder-overfit-warn';
+    }
+  }
+
+  // --- Button handlers ---
+  window.builderNextSplit=function(){
+    const result=doOneSplit();
+    if(!result){
+      updateInfo(null);
+      document.getElementById('btnNextSplit').disabled=true;
+      document.getElementById('btnAutoBuild').disabled=true;
+    } else {
+      updateInfo(result);
+    }
+    drawScatter();
+    drawTree();
+  };
+
+  window.builderReset=function(){
+    if(autoInterval){clearInterval(autoInterval);autoInterval=null;}
+    initTree();
+    document.getElementById('btnNextSplit').disabled=false;
+    document.getElementById('btnAutoBuild').disabled=false;
+    updateInfo(null);
+    drawScatter();
+    drawTree();
+  };
+
+  window.builderAutoBuild=function(){
+    if(autoInterval) return;
+    document.getElementById('btnAutoBuild').disabled=true;
+    document.getElementById('btnNextSplit').disabled=true;
+    autoInterval=setInterval(function(){
+      const result=doOneSplit();
+      if(!result){
+        clearInterval(autoInterval);
+        autoInterval=null;
+        updateInfo(null);
+        drawScatter();
+        drawTree();
+        return;
+      }
+      updateInfo(result);
+      drawScatter();
+      drawTree();
+    },800);
+  };
+
+  // --- Initialize ---
+  initTree();
+  drawScatter();
+  drawTree();
+
+  // Expose redraw for language toggle
+  window._builderRedraw=function(){ drawScatter(); drawTree(); };
+
+  // Redraw on resize
+  window.addEventListener('resize',function(){
+    drawScatter();
+    drawTree();
+  });
+
+})();
+</script>
+</body>
+</html>
