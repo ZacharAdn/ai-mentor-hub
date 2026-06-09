@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מסלול geoAI · מושגים אינטראקטיביים</title>
+<style>
+  :root{--bg:#0f172a;--card:#1e293b;--b:#334155;--bh:#475569;--t1:#e2e8f0;--t2:#cbd5e1;--mut:#94a3b8;--pur:#818cf8;--vio:#c084fc;--pink:#f472b6;--ind:#6366f1;--brt:#8b5cf6;--ok:#22c55e;--err:#ef4444;--info:#3b82f6;--gold:#fbbf24;--cy:#22d3ee}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--t1);font-family:-apple-system,Segoe UI,Arial,sans-serif;line-height:1.7}
+  section{max-width:940px;margin:0 auto;padding:2.2rem 1.1rem;border-bottom:1px solid var(--b)}
+  .hero{text-align:center;padding:2.8rem 1.1rem 1.4rem;background:radial-gradient(ellipse at top,rgba(129,140,248,.18),transparent 60%)}
+  .hero h1{font-size:2.1rem;margin:.2rem 0;background:linear-gradient(135deg,#818cf8,#c084fc,#f472b6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  h2{color:var(--vio);font-size:1.45rem;margin:0 0 .3rem}
+  h3{margin:.8rem 0 .3rem;color:var(--cy);font-size:1.08rem}
+  .sub{color:var(--mut);margin:.1rem 0 1rem}
+  .step-tag{display:inline-block;background:rgba(129,140,248,.15);color:var(--pur);border:1px solid var(--b);border-radius:999px;padding:.15rem .7rem;font-size:.82rem;margin-bottom:.5rem;font-weight:700}
+  .card{background:var(--card);border:1px solid var(--b);border-radius:14px;padding:1.2rem;margin:1rem 0}
+  strong{color:var(--pink)}
+  code{background:#0b1220;border:1px solid var(--b);border-radius:5px;padding:1px 6px;direction:ltr;display:inline-block;color:#a5b4fc;font-size:.9em}
+  .opt{display:flex;flex-wrap:wrap;gap:.5rem;margin:.4rem 0 .9rem}
+  .opt button{padding:.55rem .95rem;border-radius:10px;border:1px solid var(--b);background:#0b1220;color:var(--t1);cursor:pointer;font-weight:600;font-size:.92rem}
+  .opt button.on{background:linear-gradient(135deg,var(--ind),var(--brt));color:#fff;border-color:transparent}
+  .qlabel{font-weight:700;color:var(--cy);margin:.2rem 0 .1rem}
+  #plan{background:#0b1220;border:1px solid var(--bh);border-radius:12px;padding:1rem 1.1rem;margin-top:.6rem}
+  #plan .row{display:flex;gap:.5rem;padding:.3rem 0;border-bottom:1px dashed var(--b)}
+  #plan .row:last-child{border-bottom:none}
+  #plan .k{color:var(--gold);min-width:130px;font-weight:700}
+  #plan .v{color:var(--t2)}
+  .verdict{margin-top:.6rem;font-weight:700}
+  .verdict.bad{color:#fca5a5}.verdict.good{color:#86efac}
+  input[type=range]{width:100%;accent-color:var(--brt)}
+  /* split */
+  .blocks{display:flex;gap:5px;margin:.6rem 0}
+  .blocks div{flex:1;text-align:center;padding:.7rem .2rem;border-radius:7px;font-weight:700;font-size:.76rem;border:1px solid var(--b);background:#0b1220;color:var(--mut)}
+  .blocks div.train{background:rgba(34,197,94,.16);border-color:var(--ok);color:#bbf7d0}
+  .blocks div.test{background:rgba(59,130,246,.2);border-color:var(--info);color:#bfdbfe}
+  /* bars */
+  .bar{display:flex;align-items:center;gap:.6rem;margin:.4rem 0}
+  .bar .lbl{min-width:150px;color:var(--t2);font-size:.88rem}
+  .bar .track{flex:1;background:#0b1220;border-radius:6px;overflow:hidden;height:22px;border:1px solid var(--b)}
+  .bar .fill{height:100%;border-radius:6px}
+  /* resolution grid */
+  .gridwrap{display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+  .ggrid{display:grid;gap:3px;background:#0b1220;padding:6px;border-radius:10px;border:1px solid var(--b)}
+  .ggrid span{display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:.7rem;font-weight:700;color:#0b1220}
+  /* kring */
+  .hexrow{display:flex;justify-content:center;margin:.4rem auto}
+  .hx{width:54px;height:54px;display:flex;align-items:center;justify-content:center;background:#0b1220;border:1px solid var(--b);border-radius:8px;font-size:.78rem;color:var(--mut)}
+  .hx.c{border-color:var(--gold);color:var(--gold);font-weight:800}
+  .hx.n{border-color:var(--cy);color:#bdf3fb}
+  /* confusion matrix */
+  .cm{display:grid;grid-template-columns:90px 1fr 1fr;gap:6px;align-items:stretch;max-width:430px}
+  .cm .hd{display:flex;align-items:center;justify-content:center;font-size:.78rem;color:var(--mut);text-align:center;font-weight:700}
+  .cm .cell{border-radius:10px;padding:.7rem .4rem;text-align:center;border:1px solid var(--b)}
+  .cm .cell .n{font-size:1.5rem;font-weight:800}
+  .cm .cell .t{font-size:.72rem;color:var(--t2)}
+  .cm .tp{background:rgba(34,197,94,.16);border-color:var(--ok)}
+  .cm .tn{background:rgba(100,116,139,.16)}
+  .cm .fp{background:rgba(239,68,68,.14);border-color:var(--err)}
+  .cm .fn{background:rgba(251,191,36,.14);border-color:var(--gold)}
+  .mchips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem}
+  .mchip{background:#0b1220;border:1px solid var(--bh);border-radius:10px;padding:.5rem .8rem;font-size:.86rem}
+  .mchip b{color:var(--cy)}
+  .mchip .val{color:var(--gold);font-weight:800;font-size:1.05rem}
+  .twocol{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  /* iou */
+  .iou{position:relative;width:170px;height:120px;background:#0b1220;border:1px solid var(--b);border-radius:8px;margin:.4rem 0}
+  .iou .box{position:absolute;border-radius:4px}
+  .iou .truth{border:2px solid var(--ok);background:rgba(34,197,94,.12);left:20px;top:20px;width:80px;height:80px}
+  .iou .pred{border:2px dashed var(--gold);background:rgba(251,191,36,.12);top:30px;height:80px;width:80px}
+  /* pairs */
+  table.pairs{width:100%;border-collapse:collapse;margin-top:.6rem;font-size:.9rem}
+  table.pairs th,table.pairs td{border:1px solid var(--b);padding:.55rem .7rem;text-align:right;vertical-align:top}
+  table.pairs th{background:#111c33;color:var(--pur)}
+  table.pairs td:nth-child(1),table.pairs td:nth-child(2){color:var(--cy);font-weight:700;white-space:nowrap}
+  .gloss{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+  .gloss div{background:var(--card);border:1px solid var(--b);border-radius:10px;padding:.65rem .85rem;font-size:.9rem}
+  .gloss b{color:var(--pur)}
+  footer{text-align:center;color:var(--mut);padding:1.8rem 1rem;font-size:.88rem}
+  @media(max-width:680px){.gloss,.twocol{grid-template-columns:1fr}#plan .k{min-width:100px}.cm{max-width:100%}}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>מהדאטה למודל ולהמלצה</h1>
+  <p class="sub">מלווה אינטראקטיבי למסלול המעשי · geoAI מפגש 3 · הסקשנים לפי סדר השלבים</p>
+</div>
+
+<!-- STEP 1 -->
+<section>
+  <span class="step-tag">שלב 1 · סוג המשימה</span>
+  <h2>🧭 מחולל ההחלטות לפרויקט שלכם</h2>
+  <p class="sub">בוחרים שתי תשובות ומקבלים תוכנית: סוג משימה, מדד, baseline, מודלים, וכלל הפיצול. השלבים הבאים מעמיקים בכל חלק לפי הסדר.</p>
+  <div class="card">
+    <div class="qlabel">1. מה עמודת המטרה שאתם חוזים?</div>
+    <div class="opt" id="q1">
+      <button data-v="num" class="on">מספר רציף</button>
+      <button data-v="binary">כן / לא</button>
+      <button data-v="multi">קטגוריה (כמה ערכים)</button>
+      <button data-v="none">אין label (קבוצות)</button>
+      <button data-v="image">זיהוי בתמונה</button>
+    </div>
+    <div class="qlabel">2. יש מימד זמן בדאטה?</div>
+    <div class="opt" id="q2">
+      <button data-v="yes" class="on">כן, יש זמן</button>
+      <button data-v="no">לא, סטטי</button>
+    </div>
+    <div id="plan"></div>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section>
+  <span class="step-tag">שלב 2 · יחידת התצפית (רזולוציה)</span>
+  <h2>🔍 גס מול עדין</h2>
+  <p class="sub">היחידה שתבחרו היא הגרנולריות של החיזוי. גס = יציב אך מטשטש; עדין = חד אך רועש.</p>
+  <div class="card">
+    <div class="opt" id="qres">
+      <button data-v="coarse">גס</button><button data-v="mid" class="on">בינוני</button><button data-v="fine">עדין</button>
+    </div>
+    <div class="gridwrap">
+      <div class="ggrid" id="resGrid"></div>
+      <div style="flex:1;min-width:200px"><div class="verdict" id="resVerdict" style="color:var(--t2);font-weight:600"></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h3>מה זה אומר בפועל? (על נתוני התחבורה שלנו)</h3>
+    <p class="sub" style="margin:.2rem 0 .6rem">הרזולוציה היא גודל התא במרחב. הנה אותה החלטה עם מספרים אמיתיים של H3:</p>
+    <table class="pairs">
+      <tr><th>רמה</th><th>גודל תא</th><th>דוגמה קונקרטית</th><th>נסיעות בתא לשעה</th><th>מתי מתאים</th></tr>
+      <tr><td>גס</td><td>רמה 6 · כ-36 קמ"ר</td><td>"כל מרכז תל אביב כתא אחד"</td><td>מאות, יציב מאוד</td><td>תכנון ברמת עיר, או כשאין הרבה דאטה</td></tr>
+      <tr><td>בינוני</td><td>רמה 8 · כ-0.7 קמ"ר</td><td>"שכונה או כמה רחובות"</td><td>עשרות</td><td>רוב הפרויקטים. נקודת התחלה טובה</td></tr>
+      <tr><td>עדין</td><td>רמה 10 · כ-15 דונם</td><td>"צומת בודד"</td><td>0 עד 2, רועש מאוד</td><td>חיזוי מקומי מדויק, אבל דורש הרבה דאטה</td></tr>
+    </table>
+    <p style="margin:.7rem 0 0">למה זה משנה לחיזוי: ברמה 10 רוב התאים יהיו <strong>0</strong> ברוב השעות, אז המודל ילמד בעיקר "בדרך כלל אפס" — חד גאוגרפית אבל חסר תועלת. ברמה 6 תמיד יש מספר יפה לחזות, אבל "ביקוש במרכז תל אביב" לא עוזר לנהג ספציפי. לכן מתחילים מבינוני ומכווננים משם.</p>
+    <p style="margin:.5rem 0 0">אותו היגיון בציר הזמן: חלון של <strong>יום</strong> נותן מספרים יציבים אבל לא עוזר ל"עכשיו"; חלון של <strong>דקה</strong> רועש מדי; <strong>שעה</strong> בדרך כלל האיזון.</p>
+  </div>
+</section>
+
+<!-- STEP 3 — METRICS -->
+<section>
+  <span class="step-tag">שלב 3 · המדד (KPI)</span>
+  <h2>📊 המדדים — וכיצד לא להתבלבל</h2>
+  <p class="sub">לכל סוג משימה מדד משלו. הנה ארבע המשפחות, אינטראקטיביות.</p>
+
+  <div class="card">
+    <h3>🟩 Classification · מטריצת הבלבול (confusion matrix)</h3>
+    <p class="sub" style="margin:.2rem 0 .8rem">מסווגים משושים ל"עמוס / לא עמוס". מזיזים את הסף ורואים איך משתנים precision ו-recall. אלה לב הסיווג.</p>
+    <div class="twocol">
+      <div>
+        <div class="cm">
+          <div class="hd"></div><div class="hd">ניבא: עמוס</div><div class="hd">ניבא: לא</div>
+          <div class="hd">באמת עמוס</div>
+          <div class="cell tp"><div class="n" id="cTP">0</div><div class="t">TP · פגענו</div></div>
+          <div class="cell fn"><div class="n" id="cFN">0</div><div class="t">FN · פספסנו</div></div>
+          <div class="hd">באמת לא</div>
+          <div class="cell fp"><div class="n" id="cFP">0</div><div class="t">FP · אזעקת שווא</div></div>
+          <div class="cell tn"><div class="n" id="cTN">0</div><div class="t">TN · צדקנו בשלילה</div></div>
+        </div>
+      </div>
+      <div>
+        <label class="qlabel">סף ההחלטה: <span id="thrVal" style="color:var(--gold)">0.50</span></label>
+        <input type="range" id="thr" min="0.05" max="0.95" step="0.01" value="0.5" oninput="renderCM()">
+        <div class="mchips">
+          <div class="mchip"><b>Precision</b> <span class="val" id="mPrec">0</span><br><span style="font-size:.78rem;color:var(--mut)">מהחיוביים שניבאנו, כמה צדקנו</span></div>
+          <div class="mchip"><b>Recall</b> <span class="val" id="mRec">0</span><br><span style="font-size:.78rem;color:var(--mut)">מהחיוביים האמיתיים, כמה תפסנו</span></div>
+          <div class="mchip"><b>F1</b> <span class="val" id="mF1">0</span><br><span style="font-size:.78rem;color:var(--mut)">איזון בין השניים</span></div>
+          <div class="mchip"><b>Accuracy</b> <span class="val" id="mAcc">0</span><br><span style="font-size:.78rem;color:var(--mut)">אחוז הצדק הכולל</span></div>
+        </div>
+        <div class="verdict" id="cmVerdict" style="font-size:.9rem"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🟦 Regression · MAE מול RMSE</h3>
+    <p class="sub" style="margin:.2rem 0 .8rem">שניהם מודדים טעות (נמוך יותר טוב). מזיזים את הטעות החריגה ורואים איך RMSE מתרחק.</p>
+    <label class="qlabel">טעות חריגה אחת בדאטה: <span id="outVal" style="color:var(--gold)">8</span></label>
+    <input type="range" id="outErr" min="2" max="25" step="0.5" value="8" oninput="renderReg()">
+    <div class="mchips">
+      <div class="mchip"><b>MAE</b> <span class="val" id="vMAE">0</span><br><span style="font-size:.78rem;color:var(--mut)">טעות ממוצעת. כל טעות נספרת שווה</span></div>
+      <div class="mchip"><b>RMSE</b> <span class="val" id="vRMSE">0</span><br><span style="font-size:.78rem;color:var(--mut)">מעניש טעויות גדולות בריבוע</span></div>
+    </div>
+    <div class="verdict" id="regVerdict" style="font-size:.9rem"></div>
+  </div>
+
+  <div class="twocol">
+    <div class="card">
+      <h3>🟪 Clustering · Silhouette</h3>
+      <p class="sub" style="margin:.2rem 0">מודד עד כמה הקבוצות צפופות ומופרדות. ערך בין 1- ל-1: קרוב ל-1 = קבוצות ברורות; קרוב ל-0 = חופפות. כשאין label, זה המדד.</p>
+    </div>
+    <div class="card">
+      <h3>🟧 Computer Vision · IoU ו-mAP</h3>
+      <p class="sub" style="margin:.2rem 0">IoU = כמה התיבה שניבאנו חופפת לאמת (חיתוך חלקי איחוד). גוררים:</p>
+      <div class="iou"><div class="box truth"></div><div class="box pred" id="iouPred"></div></div>
+      <input type="range" id="iouS" min="0" max="80" value="30" oninput="renderIoU()">
+      <div class="mchip" style="margin-top:.4rem"><b>IoU</b> <span class="val" id="iouVal">0</span></div>
+      <p class="sub" style="margin:.5rem 0 0;font-size:.8rem">mAP = ממוצע הדיוק על פני ספי IoU שונים. המדד הסטנדרטי לזיהוי אובייקטים.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STEP 4 -->
+<section>
+  <span class="step-tag">שלב 4 · פיצול train/test</span>
+  <h2>⏱️ אקראי מול לפי-זמן (המלכודת מספר 1)</h2>
+  <p class="sub">לדאטה עם זמן, פיצול אקראי הוא דליפה.</p>
+  <div class="card">
+    <div class="opt" id="qsplit"><button data-v="time" class="on">לפי זמן</button><button data-v="rand">אקראי</button></div>
+    <div class="blocks" id="splitBlocks"></div>
+    <div class="verdict" id="splitVerdict"></div>
+    <p class="sub" style="margin:.6rem 0 0">ירוק = אימון · כחול = בדיקה.</p>
+  </div>
+</section>
+
+<!-- STEP 5 -->
+<section>
+  <span class="step-tag">שלב 5 · פיצ'רים</span>
+  <h2>🧩 עבר (lag) ושכנים (k-ring)</h2>
+  <p class="sub">שני הפיצ'רים החזקים, על שני צירים שונים: lag על ציר הזמן, k-ring על ציר המרחב.</p>
+  <div class="card">
+    <div class="opt" id="qk"><button data-v="off" class="on">רק התא</button><button data-v="on">תא פלוס שכנים</button></div>
+    <div class="hexrow" id="kring"></div>
+    <div class="verdict" id="kVerdict" style="color:var(--t2);font-weight:600;text-align:center"></div>
+  </div>
+</section>
+
+<!-- STEP 6 -->
+<section>
+  <span class="step-tag">שלב 6 · baseline · מודל דאמי</span>
+  <h2>📏 לנצח את הרף</h2>
+  <p class="sub">מודל דאמי (DummyRegressor / DummyClassifier) הוא מודל שלא לומד, רק מנחש קבוע. זה ה-baseline. גוררים את הטעות של המודל שלכם.</p>
+  <div class="card">
+    <div class="bar"><div class="lbl">דאמי (ממוצע / רוב)</div><div class="track"><div class="fill" style="width:100%;background:#64748b"></div></div><div style="min-width:42px">14.2</div></div>
+    <div class="bar"><div class="lbl">Persistence (שעה קודמת)</div><div class="track"><div class="fill" style="width:43%;background:#a78bfa"></div></div><div style="min-width:42px">6.1</div></div>
+    <div class="bar"><div class="lbl">המודל שלכם</div><div class="track"><div class="fill" id="modelFill" style="width:30%;background:var(--ok)"></div></div><div style="min-width:42px" id="modelVal">4.3</div></div>
+    <input type="range" id="modelErr" min="2" max="18" value="4.3" step="0.1" oninput="renderBaseline()">
+    <div class="verdict" id="baseVerdict"></div>
+    <p class="sub" style="margin:.4rem 0 0">דאמי: <code>mean</code>/<code>median</code> ל-regression, <code>most_frequent</code> ל-classification. המדד כאן MAE (נמוך יותר טוב).</p>
+  </div>
+</section>
+
+<!-- STEP 7-8 -->
+<section>
+  <span class="step-tag">שלבים 7–8 · אימון והשוואה</span>
+  <h2>🏁 2–3 מודלים, טבלה אחת</h2>
+  <p class="sub">מאמנים כמה מועמדים, מודדים כולם על ה-test לפי אותו KPI, בוחרים מנצח עם הסבר.</p>
+  <div class="card">
+    <div class="bar"><div class="lbl">Baseline (דאמי)</div><div class="track"><div class="fill" style="width:100%;background:#64748b"></div></div><div style="min-width:42px">14.2</div></div>
+    <div class="bar"><div class="lbl">Linear Regression</div><div class="track"><div class="fill" style="width:55%;background:#60a5fa"></div></div><div style="min-width:42px">7.8</div></div>
+    <div class="bar"><div class="lbl">Random Forest פלוס שכנים</div><div class="track"><div class="fill" style="width:30%;background:var(--ok)"></div></div><div style="min-width:42px">4.3 ✅</div></div>
+    <p class="sub" style="margin:.5rem 0 0">המנצח הוא לא בהכרח המתוחכם — אלא זה שמנצח את הרף עם ההסבר הטוב ביותר.</p>
+  </div>
+</section>
+
+<!-- STEP 9 -->
+<section>
+  <span class="step-tag">שלב 9 · המלצה</span>
+  <h2>🎯 מחיזוי להמלצה</h2>
+  <p class="sub">חיזוי בלי המלצה הוא רק מספר.</p>
+  <div class="card">
+    <input type="range" id="presc" min="0" max="100" value="30" oninput="renderPresc()">
+    <div style="text-align:center;margin:.4rem 0;font-weight:700">ביקוש חזוי למשושה: <span id="prescVal" style="color:var(--gold)">30</span></div>
+    <div id="prescOut" style="border:1px solid var(--info);background:rgba(59,130,246,.08);color:#bfdbfe;padding:.6rem .9rem;border-radius:8px"></div>
+  </div>
+</section>
+
+<!-- CONFUSABLE PAIRS -->
+<section>
+  <h2>🔀 מתבלבלים? טבלת ההבחנה</h2>
+  <p class="sub">הזוגות שהכי קל לערבב, וההבדל במשפט אחד.</p>
+  <table class="pairs">
+    <tr><th>מושג</th><th>מול</th><th>ההבדל</th></tr>
+    <tr><td>Precision</td><td>Recall</td><td>Precision: מהחיוביים שניבאנו, כמה צדקנו. Recall: מהחיוביים האמיתיים, כמה תפסנו. סף גבוה מעלה precision ומוריד recall.</td></tr>
+    <tr><td>MAE</td><td>RMSE</td><td>שניהם טעות ממוצעת. RMSE מעניש טעויות גדולות הרבה יותר (ריבוע), אז הוא רגיש ל-outliers.</td></tr>
+    <tr><td>lag</td><td>k-ring</td><td>שניהם פיצ'רים. lag הוא ציר הזמן (מה היה קודם); k-ring הוא ציר המרחב (מה קורה אצל השכנים).</td></tr>
+    <tr><td>baseline / דאמי</td><td>מודל</td><td>הדאמי מנחש קבוע (ממוצע/רוב) ומשמש רף. המודל הוא מה שצריך לנצח את הרף.</td></tr>
+    <tr><td>Descriptive</td><td>Predictive</td><td>Descriptive: מה קרה (תיאור). Predictive: מה יקרה (חיזוי).</td></tr>
+    <tr><td>Predictive</td><td>Prescriptive</td><td>Predictive: התחזית עצמה. Prescriptive: ההמלצה לפעולה שנגזרת ממנה.</td></tr>
+    <tr><td>train</td><td>test</td><td>train: עליו לומדים. test: עליו בודקים, ולא נוגעים בו עד הסוף. כל הציונים על test.</td></tr>
+    <tr><td>Regression</td><td>Classification</td><td>Regression חוזה מספר רציף; Classification חוזה קטגוריה.</td></tr>
+    <tr><td>Accuracy</td><td>F1</td><td>Accuracy: אחוז הצדק הכולל, מטעה כשהקטגוריות לא מאוזנות. F1: מאזן precision ו-recall, עדיף בנתונים לא מאוזנים.</td></tr>
+  </table>
+</section>
+
+<!-- GLOSSARY -->
+<section>
+  <h2>📚 מילון מהיר</h2>
+  <div class="gloss" id="gloss"></div>
+</section>
+
+<footer>geoAI · מפגש 3 · נלווה למסמך <code>מסלול_מהדאטה_למודל_ולהמלצה.md</code></footer>
+
+<script>
+/* helper */
+function bindOpts(id,cb){const h=document.getElementById(id);h.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{h.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');cb(b.getAttribute('data-v'));}));}
+function row(k,v){return `<div class="row"><div class="k">${k}</div><div class="v">${v}</div></div>`;}
+
+/* step1 decision */
+let q1='num',q2='yes';
+const TASK={
+  num:{task:'Regression',metric:'MAE או RMSE',base:'דאמי ממוצע, ובמרחב-זמן גם persistence',models:'Linear Regression, Random Forest, Gradient Boosting'},
+  binary:{task:'Classification בינארי',metric:'F1 או Recall (ראו confusion matrix)',base:'דאמי most_frequent',models:'Logistic Regression, Random Forest, KNN'},
+  multi:{task:'Classification רב-ערכי',metric:'F1 weighted או Accuracy',base:'דאמי most_frequent',models:'Random Forest, Logistic Regression'},
+  none:{task:'Clustering',metric:'Silhouette',base:'k=1 או חלוקה אקראית',models:'K-Means, DBSCAN, Hierarchical'},
+  image:{task:'Computer Vision',metric:'mAP / IoU',base:'הגרסה הקטנה ביותר',models:'וריאנטים של הרשת'}
+};
+function renderPlan(){const t=TASK[q1];
+  const split=q2==='yes'?'<b>לפי זמן</b> — מאמנים על העבר, בודקים על העתיד. בלי shuffle אקראי.':'אקראי תקין, אבל שמרו <b>אזור שלם</b> לבדיקה (דליפה מרחבית).';
+  let f='פיצ\'ר מרחבי: ממוצע השכנים (k-ring).';if(q2==='yes')f+=' פיצ\'ר זמני: lag.';
+  document.getElementById('plan').innerHTML=row('סוג משימה',t.task)+row('מדד',t.metric)+row('baseline',t.base)+row('מודלים',t.models)+row('פיצול',split)+row('פיצ\'רים',f);}
+bindOpts('q1',v=>{q1=v;renderPlan();});bindOpts('q2',v=>{q2=v;renderPlan();});
+
+/* step2 resolution */
+let res='mid';
+function renderRes(){const host=document.getElementById('resGrid');const n=res==='coarse'?2:res==='mid'?4:6;
+  const sz=res==='coarse'?54:res==='mid'?34:24;host.style.gridTemplateColumns=`repeat(${n},${sz}px)`;host.innerHTML='';
+  let seed=res==='coarse'?1:res==='mid'?2:3;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
+  const coarse=[88,76,80,71];
+  for(let i=0;i<n*n;i++){let val=res==='coarse'?coarse[i%4]:Math.round(rnd()*100*(res==='mid'?0.55:0.22));
+    const s=document.createElement('span');s.style.width=sz+'px';s.style.height=sz+'px';const t=Math.min(1,val/100);
+    s.style.background=`hsl(${215-215*t},72%,${32+22*t}%)`;s.textContent=res==='fine'?'':val;host.appendChild(s);}
+  document.getElementById('resVerdict').innerHTML={coarse:'<b style="color:#fca5a5">גס:</b> ספירות גדולות ויציבות, אבל מטשטש איפה בדיוק.',mid:'<b style="color:#86efac">בינוני:</b> איזון טוב להתחלה.',fine:'<b style="color:#fca5a5">עדין:</b> חד גאוגרפית, אבל תאים ריקים ורעש.'}[res];}
+bindOpts('qres',v=>{res=v;renderRes();});
+
+/* step3 confusion matrix */
+const cmData=[];(function(){let s=12;const r=()=>{s=(s*9301+49297)%233280;return s/233280;};
+  for(let i=0;i<120;i++){const y=r()<0.4?1:0;let sc=(y?0.62:0.38)+(r()-0.5)*0.5;sc=Math.max(0,Math.min(1,sc));cmData.push({y,s:sc});}})();
+function renderCM(){const t=parseFloat(document.getElementById('thr').value);document.getElementById('thrVal').textContent=t.toFixed(2);
+  let TP=0,FP=0,FN=0,TN=0;cmData.forEach(d=>{const p=d.s>=t?1:0;if(d.y&&p)TP++;else if(!d.y&&p)FP++;else if(d.y&&!p)FN++;else TN++;});
+  document.getElementById('cTP').textContent=TP;document.getElementById('cFP').textContent=FP;document.getElementById('cFN').textContent=FN;document.getElementById('cTN').textContent=TN;
+  const prec=TP+FP?TP/(TP+FP):0,rec=TP+FN?TP/(TP+FN):0,f1=prec+rec?2*prec*rec/(prec+rec):0,acc=(TP+TN)/cmData.length;
+  document.getElementById('mPrec').textContent=prec.toFixed(2);document.getElementById('mRec').textContent=rec.toFixed(2);
+  document.getElementById('mF1').textContent=f1.toFixed(2);document.getElementById('mAcc').textContent=acc.toFixed(2);
+  const v=document.getElementById('cmVerdict');
+  if(t>0.7){v.className='verdict bad';v.textContent='סף גבוה: כמעט הכל "לא עמוס". precision גבוה אבל מפספסים הרבה (recall נמוך).';}
+  else if(t<0.35){v.className='verdict bad';v.textContent='סף נמוך: מתריעים על הכל. recall גבוה אבל הרבה אזעקות שווא (precision נמוך).';}
+  else{v.className='verdict good';v.textContent='סף מאוזן: precision ו-recall קרובים. F1 בשיא בערך כאן.';}}
+
+/* step3 reg */
+function renderReg(){const out=parseFloat(document.getElementById('outErr').value);document.getElementById('outVal').textContent=out;
+  const errs=[2,1,2,3,2,out];const mae=errs.reduce((a,b)=>a+Math.abs(b),0)/errs.length;const rmse=Math.sqrt(errs.reduce((a,b)=>a+b*b,0)/errs.length);
+  document.getElementById('vMAE').textContent=mae.toFixed(1);document.getElementById('vRMSE').textContent=rmse.toFixed(1);
+  const v=document.getElementById('regVerdict');const gap=rmse-mae;
+  v.className='verdict '+(gap>3?'bad':'good');
+  v.textContent=gap>3?'הפער גדול: טעות חריגה אחת מנפחת את RMSE. אם outliers חשובים לכם, RMSE מתאים.':'הטעויות דומות בגודלן, אז MAE ו-RMSE קרובים.';}
+
+/* step3 iou */
+function renderIoU(){const off=parseInt(document.getElementById('iouS').value);document.getElementById('iouPred').style.left=(20+off)+'px';
+  // two 80x80 squares; overlap on x by (80-off), full on y (both 80 tall, pred top 30 truth top 20 -> overlap y = 70)
+  const ox=Math.max(0,80-off),oy=70,inter=ox*oy,uni=80*80+80*80-inter;const iou=uni?inter/uni:0;
+  document.getElementById('iouVal').textContent=iou.toFixed(2);}
+
+/* step4 split */
+let splitMode='time';
+function renderSplit(){const N=10,host=document.getElementById('splitBlocks');host.innerHTML='';
+  const testIdx=splitMode==='time'?new Set([8,9]):new Set([2,5,8]);
+  for(let i=0;i<N;i++){const d=document.createElement('div');d.className=testIdx.has(i)?'test':'train';d.textContent='שבוע '+(i+1);host.appendChild(d);}
+  const v=document.getElementById('splitVerdict');
+  if(splitMode==='time'){v.className='verdict good';v.textContent='✓ תקין: כל הבדיקה בעתיד.';}
+  else{v.className='verdict bad';v.textContent='✗ דליפה! בדיקה מעורבבת עם האימון, הציון יוצא מנופח.';}}
+bindOpts('qsplit',v=>{splitMode=v;renderSplit();});
+
+/* step5 kring */
+let kmode='off';
+function renderK(){const host=document.getElementById('kring');host.innerHTML='';
+  const map=[0,1,1,1,2,1,0,1,1];const g=document.createElement('div');g.style.display='grid';g.style.gridTemplateColumns='repeat(3,56px)';g.style.gap='4px';
+  map.forEach(m=>{const d=document.createElement('div');d.className='hx';
+    if(m===2){d.classList.add('c');d.textContent='תא';}
+    else if(m===1){if(kmode==='on'){d.classList.add('n');d.textContent='שכן';}else{d.textContent='';d.style.opacity=.25;}}
+    else{d.style.visibility='hidden';}g.appendChild(d);});
+  host.appendChild(g);
+  document.getElementById('kVerdict').textContent=kmode==='on'?'השכנים נכנסים כפיצ\'ר: ממוצע 6 השכנים הופך לעמודה.':'בלי שכנים המודל רואה כל תא לבד ומפספס גלישה מאזורים סמוכים.';}
+bindOpts('qk',v=>{kmode=v;renderK();});
+
+/* step6 baseline */
+function renderBaseline(){const e=parseFloat(document.getElementById('modelErr').value);document.getElementById('modelVal').textContent=e.toFixed(1);
+  document.getElementById('modelFill').style.width=Math.max(4,e/14.2*100)+'%';const v=document.getElementById('baseVerdict');
+  if(e<6.1){v.className='verdict good';v.textContent='✓ מנצח גם את הדאמי וגם את persistence. יש ערך מוסף.';document.getElementById('modelFill').style.background='var(--ok)';}
+  else if(e<14.2){v.className='verdict bad';v.textContent='△ מנצח את הדאמי אבל לא את persistence. עדיין לא הוכחתם תרומה מעבר ל"כמו שעה שעברה".';document.getElementById('modelFill').style.background='var(--gold)';}
+  else{v.className='verdict bad';v.textContent='✗ לא מנצח אפילו את הדאמי. זו תוצאה, לא כישלון, והיא מלמדת משהו.';document.getElementById('modelFill').style.background='var(--err)';}}
+
+/* step9 presc */
+function renderPresc(){const v=parseInt(document.getElementById('presc').value);document.getElementById('prescVal').textContent=v;
+  let t;if(v<35)t='ביקוש נמוך: אין פעולה. חבל על המשאב.';else if(v<70)t='ביקוש בינוני: לדיספצ\'ר, שמור על הקיים ועקוב.';else t='ביקוש גבוה: לדיספצ\'ר, שלח נהגים פנויים מהשכנים אל המשושה הזה עכשיו.';
+  document.getElementById('prescOut').textContent=t;}
+
+/* glossary */
+const G=[['target','מה שאנחנו חוזים. מחליטים עליו ראשון.'],['feature (פיצ\'ר)','עמודת קלט. רמז למודל.'],['baseline / דאמי','ניחוש טיפש קבוע כרף.'],['persistence','baseline למרחב-זמן: "השעה הבאה כמו זו".'],['k-ring','שכנים מרחביים כפיצ\'ר.'],['lag','ערך מהעבר כפיצ\'ר.'],['leakage','המודל "מציץ" בעתיד. למשל פיצול אקראי בזמן.'],['train/test','לומדים על אחד, בודקים על השני.'],['overfit','מצוין על train, נכשל על test.'],['precision','מהחיוביים שניבאנו, כמה צדקנו.'],['recall','מהחיוביים האמיתיים, כמה תפסנו.'],['F1','איזון precision ו-recall.'],['confusion matrix','טבלת TP/FP/FN/TN, מקור כל מדדי הסיווג.'],['MAE','טעות ממוצעת מוחלטת.'],['RMSE','טעות ממוצעת שמענישה טעויות גדולות.'],['Silhouette','איכות קלאסטרינג (הפרדה וצפיפות).'],['IoU','חפיפה בין תיבה חזויה לאמת.'],['mAP','דיוק זיהוי ממוצע, המדד ל-CV.'],['prescriptive','מחיזוי להמלצה לפעולה.']];
+document.getElementById('gloss').innerHTML=G.map(g=>`<div><b>${g[0]}</b> — ${g[1]}</div>`).join('');
+
+/* init — in order */
+renderPlan();renderRes();renderCM();renderReg();renderIoU();renderSplit();renderK();renderBaseline();renderPresc();
+</script>
+</body>
+</html>
