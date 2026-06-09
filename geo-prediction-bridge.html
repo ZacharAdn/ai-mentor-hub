@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מהתיאור לחיזוי להמלצה — גשר geoAI</title>
+<style>
+  :root{
+    --bg:#0f172a; --card:#1e293b; --border:#334155; --border-h:#475569;
+    --t1:#e2e8f0; --t2:#cbd5e1; --muted:#94a3b8;
+    --purple:#818cf8; --violet:#c084fc; --pink:#f472b6; --indigo:#6366f1;
+    --bright:#8b5cf6; --success:#22c55e; --error:#ef4444; --info:#3b82f6; --gold:#fbbf24; --cyan:#22d3ee;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--t1);font-family:-apple-system,Segoe UI,Arial,Helvetica,sans-serif;line-height:1.7}
+  section{max-width:980px;margin:0 auto;padding:3rem 1.2rem}
+  h1,h2,h3{line-height:1.3}
+  h2{color:var(--violet);font-size:1.9rem;margin:0 0 .4rem}
+  .sub{color:var(--muted);margin:0 0 1.4rem;font-size:1.05rem}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.6rem;margin:1rem 0;box-shadow:0 4px 24px rgba(0,0,0,.3)}
+  strong{color:var(--pink)}
+  code{background:#0b1220;border:1px solid var(--border);border-radius:6px;padding:1px 6px;direction:ltr;display:inline-block;color:#a5b4fc;font-size:.92em}
+  /* lang toggle */
+  .lang-toggle{position:fixed;top:1rem;left:1rem;z-index:1000;display:flex;background:rgba(30,41,59,.92);backdrop-filter:blur(12px);border-radius:12px;border:1px solid var(--border);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+  .lang-btn{padding:.5rem 1rem;background:none;border:none;color:var(--muted);cursor:pointer;font-weight:600;font-size:.9rem}
+  .lang-btn.active{background:linear-gradient(135deg,var(--indigo),var(--bright));color:#fff}
+  /* hero */
+  .hero{text-align:center;padding:4rem 1.2rem 2rem;background:radial-gradient(ellipse at top,rgba(129,140,248,.18),transparent 60%)}
+  .hero h1{font-size:2.6rem;margin:.2rem 0;background:linear-gradient(135deg,#818cf8,#c084fc,#f472b6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .hero .spine{max-width:720px;margin:1.2rem auto 0;color:var(--t2);font-size:1.15rem;border:1px dashed var(--border-h);border-radius:14px;padding:1rem 1.2rem;background:rgba(30,41,59,.5)}
+  .pill{display:inline-block;background:rgba(129,140,248,.15);color:var(--purple);border:1px solid var(--border);border-radius:999px;padding:.25rem .9rem;font-size:.9rem;margin-bottom:.6rem}
+  /* arc */
+  .arc{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+  .arc .card{margin:0;text-align:center}
+  .arc .em{font-size:2rem;display:block;margin-bottom:.3rem}
+  .arc h3{margin:.2rem 0;color:var(--pink)}
+  .arc small{color:var(--muted)}
+  .flow{display:flex;align-items:center;justify-content:center;gap:.6rem;color:var(--muted);font-weight:700;margin:.8rem 0 0;flex-wrap:wrap}
+  .flow span.node{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.4rem .8rem;color:var(--t1)}
+  /* demo */
+  .demo-wrap{display:flex;gap:1.2rem;flex-wrap:wrap;align-items:flex-start}
+  .demo-stage{flex:1 1 360px;min-width:300px}
+  .demo-side{flex:1 1 300px;min-width:260px}
+  svg.hexmap{width:100%;height:auto;background:#0b1220;border:1px solid var(--border);border-radius:14px}
+  .hexlbl{font:600 13px sans-serif;fill:#0b1220;pointer-events:none}
+  .stepinfo{background:#0b1220;border:1px solid var(--border-h);border-radius:12px;padding:1rem;margin-top:1rem;min-height:5.5rem;color:var(--t2);font-size:1.05rem}
+  .stepinfo b{color:var(--gold)}
+  .controls{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+  .btn{padding:.65rem 1.3rem;border-radius:10px;border:none;font-size:1rem;font-weight:700;cursor:pointer}
+  .btn-primary{background:linear-gradient(135deg,var(--indigo),var(--bright));color:#fff}
+  .btn-primary:hover{transform:scale(1.04);box-shadow:0 0 20px rgba(99,102,241,.4)}
+  .btn-secondary{background:var(--card);color:var(--t2);border:1px solid var(--border-h)}
+  .progress{display:flex;gap:4px;margin-top:.8rem}
+  .progress i{height:6px;flex:1;background:var(--border);border-radius:3px}
+  .progress i.on{background:linear-gradient(135deg,var(--purple),var(--pink))}
+  /* side panels */
+  .panel{background:#0b1220;border:1px solid var(--border);border-radius:12px;padding:1rem;margin-bottom:.9rem}
+  .panel h4{margin:.1rem 0 .6rem;color:var(--cyan);font-size:1rem}
+  .panel.hide{display:none}
+  table.ft{width:100%;border-collapse:collapse;font-size:.86rem;direction:ltr}
+  table.ft th,table.ft td{border:1px solid var(--border);padding:4px 7px;text-align:center}
+  table.ft th{background:#111c33;color:var(--purple)}
+  .chips{display:flex;flex-wrap:wrap;gap:.4rem}
+  .chip{background:rgba(34,211,238,.12);border:1px solid var(--cyan);color:#bdf3fb;border-radius:999px;padding:.25rem .7rem;font-size:.85rem}
+  .chip.t{background:rgba(251,191,36,.14);border-color:var(--gold);color:#fde68a}
+  .tl{display:flex;gap:4px}
+  .tl div{flex:1;text-align:center;padding:.5rem .2rem;border-radius:8px;font-size:.82rem;font-weight:700}
+  .tl .train{background:rgba(34,197,94,.18);border:1px solid var(--success);color:#bbf7d0}
+  .tl .test{background:rgba(59,130,246,.2);border:1px solid var(--info);color:#bfdbfe}
+  .callout{border-right:4px solid var(--error);background:rgba(239,68,68,.08);padding:.7rem 1rem;border-radius:8px;color:#fecaca}
+  html[dir=ltr] .callout{border-right:none;border-left:4px solid var(--error)}
+  /* glossary */
+  .gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:.9rem}
+  .gcard{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;cursor:pointer;transition:.15s}
+  .gcard:hover{border-color:var(--border-h);transform:translateY(-2px)}
+  .gterm{font-weight:800;color:var(--purple);font-size:1.08rem}
+  .gplain{color:var(--t2);margin:.35rem 0 0}
+  .gsay{margin:.6rem 0 0;color:var(--success);font-size:.95rem;border-top:1px dashed var(--border);padding-top:.5rem;display:none}
+  .gsay::before{content:"🗣 ";}
+  .gcard.open .gsay{display:block}
+  .hint{color:var(--muted);font-size:.9rem;margin-top:.4rem}
+  /* project placer */
+  .pbtns{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}
+  .pbtn{flex:1 1 140px;padding:.8rem;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--t1);font-weight:700;cursor:pointer}
+  .pbtn.active{background:linear-gradient(135deg,var(--indigo),var(--bright));color:#fff;border-color:transparent}
+  #pout{background:#0b1220;border:1px solid var(--border-h);border-radius:12px;padding:1.1rem;color:var(--t2);min-height:4rem}
+  /* takeaways */
+  ul.take{list-style:none;padding:0}
+  ul.take li{background:var(--card);border:1px solid var(--border);border-right:4px solid var(--purple);border-radius:10px;padding:.8rem 1rem;margin:.6rem 0}
+  html[dir=ltr] ul.take li{border-right:1px solid var(--border);border-left:4px solid var(--purple)}
+  footer{text-align:center;color:var(--muted);padding:2.5rem 1rem;border-top:1px solid var(--border);font-size:.9rem}
+  @media(max-width:760px){
+    .arc{grid-template-columns:1fr}.gloss{grid-template-columns:1fr}.hero h1{font-size:2rem}
+    .lang-toggle{top:.7rem;left:.7rem}.lang-btn{padding:.4rem .7rem;font-size:.82rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עב</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <span class="pill" data-i18n="hero_pill">geoAI · מפגש 3 · החלק של זכר</span>
+  <h1 data-i18n="hero_title">מהתיאור לחיזוי להמלצה</h1>
+  <p class="sub" data-i18n="hero_sub">איך לוקחים דאטה גיאוגרפי מאורגן, וממירים אותו לחיזוי, ואז להמלצה אמיתית למשתמש</p>
+  <div class="spine" data-i18n="hero_spine">המבנה והרזולוציה שבחרתם קובעים את הפיצ'רים שהמודל לומד. אותו דאטה, אותה דוגמה — מהתיאור שאלי בנה ועד ההמלצה שאתם נותנים.</div>
+</div>
+
+<!-- THE ARC -->
+<section>
+  <h2 data-i18n="arc_title">שלוש רמות, קו אחד</h2>
+  <p class="sub" data-i18n="arc_sub">כל פרויקט יושב איפשהו על הקו הזה. המטרה היום: לזוז ימינה.</p>
+  <div class="arc">
+    <div class="card"><span class="em">🗺️</span><h3 data-i18n="arc1_t">תיאור · Descriptive</h3><small data-i18n="arc1_d">מה קרה? סופרים, מסכמים, מציירים מפה. זה מה שאלי בנה בקנה מידה.</small></div>
+    <div class="card"><span class="em">🔮</span><h3 data-i18n="arc2_t">חיזוי · Predictive</h3><small data-i18n="arc2_d">מה יקרה? מודל שלומד מהעבר וחוזה את השעה הבאה.</small></div>
+    <div class="card"><span class="em">🎯</span><h3 data-i18n="arc3_t">המלצה · Prescriptive</h3><small data-i18n="arc3_d">מה לעשות? הופכים את החיזוי לפעולה למשתמש קונקרטי.</small></div>
+  </div>
+  <div class="flow">
+    <span class="node" data-i18n="arc_n1">תיאור</span><b>·</b><span class="node" data-i18n="arc_n2">חיזוי</span><b>·</b><span class="node" data-i18n="arc_n3">המלצה</span>
+  </div>
+</section>
+
+<!-- BRIDGE FROM ELI -->
+<section>
+  <h2 data-i18n="bridge_title">הגשר מהחלק של אלי</h2>
+  <p class="sub" data-i18n="bridge_sub">לא מתחילים מאפס. הטבלה שאלי בנה היא בדיוק הקלט של המודל.</p>
+  <div class="card">
+    <div class="flow" style="font-size:1.05rem">
+      <span class="node" data-i18n="br_a">משושה H3 (אינדקס)</span><b>·</b>
+      <span class="node" data-i18n="br_b">COUNT נסיעות לכל משושה לשעה</span><b>·</b>
+      <span class="node" data-i18n="br_c">טבלת פיצ'רים</span><b>·</b>
+      <span class="node" data-i18n="br_d">מודל</span>
+    </div>
+    <p style="margin:1rem 0 0" data-i18n="bridge_punch"><strong>מה שאלי בנה כאינדקס, המודל לומד כפיצ'ר.</strong> הרזולוציה של המשושה שבחרתם היא הרזולוציה של החיזוי. ה-k-ring (השכנים) שאלי לימד הוא הפיצ'ר המרחבי שלי. אין שלב נפרד של "הנדסת פיצ'רים" — הארכיטקטורה כבר עשתה אותו.</p>
+  </div>
+</section>
+
+<!-- INTERACTIVE DEMO -->
+<section>
+  <h2 data-i18n="demo_title">הדגמה חיה: מהדאטה להמלצה, צעד-אחר-צעד</h2>
+  <p class="sub" data-i18n="demo_sub">דאטה אחד של נסיעות תחבורה. כל משושה = אזור. הצבע = כמות הביקוש. לוחצים "צעד".</p>
+  <div class="demo-wrap">
+    <div class="demo-stage">
+      <svg class="hexmap" id="hexmap" viewBox="0 0 420 320" role="img" aria-label="hex demand map"></svg>
+      <div class="progress" id="prog"></div>
+      <div class="stepinfo" id="stepInfo"></div>
+      <div class="controls">
+        <button class="btn btn-primary" onclick="step()" data-i18n="btn_step">צעד הבא ←</button>
+        <button class="btn btn-primary" onclick="autoPlay()" data-i18n="btn_auto">▶ אוטומטי</button>
+        <button class="btn btn-secondary" onclick="resetDemo()" data-i18n="btn_reset">↺ איפוס</button>
+      </div>
+    </div>
+    <div class="demo-side">
+      <div class="panel hide" id="pTable">
+        <h4 data-i18n="p_table_h">טבלת הפיצ'רים</h4>
+        <table class="ft">
+          <tr><th>hex</th><th>hour</th><th>rides</th><th>nbr</th><th>lag_1h</th></tr>
+          <tr><td>12</td><td>18:00</td><td>95</td><td>67</td><td>88</td></tr>
+          <tr><td>7</td><td>18:00</td><td>80</td><td>54</td><td>75</td></tr>
+          <tr><td>3</td><td>18:00</td><td>22</td><td>19</td><td>20</td></tr>
+        </table>
+        <p class="hint" data-i18n="p_table_hint">כל שורה = משושה בשעה מסוימת. בדיוק הפלט של האגרגציה.</p>
+      </div>
+      <div class="panel hide" id="pFeat">
+        <h4 data-i18n="p_feat_h">הפיצ'רים של המשושה הנבחר</h4>
+        <div class="chips">
+          <span class="chip t" data-i18n="ch_target">🎯 target: נסיעות בשעה הבאה</span>
+          <span class="chip" data-i18n="ch_lag1">lag: לפני שעה</span>
+          <span class="chip" data-i18n="ch_lag2">lag: אתמול באותה שעה</span>
+          <span class="chip" data-i18n="ch_nbr">k-ring: ממוצע 6 השכנים</span>
+          <span class="chip" data-i18n="ch_hour">שעה ביום</span>
+        </div>
+      </div>
+      <div class="panel hide" id="pTime">
+        <h4 data-i18n="p_time_h">פיצול לפי זמן</h4>
+        <div class="tl">
+          <div class="train" data-i18n="tl_w1">שבוע 1</div>
+          <div class="train" data-i18n="tl_w2">שבוע 2</div>
+          <div class="train" data-i18n="tl_w3">שבוע 3</div>
+          <div class="test" data-i18n="tl_w4">שבוע 4</div>
+        </div>
+        <p class="hint" data-i18n="p_time_hint">ירוק = אימון (עבר). כחול = בחינה (עתיד). אף פעם לא אקראי.</p>
+      </div>
+      <div class="panel hide" id="pErr">
+        <h4 data-i18n="p_err_h">ניתוח טעות</h4>
+        <div class="callout" data-i18n="p_err_txt">המשושה האדום: ניבאנו 22, בפועל 85. ערב משחק. חסר פיצ'ר "אירועים" — וזה בדיוק מה שמשפר את המודל בסבב הבא.</div>
+      </div>
+      <div class="panel hide" id="pAct">
+        <h4 data-i18n="p_act_h">ההמלצה</h4>
+        <p data-i18n="p_act_txt">מסמנים את המשושים החמים (אדום) ושולחים נהגים פנויים אליהם <strong>לפני</strong> שהביקוש קופץ. למי? לדיספצ'ר ולנהג. זה ה-prescriptive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOSSARY -->
+<section>
+  <h2 data-i18n="gloss_title">המילון — כל מילה מפחידה בשורה אחת</h2>
+  <p class="sub" data-i18n="gloss_sub">לוחצים על כרטיס כדי לראות מה אומרים על זה בכיתה.</p>
+  <div class="gloss" id="glossGrid"></div>
+</section>
+
+<!-- PROJECT PLACER -->
+<section>
+  <h2 data-i18n="proj_title">איפה הפרויקט שלכם על הקו?</h2>
+  <p class="sub" data-i18n="proj_sub">לוחצים על רמה כדי לראות מה היא דורשת, ולאן זזים הלאה.</p>
+  <div class="pbtns">
+    <button class="pbtn active" onclick="setProj(0)" data-i18n="pb0">🗺️ תיאור</button>
+    <button class="pbtn" onclick="setProj(1)" data-i18n="pb1">🔮 חיזוי</button>
+    <button class="pbtn" onclick="setProj(2)" data-i18n="pb2">🎯 המלצה</button>
+  </div>
+  <div id="pout"></div>
+</section>
+
+<!-- TAKEAWAYS -->
+<section>
+  <h2 data-i18n="take_title">שש נקודות לקחת הביתה</h2>
+  <ul class="take" id="takeList"></ul>
+</section>
+
+<footer>
+  <p data-i18n="foot">geoAI · מפגש 3 · נבנה ככלי הוראה חי. כל משושה הוא החלטה.</p>
+</footer>
+
+<script>
+/* ===================== translations ===================== */
+const T = {
+  he:{
+    hero_pill:"geoAI · מפגש 3 · החלק של זכר",
+    hero_title:"מהתיאור לחיזוי להמלצה",
+    hero_sub:"איך לוקחים דאטה גיאוגרפי מאורגן, וממירים אותו לחיזוי, ואז להמלצה אמיתית למשתמש",
+    hero_spine:"המבנה והרזולוציה שבחרתם קובעים את הפיצ'רים שהמודל לומד. אותו דאטה, אותה דוגמה — מהתיאור שאלי בנה ועד ההמלצה שאתם נותנים.",
+    arc_title:"שלוש רמות, קו אחד",
+    arc_sub:"כל פרויקט יושב איפשהו על הקו הזה. המטרה היום: לזוז ימינה.",
+    arc1_t:"תיאור · Descriptive", arc1_d:"מה קרה? סופרים, מסכמים, מציירים מפה. זה מה שאלי בנה בקנה מידה.",
+    arc2_t:"חיזוי · Predictive", arc2_d:"מה יקרה? מודל שלומד מהעבר וחוזה את השעה הבאה.",
+    arc3_t:"המלצה · Prescriptive", arc3_d:"מה לעשות? הופכים את החיזוי לפעולה למשתמש קונקרטי.",
+    arc_n1:"תיאור", arc_n2:"חיזוי", arc_n3:"המלצה",
+    bridge_title:"הגשר מהחלק של אלי",
+    bridge_sub:"לא מתחילים מאפס. הטבלה שאלי בנה היא בדיוק הקלט של המודל.",
+    br_a:"משושה H3 (אינדקס)", br_b:"COUNT נסיעות לכל משושה לשעה", br_c:"טבלת פיצ'רים", br_d:"מודל",
+    bridge_punch:"<strong>מה שאלי בנה כאינדקס, המודל לומד כפיצ'ר.</strong> הרזולוציה של המשושה שבחרתם היא הרזולוציה של החיזוי. ה-k-ring (השכנים) שאלי לימד הוא הפיצ'ר המרחבי שלי. אין שלב נפרד של \"הנדסת פיצ'רים\" — הארכיטקטורה כבר עשתה אותו.",
+    demo_title:"הדגמה חיה: מהדאטה להמלצה, צעד-אחר-צעד",
+    demo_sub:"דאטה אחד של נסיעות תחבורה. כל משושה = אזור. הצבע = כמות הביקוש. לוחצים \"צעד\".",
+    p_table_h:"טבלת הפיצ'רים", p_table_hint:"כל שורה = משושה בשעה מסוימת. בדיוק הפלט של האגרגציה.",
+    p_feat_h:"הפיצ'רים של המשושה הנבחר",
+    ch_target:"🎯 target: נסיעות בשעה הבאה", ch_lag1:"lag: לפני שעה", ch_lag2:"lag: אתמול באותה שעה", ch_nbr:"k-ring: ממוצע 6 השכנים", ch_hour:"שעה ביום",
+    p_time_h:"פיצול לפי זמן", tl_w1:"שבוע 1", tl_w2:"שבוע 2", tl_w3:"שבוע 3", tl_w4:"שבוע 4",
+    p_time_hint:"ירוק = אימון (עבר). כחול = בחינה (עתיד). אף פעם לא אקראי.",
+    p_err_h:"ניתוח טעות",
+    p_err_txt:"המשושה האדום: ניבאנו 22, בפועל 85. ערב משחק. חסר פיצ'ר \"אירועים\" — וזה בדיוק מה שמשפר את המודל בסבב הבא.",
+    p_act_h:"ההמלצה",
+    p_act_txt:"מסמנים את המשושים החמים (אדום) ושולחים נהגים פנויים אליהם <strong>לפני</strong> שהביקוש קופץ. למי? לדיספצ'ר ולנהג. זה ה-prescriptive.",
+    btn_step:"צעד הבא ←", btn_auto:"▶ אוטומטי", btn_reset:"↺ איפוס",
+    gloss_title:"המילון — כל מילה מפחידה בשורה אחת",
+    gloss_sub:"לוחצים על כרטיס כדי לראות מה אומרים על זה בכיתה.",
+    proj_title:"איפה הפרויקט שלכם על הקו?",
+    proj_sub:"לוחצים על רמה כדי לראות מה היא דורשת, ולאן זזים הלאה.",
+    pb0:"🗺️ תיאור", pb1:"🔮 חיזוי", pb2:"🎯 המלצה",
+    take_title:"שש נקודות לקחת הביתה",
+    foot:"geoAI · מפגש 3 · נבנה ככלי הוראה חי. כל משושה הוא החלטה.",
+    steps:[
+      "<b>דאטה גולמי.</b> מיליוני נסיעות, נקודה אחת לכל נסיעה. יפה, אבל אי אפשר ללמוד מזה ככה. קודם צריך לארגן.",
+      "<b>אגרגציה (החלק של אלי).</b> סופרים כמה נסיעות בכל משושה בכל שעה. עכשיו יש טבלה: שורה לכל משושה, מספר = ביקוש. זה descriptive — תיאור המציאות בקנה מידה.",
+      "<b>שלב 1 — בוחרים target.</b> מה רוצים לחזות? כאן: כמה נסיעות יהיו במשושה הזה בשעה הבאה. משושה אחד = שורה אחת לחיזוי.",
+      "<b>שלב 2 — פיצ'רים.</b> מה המודל מקבל כקלט? העבר (לפני שעה, אתמול) והשכנים — ששת המשושים סביב (k-ring). שימו לב: ה-k-ring שאלי לימד הוא הפיצ'ר המרחבי שלי. המבנה שבחרתם הוא הפיצ'רים.",
+      "<b>שלב 3 — train/test לפי זמן.</b> מאמנים על העבר (שבועות 1–3), בודקים על העתיד (שבוע 4). לעולם לא אקראי. אם בודקים על אותו זמן שאימנו — המודל \"מרמה\" (leakage).",
+      "<b>שלב 4 — baseline.</b> הניחוש הכי טיפש: \"השעה הבאה דומה לשעה הזו\". בונים אותו כדי שיהיה רף. מודל אמיתי שווה משהו רק אם הוא מנצח את זה.",
+      "<b>שלב 5 — ניתוח טעויות.</b> מסתכלים איפה טעינו ושואלים למה. המשושה האדום קפץ ל-85 וניבאנו 22 — ערב משחק. חסר פיצ'ר \"אירועים\". זה מה שמשפר את המודל.",
+      "<b>הנגשה (prescriptive).</b> החיזוי הופך להמלצה. מסמנים את המשושים החמים ושולחים נהגים פנויים אליהם לפני שהביקוש קופץ. למי זה עוזר? לדיספצ'ר ולנהג. מתיאור — לפעולה."
+    ],
+    demo_done:"זהו, עברנו את כל הקו: דאטה גולמי, תיאור, חיזוי, המלצה. לוחצים איפוס כדי לחזור.",
+    glossary:[
+      ["target","מה שאנחנו מנסים לחזות. מחליטים עליו לפני הכל.","\"לפני שנוגעים בקוד — מה בדיוק אנחנו רוצים לחזות?\""],
+      ["feature (פיצ'ר)","עמודה שהמודל מקבל כקלט. מספר שמתאר משהו על הדוגמה.","\"כל עמודה בטבלה שלא היעד — היא פיצ'ר, רמז למודל.\""],
+      ["k-ring / שכנים","המשושים שמסביב. כדי לחזות משושה, מסתכלים גם על השכנים שלו.","\"מה שקורה לידי משפיע עליי — אז השכנים נכנסים כפיצ'ר.\""],
+      ["lag","ערך מהעבר כקלט: כמה היה לפני שעה, כמה היה אתמול.","\"הדבר הכי חזק לחיזוי הוא בדרך כלל מה שהיה רגע לפני.\""],
+      ["train / test split","מחלקים את הדאטה: חלק ללמידה, חלק לבחינה הוגנת.","\"בודקים את המודל על דאטה שהוא לא ראה — אחרת זה לא הוגן.\""],
+      ["leakage (דליפה)","כשהמודל \"מציץ\" בתשובה. למשל בודקים על אותו זמן שאימנו.","\"אם המודל ראה את העתיד בזמן האימון — הציון שלו שקר.\""],
+      ["baseline","ניחוש פשוט שמשמש רף. המודל שווה רק אם מנצח אותו.","\"קודם הניחוש הטיפש. רק מה שמנצח אותו נחשב הישג.\""],
+      ["error analysis","מסתכלים איפה טעינו ושואלים למה. בלי מתמטיקה.","\"לא 'כמה טעינו' אלא 'איפה ולמה' — שם נמצא השיפור.\""],
+      ["prescriptive","מחיזוי להמלצה: מה לעשות, ולמי.","\"חיזוי בלי המלצה הוא רק גרף. מה עושים איתו, ובשביל מי?\""]
+    ],
+    proj:[
+      "<b>🗺️ תיאור.</b> יש לכם דאטה מאורגן: מפה, ספירות, דשבורד שמראה מה קרה. זה הבסיס — רוב הצוותים כאן. <b>הצעד הבא:</b> לבחור target ולעבור לחיזוי.",
+      "<b>🔮 חיזוי.</b> אתם מנבאים מספר או קטגוריה מהעבר. יש target, פיצ'רים, baseline, פיצול לפי זמן. <b>הצעד הבא:</b> ניתוח טעויות, ואז להפוך את החיזוי להמלצה.",
+      "<b>🎯 המלצה.</b> החיזוי הופך לפעולה למשתמש קונקרטי: 'תשלח נהג לכאן', 'תבדוק את האזור הזה'. זה היעד. <b>שאלת המפתח:</b> מה זה נותן, ולמי?"
+    ],
+    takeaways:[
+      "הזרימה: תיאור, אחר כך חיזוי, אחר כך המלצה. הפרויקט שלכם נמצא איפשהו על הקו הזה.",
+      "המבנה שבחרתם (רזולוציה, אגרגציה, שכנים) הוא הפיצ'רים של המודל. מה שאלי בנה כאינדקס — המודל לומד כפיצ'ר.",
+      "תמיד מתחילים מ-baseline טיפש. בלי רף, אי אפשר לדעת אם המודל שווה משהו.",
+      "מפצלים לפי זמן, לא אקראי. מאמנים על העבר, בודקים על העתיד.",
+      "ניתוח טעויות זה לא מתמטיקה — זה לשאול 'איפה טעינו ולמה', ומשם לשפר.",
+      "חיזוי בלי המלצה הוא רק גרף. השאלה הסופית: מה זה נותן, ולמי?"
+    ]
+  },
+  en:{
+    hero_pill:"geoAI · Session 3 · Zac's part",
+    hero_title:"From Description to Prediction to Recommendation",
+    hero_sub:"How you take organized geospatial data, turn it into a prediction, and then into a real recommendation for a user",
+    hero_spine:"The structure and resolution you chose ARE the features the model learns. One dataset, one example — from the description Eli built to the recommendation you give.",
+    arc_title:"Three levels, one line",
+    arc_sub:"Every project sits somewhere on this line. Today's goal: move to the right.",
+    arc1_t:"Descriptive", arc1_d:"What happened? Count, summarize, draw a map. This is what Eli built at scale.",
+    arc2_t:"Predictive", arc2_d:"What will happen? A model that learns from the past and forecasts the next hour.",
+    arc3_t:"Prescriptive", arc3_d:"What to do? Turn the prediction into an action for a concrete user.",
+    arc_n1:"Describe", arc_n2:"Predict", arc_n3:"Recommend",
+    bridge_title:"The bridge from Eli's part",
+    bridge_sub:"You don't start from zero. The table Eli built IS the model's input.",
+    br_a:"H3 hex (index)", br_b:"COUNT rides per hex per hour", br_c:"feature table", br_d:"model",
+    bridge_punch:"<strong>What Eli built as an index, the model learns as a feature.</strong> The hex resolution you chose is the prediction resolution. The k-ring (neighbors) Eli taught is my spatial feature. There is no separate \"feature engineering\" step — the architecture already did it.",
+    demo_title:"Live demo: from data to recommendation, step by step",
+    demo_sub:"One transit dataset. Each hex = an area. Color = demand. Click \"Step\".",
+    p_table_h:"The feature table", p_table_hint:"Each row = a hex at a given hour. Exactly the aggregation output.",
+    p_feat_h:"Features of the selected hex",
+    ch_target:"🎯 target: rides next hour", ch_lag1:"lag: one hour ago", ch_lag2:"lag: yesterday same hour", ch_nbr:"k-ring: mean of 6 neighbors", ch_hour:"hour of day",
+    p_time_h:"Split by time", tl_w1:"Week 1", tl_w2:"Week 2", tl_w3:"Week 3", tl_w4:"Week 4",
+    p_time_hint:"Green = train (past). Blue = test (future). Never random.",
+    p_err_h:"Error analysis",
+    p_err_txt:"Red hex: we predicted 22, actual was 85. Game night. We're missing an \"events\" feature — and that's exactly what improves the model next round.",
+    p_act_h:"The recommendation",
+    p_act_txt:"Mark the hot hexes (red) and send free drivers there <strong>before</strong> demand spikes. For whom? The dispatcher and the driver. That's prescriptive.",
+    btn_step:"Next step →", btn_auto:"▶ Auto", btn_reset:"↺ Reset",
+    gloss_title:"The glossary — every scary word in one line",
+    gloss_sub:"Click a card to see what you say about it in class.",
+    proj_title:"Where is your project on the line?",
+    proj_sub:"Click a level to see what it requires, and where to move next.",
+    pb0:"🗺️ Describe", pb1:"🔮 Predict", pb2:"🎯 Recommend",
+    take_title:"Six things to take home",
+    foot:"geoAI · Session 3 · Built as a live teaching tool. Every hex is a decision.",
+    steps:[
+      "<b>Raw data.</b> Millions of rides, one dot each. Nice, but you can't learn from it like this. First, organize.",
+      "<b>Aggregation (Eli's part).</b> Count rides per hex per hour. Now there's a table: a row per hex, number = demand. That's descriptive — reality at scale.",
+      "<b>Step 1 — choose a target.</b> What to predict? Here: how many rides in this hex next hour. One hex = one row to predict.",
+      "<b>Step 2 — features.</b> What does the model get as input? The past (an hour ago, yesterday) and the neighbors — the six hexes around (k-ring). Note: Eli's k-ring is my spatial feature. The structure you chose is the features.",
+      "<b>Step 3 — train/test by time.</b> Train on the past (weeks 1–3), test on the future (week 4). Never random. Testing on the same time you trained on = the model \"cheats\" (leakage).",
+      "<b>Step 4 — baseline.</b> The dumbest guess: \"next hour ≈ this hour\". You build it as a bar. A real model is worth something only if it beats this.",
+      "<b>Step 5 — error analysis.</b> Look where it's wrong and ask why. The red hex jumped to 85, we predicted 22 — game night. Missing an \"events\" feature. That's what improves the model.",
+      "<b>Prescriptive.</b> The prediction becomes a recommendation. Mark the hot hexes and send free drivers there before demand spikes. Who does it help? The dispatcher and the driver. From description to action."
+    ],
+    demo_done:"That's the whole line: raw data, description, prediction, recommendation. Click Reset to replay.",
+    glossary:[
+      ["target","What we're trying to predict. Decide it before anything else.","\"Before we touch code — what exactly do we want to predict?\""],
+      ["feature","A column the model gets as input. A number describing the example.","\"Every column that isn't the target is a feature, a hint to the model.\""],
+      ["k-ring / neighbors","The hexes around. To predict a hex, look at its neighbors too.","\"What happens next to me affects me — so neighbors become a feature.\""],
+      ["lag","A past value as input: how much an hour ago, yesterday.","\"The strongest predictor is usually what happened just before.\""],
+      ["train / test split","Split the data: part to learn, part for a fair test.","\"Test on data the model never saw — otherwise it's not fair.\""],
+      ["leakage","When the model \"peeks\" at the answer. E.g. testing on the trained period.","\"If the model saw the future during training, its score is a lie.\""],
+      ["baseline","A simple guess used as a bar. The model counts only if it beats it.","\"First the dumb guess. Only beating it counts as an achievement.\""],
+      ["error analysis","Look where it's wrong and ask why. No math.","\"Not 'how wrong' but 'where and why' — that's where improvement is.\""],
+      ["prescriptive","From prediction to recommendation: what to do, and for whom.","\"A prediction without a recommendation is just a chart. So what, for whom?\""]
+    ],
+    proj:[
+      "<b>🗺️ Descriptive.</b> You have organized data: a map, counts, a dashboard of what happened. The baseline — most teams here. <b>Next step:</b> pick a target, move to prediction.",
+      "<b>🔮 Predictive.</b> You forecast a number or category from the past. There's a target, features, baseline, time split. <b>Next step:</b> error analysis, then turn the prediction into a recommendation.",
+      "<b>🎯 Prescriptive.</b> The prediction becomes an action for a concrete user: 'send a driver here', 'check this area'. The goal. <b>Key question:</b> what does it give, and for whom?"
+    ],
+    takeaways:[
+      "The flow: describe, then predict, then recommend. Your project sits somewhere on this line.",
+      "The structure you chose (resolution, aggregation, neighbors) is the model's features. What Eli built as an index, the model learns as a feature.",
+      "Always start from a dumb baseline. Without a bar, you can't know if the model is worth anything.",
+      "Split by time, not randomly. Train on the past, test on the future.",
+      "Error analysis isn't math — it's asking 'where did we err and why', and improving from there.",
+      "A prediction without a recommendation is just a chart. The final question: what does it give, and for whom?"
+    ]
+  }
+};
+
+/* ===================== hex grid demo ===================== */
+const R=38, COLS=5, ROWS=4;
+const hexW=Math.sqrt(3)*R, rowSp=1.5*R, padX=18, padY=16;
+const hexes=[];
+for(let row=0;row<ROWS;row++)for(let col=0;col<COLS;col++){
+  const cx=padX+hexW/2+col*hexW+(row%2?hexW/2:0);
+  const cy=padY+R+row*rowSp;
+  hexes.push({cx,cy,i:hexes.length});
+}
+const thisHour=[10,20,35,22,8, 25,55,80,50,18, 30,70,95,65,20, 12,28,40,26,10];
+const nextActual=thisHour.slice(); nextActual[3]=85; nextActual[17]=10; nextActual[12]=90; nextActual[8]=66;
+const target=12;
+// 6 nearest hexes to target = k-ring
+const neighbors=hexes.map(h=>({i:h.i,d:Math.hypot(h.cx-hexes[target].cx,h.cy-hexes[target].cy)}))
+  .filter(o=>o.i!==target).sort((a,b)=>a.d-b.d).slice(0,6).map(o=>o.i);
+const errors=[3,17];
+const surge=[3,7,12];
+const drivers=[15,19,0];
+const dots=[];
+(function(){let s=7;const rnd=()=>{s=(s*9301+49297)%233280;return s/233280;};
+ for(let k=0;k<60;k++){dots.push({x:padX+rnd()*(COLS*hexW),y:padY+rnd()*(ROWS*rowSp+R)});}})();
+
+function hexPts(cx,cy){let p=[];for(let k=0;k<6;k++){const a=Math.PI/180*(60*k-90);p.push((cx+R*Math.cos(a)).toFixed(1)+","+(cy+R*Math.sin(a)).toFixed(1));}return p.join(" ");}
+function colorFor(v){const t=Math.max(0,Math.min(1,v/100));const hue=215-215*t;return`hsl(${hue},72%,${30+24*t}%)`;}
+
+function buildSVG(){
+  const svg=document.getElementById('hexmap');
+  let s=`<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#fbbf24"/></marker></defs>`;
+  s+=`<g id="dots">`+dots.map(d=>`<circle cx="${d.x.toFixed(1)}" cy="${d.y.toFixed(1)}" r="2.4" fill="#64748b" opacity="0.8"/>`).join('')+`</g>`;
+  s+=`<g id="arrows"></g>`;
+  hexes.forEach(h=>{
+    s+=`<polygon id="hex-${h.i}" points="${hexPts(h.cx,h.cy)}" fill="#1e293b" stroke="#334155" stroke-width="1"/>`;
+    s+=`<text id="lbl-${h.i}" class="hexlbl" x="${h.cx}" y="${h.cy+4}" text-anchor="middle" style="display:none"></text>`;
+  });
+  svg.innerHTML=s;
+}
+
+let cur=0; const MAX=8; let timer=null;
+function renderStep(n){
+  const fillVals = n>=7?nextActual:thisHour;
+  hexes.forEach(h=>{
+    const poly=document.getElementById('hex-'+h.i), lbl=document.getElementById('lbl-'+h.i);
+    let fill = n===0?'#1e293b':colorFor(fillVals[h.i]);
+    let stroke='#334155', sw=1;
+    if(n>=2 && h.i===target){stroke='#fbbf24';sw=4;}
+    else if(n>=3 && neighbors.includes(h.i)){stroke='#22d3ee';sw=3;}
+    if(n===6 && errors.includes(h.i)){stroke='#ef4444';sw=4;}
+    if(n===7 && surge.includes(h.i)){stroke='#ef4444';sw=4.5;}
+    poly.setAttribute('fill',fill); poly.setAttribute('stroke',stroke); poly.setAttribute('stroke-width',sw);
+    if(n>=1){lbl.style.display='block';lbl.textContent=fillVals[h.i];lbl.setAttribute('fill', fillVals[h.i]>55?'#0b1220':'#e2e8f0');}
+    else lbl.style.display='none';
+  });
+  document.getElementById('dots').style.display = n===0?'block':'none';
+  // arrows
+  const ag=document.getElementById('arrows');
+  if(n===7){
+    ag.innerHTML=drivers.map((d,k)=>{const from=hexes[d],to=hexes[surge[k%surge.length]];
+      return `<line x1="${from.cx}" y1="${from.cy}" x2="${to.cx}" y2="${to.cy}" stroke="#fbbf24" stroke-width="3" stroke-dasharray="5 4" marker-end="url(#arr)" opacity="0.9"/>`;}).join('');
+  } else ag.innerHTML='';
+  // side panels
+  show('pTable', n>=1); show('pFeat', n===3); show('pTime', n===4); show('pErr', n===6); show('pAct', n===7);
+  // progress
+  document.querySelectorAll('#prog i').forEach((el,k)=>el.classList.toggle('on',k<=n));
+  document.getElementById('stepInfo').innerHTML = T[lang].steps[n];
+}
+function show(id,on){document.getElementById(id).classList.toggle('hide',!on);}
+
+function applyView(){
+  if(cur>=MAX){ renderStep(MAX-1);
+    document.getElementById('stepInfo').innerHTML=T[lang].demo_done;
+    document.querySelectorAll('#prog i').forEach(el=>el.classList.add('on'));
+  } else renderStep(cur);
+}
+function step(){ if(cur<MAX) cur++; applyView(); }
+function autoPlay(){ if(timer)return; timer=setInterval(()=>{ if(cur>=MAX){clearInterval(timer);timer=null;return;} step(); },1100); }
+function resetDemo(){ if(timer){clearInterval(timer);timer=null;} cur=0; applyView(); }
+
+/* ===================== glossary / project / takeaways ===================== */
+function renderDynamic(){
+  const g=document.getElementById('glossGrid');
+  g.innerHTML=T[lang].glossary.map((it,k)=>`<div class="gcard" onclick="this.classList.toggle('open')">
+    <div class="gterm">${it[0]}</div><div class="gplain">${it[1]}</div><div class="gsay">${it[2]}</div></div>`).join('');
+  document.getElementById('takeList').innerHTML=T[lang].takeaways.map(t=>`<li>${t}</li>`).join('');
+  setProj(curProj);
+}
+let curProj=0;
+function setProj(i){curProj=i;document.querySelectorAll('.pbtn').forEach((b,k)=>b.classList.toggle('active',k===i));
+  document.getElementById('pout').innerHTML=T[lang].proj[i];}
+
+/* ===================== language ===================== */
+let lang='he';
+function setLang(l){
+  lang=l; const h=document.documentElement; h.lang=l; h.dir=l==='he'?'rtl':'ltr';
+  document.getElementById('btn-en').classList.toggle('active',l==='en');
+  document.getElementById('btn-he').classList.toggle('active',l==='he');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const k=el.getAttribute('data-i18n'); if(T[l][k]!==undefined) el.innerHTML=T[l][k];});
+  renderDynamic();
+  applyView(); // refresh demo (visual + text) in new language
+}
+
+/* init */
+buildSVG();
+document.getElementById('prog').innerHTML=Array.from({length:MAX}).map(()=>'<i></i>').join('');
+cur=0;
+setLang('he');
+</script>
+</body>
+</html>
