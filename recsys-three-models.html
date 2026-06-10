@@ -93,6 +93,33 @@ table.cmp th{background:var(--bg-primary); color:var(--accent-purple);}
 .takeaways{margin:1rem 1.4rem 0;}
 footer{text-align:center; padding:2.5rem 1rem; color:var(--text-muted); font-size:.9rem; border-top:1px solid var(--border); margin-top:3rem;}
 svg text{font-family:inherit;}
+.mech{border-top:1px dashed var(--border-hover); margin-top:1.5rem; padding-top:1.3rem;}
+.mech h4{color:var(--accent-purple); font-size:1.05rem; margin-bottom:.8rem;}
+.pop-events{display:flex; gap:.4rem; flex-wrap:wrap; min-height:2.2rem; margin:.8rem 0;}
+.pop-event{background:var(--bg-primary); border:1px solid var(--border); border-radius:999px; padding:.2rem .7rem; font-size:.95rem; animation:popIn .3s ease;}
+@keyframes popIn{from{transform:scale(.4); opacity:0;} to{transform:scale(1); opacity:1;}}
+.preset-chips{display:flex; gap:.5rem; flex-wrap:wrap; margin:.6rem 0 1rem;}
+.tree-wrap{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1rem;}
+.tree-node{fill:#0f172a; stroke:#334155; stroke-width:1.5;}
+.tree-node.active{stroke:#22c55e; stroke-width:3; filter:drop-shadow(0 0 6px rgba(34,197,94,.5));}
+.tree-leaf{fill:#0f172a; stroke:#475569; stroke-width:1.5;}
+.tree-leaf.active{stroke:#22c55e; stroke-width:3; fill:rgba(34,197,94,.12);}
+.tree-edge{stroke:#334155; stroke-width:2; fill:none;}
+.tree-edge.active{stroke:#22c55e; stroke-width:3;}
+.mech-final{text-align:center; font-size:1.1rem; font-weight:700; margin-top:.8rem; min-height:1.6rem; color:var(--accent-violet);}
+table.mx{border-collapse:collapse; margin:0 auto; font-size:.78rem;}
+table.mx td, table.mx th{border:1px solid var(--border); width:38px; height:34px; text-align:center; padding:0;}
+table.mx th{background:var(--bg-primary); color:var(--text-muted); font-size:1rem;}
+table.mx td.hist{color:var(--success); font-size:1rem;}
+table.mx td.empty{color:#475569; cursor:pointer;}
+table.mx td.empty:hover{background:rgba(129,140,248,.15);}
+table.mx td.pred{font-size:.72rem; font-weight:700; cursor:default;}
+.vec-tables{display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:center; margin-top:1rem;}
+.vec-box{background:var(--bg-primary); border:1px solid var(--accent-indigo); border-radius:12px; padding:.8rem 1rem; animation:popIn .5s ease;}
+.vec-box h5{color:var(--accent-purple); text-align:center; margin-bottom:.5rem; font-size:.9rem;}
+.vec-box table{border-collapse:collapse; font-size:.8rem;}
+.vec-box td, .vec-box th{border:1px solid var(--border); padding:.25rem .6rem; text-align:center; color:var(--text-secondary); direction:ltr;}
+.dot-calc{background:var(--bg-primary); border:1px solid var(--accent-bright); border-radius:12px; padding:.9rem 1.2rem; margin-top:1rem; text-align:center; font-size:1rem; min-height:2.4rem; direction:ltr;}
 @media (max-width:768px){
   .hero h1{font-size:2rem;}
   section{padding:2.2rem 1rem;}
@@ -156,6 +183,13 @@ svg text{font-family:inherit;}
       <li data-i18n="c1_w"><span class="tag-bad">Weakness:</span> everyone gets the same feed. Zero personalization, and the long tail never gets shown.</li>
       <li data-i18n="c1_role"><strong>Role in our story:</strong> the bar. A model that can't beat the DJ doesn't deserve production.</li>
     </ul>
+    <div class="mech">
+      <h4 data-i18n="m1_t">⚙️ Under the hood: it really is just a counter</h4>
+      <button class="btn-primary" id="popPlayBtn" onclick="popPlay()" data-i18n="m1_play">▶ Stream interactions</button>
+      <div class="pop-events" id="popEvents"></div>
+      <div class="rank-list" id="popCounters"></div>
+      <div class="step-info" id="popMsg" data-i18n="m1_hint">Press play — interactions stream in, counters tick, the ranking reorders itself. That's the entire model.</div>
+    </div>
   </div>
 
   <div class="card contender" style="border-top-color:var(--warn);">
@@ -166,6 +200,17 @@ svg text{font-family:inherit;}
       <li data-i18n="c2_w"><span class="tag-bad">Weakness:</span> only as good as the features you hand-craft. Taste it can't see in a feature, it can't learn.</li>
       <li data-i18n="c2_leak"><span class="tag-bad">Trap:</span> every feature must be computed from the training window only — otherwise the future leaks into training <span class="pill">Leakage</span>.</li>
     </ul>
+    <div class="mech">
+      <h4 data-i18n="m2_t">⚙️ Under the hood: a (user, video) pair falls through the trees</h4>
+      <div data-i18n="m2_pick" style="font-size:.9rem; color:var(--text-muted);">Pick a pair and watch its path:</div>
+      <div class="preset-chips" id="treePresets"></div>
+      <div class="tree-wrap">
+        <svg id="tree1" width="320" height="240" viewBox="0 0 320 240" style="max-width:100%;"></svg>
+        <svg id="tree2" width="320" height="240" viewBox="0 0 320 240" style="max-width:100%;"></svg>
+      </div>
+      <div class="mech-final" id="treeFinal"></div>
+      <div class="step-info" data-i18n="m2_note">Illustration with 2 hand-made trees. A real <span class="pill">LightGBM</span> grows hundreds of trees from the data, each one correcting the errors of those before it — that's the "boosting". The final score is always the same idea: a sum of small leaf values.</div>
+    </div>
   </div>
 
   <div class="card contender" style="border-top-color:var(--success);">
@@ -176,6 +221,16 @@ svg text{font-family:inherit;}
       <li data-i18n="c3_w"><span class="tag-bad">Weakness:</span> a new user or new video has no interactions, so it has no vector — cold start is its blind spot.</li>
       <li data-i18n="c3_role"><strong>Role in our story:</strong> the first model that genuinely learns personal taste, not global rules.</li>
     </ul>
+    <div class="mech">
+      <h4 data-i18n="m3_t">⚙️ Under the hood: one big table becomes two small ones</h4>
+      <div style="overflow-x:auto;"><table class="mx" id="mxTable"></table></div>
+      <div style="text-align:center; margin-top:1rem;">
+        <button class="btn-primary" id="mxBtn" onclick="mxFactorize()" data-i18n="m3_factor">🪄 Factorize the matrix</button>
+      </div>
+      <div class="vec-tables" id="vecTables"></div>
+      <div class="dot-calc" id="dotCalc" style="display:none;"></div>
+      <div class="step-info" id="mxMsg" data-i18n="m3_hint">Green ✓ = real interactions (the training data). Everything else is unknown — 99.96% of the real matrix. Factorize, then click any empty cell to see how two tiny vectors fill it.</div>
+    </div>
   </div>
 </section>
 
@@ -443,6 +498,25 @@ en: {
   tk_6:'🔍 <strong>The leaderboard is where error analysis begins.</strong> Who did each model miss — cold users? mainstream drift? long-tail videos? That "why" is the next meeting\'s whole story.',
   footer_txt:'Built for the Loof-style personalization track · Bonim Bina mentoring',
   views_word:'views', days_word:'days old', score_word:'score',
+  m1_t:'⚙️ Under the hood: it really is just a counter',
+  m1_play:'▶ Stream interactions', m1_replay:'↻ Replay',
+  m1_hint:'Press play — interactions stream in, counters tick, the ranking reorders itself. That\'s the entire model.',
+  m1_done:'Done. 14 interactions, one table of counters — and the feed is ready. No learning happened; that\'s why it\'s called a baseline.',
+  m1_watch:'watched',
+  m2_t:'⚙️ Under the hood: a (user, video) pair falls through the trees',
+  m2_pick:'Pick a pair and watch its path:',
+  m2_note:'Illustration with 2 hand-made trees. A real <span class="pill">LightGBM</span> grows hundreds of trees from the data, each one correcting the errors of those before it — that\'s the "boosting". The final score is always the same idea: a sum of small leaf values.',
+  m2_final:(a,b)=>`Final score = ${a} + ${b} = <span style="color:var(--success);">${(Math.round((a+b)*100)/100)}</span>`,
+  tree1_title:'Tree 1', tree2_title:'Tree 2 (corrects tree 1)',
+  t1_root:'topic match ≥ 50%?', t1_n2:'popular? (views ≥ 500)',
+  t2_root:'fresh? (≤ 14 days)', t2_n2:'active user? (≥ 2 views)',
+  yes_lbl:'yes', no_lbl:'no',
+  m3_t:'⚙️ Under the hood: one big table becomes two small ones',
+  m3_factor:'🪄 Factorize the matrix',
+  m3_hint:'Green ✓ = real interactions (the training data). Everything else is unknown — 99.96% of the real matrix. Factorize, then click any empty cell to see how two tiny vectors fill it.',
+  m3_after:'The whole matrix is now compressed into these two small tables — taste vectors. Click any empty cell above: the score is just (user vector) · (video vector).',
+  m3_users_t:'User vectors', m3_vids_t:'Video vectors',
+  m3_calc:(uName,vName,ux,uy,vx,vy,s)=>`${uName} · ${vName}: (${ux})·(${vx}) + (${uy})·(${vy}) = <strong style="color:${s>=0.3?'var(--success)':(s>=0?'var(--warn)':'var(--error)')};">${s}</strong>`,
 },
 he: {
   hero_title:'שלושה מודלים, שופט אחד',
@@ -516,6 +590,25 @@ he: {
   tk_6:'🔍 <strong>לוח התוצאות הוא תחילת ניתוח השגיאות.</strong> את מי כל מודל פספס — משתמשים קרים? דריפט למיינסטרים? סרטוני זנב? ה"למה" הזה הוא כל הסיפור של המפגש הבא.',
   footer_txt:'נבנה למסלול הפרסונליזציה בסגנון Loof · מנטורינג בונים בינה',
   views_word:'צפיות', days_word:'ימים', score_word:'ציון',
+  m1_t:'⚙️ מתחת למכסה המנוע: באמת רק מונה',
+  m1_play:'▶ הזרם אינטראקציות', m1_replay:'↻ עוד פעם',
+  m1_hint:'לחצו play — אינטראקציות נכנסות, המונים מתקתקים, והדירוג מסתדר מחדש לבד. זה כל המודל.',
+  m1_done:'סיימנו. 14 אינטראקציות, טבלת מונים אחת — והפיד מוכן. שום למידה לא קרתה; בגלל זה קוראים לזה baseline.',
+  m1_watch:'ראה את',
+  m2_t:'⚙️ מתחת למכסה המנוע: זוג (משתמש, סרטון) נופל דרך העצים',
+  m2_pick:'בחרו זוג וצפו במסלול שלו:',
+  m2_note:'המחשה עם 2 עצים שבנינו ביד. <span class="pill">LightGBM</span> אמיתי מגדל מאות עצים מהדאטה, וכל עץ מתקן את השגיאות של קודמיו — זה ה-boosting. הציון הסופי הוא תמיד אותו רעיון: סכום של ערכי עלים קטנים.',
+  m2_final:(a,b)=>`ציון סופי = ${a} + ${b} = <span style="color:var(--success);">${(Math.round((a+b)*100)/100)}</span>`,
+  tree1_title:'עץ 1', tree2_title:'עץ 2 (מתקן את עץ 1)',
+  t1_root:'התאמת נושא ≥ 50%?', t1_n2:'פופולרי? (צפיות ≥ 500)',
+  t2_root:'טרי? (עד 14 ימים)', t2_n2:'משתמש פעיל? (≥ 2 צפיות)',
+  yes_lbl:'כן', no_lbl:'לא',
+  m3_t:'⚙️ מתחת למכסה המנוע: טבלה ענקית הופכת לשתי טבלאות קטנות',
+  m3_factor:'🪄 פרקו את המטריצה',
+  m3_hint:'✓ ירוק = אינטראקציות אמיתיות (דאטת האימון). כל השאר לא ידוע — 99.96% מהמטריצה האמיתית. פרקו את המטריצה, ואז לחצו על תא ריק כדי לראות איך שני וקטורים זעירים ממלאים אותו.',
+  m3_after:'כל המטריצה דחוסה עכשיו לשתי הטבלאות הקטנות האלה — וקטורי טעם. לחצו על תא ריק למעלה: הציון הוא פשוט (וקטור משתמש) · (וקטור סרטון).',
+  m3_users_t:'וקטורי משתמשים', m3_vids_t:'וקטורי סרטונים',
+  m3_calc:(uName,vName,ux,uy,vx,vy,s)=>`${uName} · ${vName}: (${ux})·(${vx}) + (${uy})·(${vy}) = <strong style="color:${s>=0.3?'var(--success)':(s>=0?'var(--warn)':'var(--error)')};">${s}</strong>`,
 }
 };
 
@@ -532,6 +625,7 @@ function setLang(lang){
   });
   renderChips(); renderActivePane(); judgeRender();
   if (lbShown) renderLeaderboard(false);
+  if (typeof renderMechAll === 'function') renderMechAll();
 }
 
 /* ─────────────── Playground ─────────────── */
@@ -717,10 +811,185 @@ function renderLeaderboard(animate){
   document.getElementById('lbInsight').innerHTML = T[currentLang].lb_insight;
 }
 
+/* ─────────────── Mechanics 1: popularity counter ─────────────── */
+const POP_EVENTS = [['A',1],['B',4],['C',1],['D',10],['B',4],['E',1],['C',7],['A',4],['D',10],['E',1],['F',3],['B',4],['C',1],['D',10]];
+const POP_VIDS = [1,4,10,7,3];
+let popTimer=null, popIdx=0, popCounts={};
+function popRenderCounters(){
+  const sorted = POP_VIDS.map(id=>({v:byId[id], n:popCounts[id]||0})).sort((a,b)=>b.n-a.n);
+  const maxN = Math.max(...sorted.map(r=>r.n), 1);
+  document.getElementById('popCounters').innerHTML = sorted.map((r,i)=>
+    rankRowHTML(i+1, r.v, `${r.n} ${T[currentLang].views_word}`, Math.round(r.n/maxN*120))
+  ).join('');
+}
+function popPlay(){
+  if (popTimer) clearInterval(popTimer);
+  popIdx=0; popCounts={};
+  document.getElementById('popEvents').innerHTML='';
+  popRenderCounters();
+  document.getElementById('popMsg').innerHTML = T[currentLang].m1_hint;
+  document.getElementById('popPlayBtn').disabled = true;
+  popTimer = setInterval(()=>{
+    if (popIdx >= POP_EVENTS.length){
+      clearInterval(popTimer); popTimer=null;
+      document.getElementById('popMsg').innerHTML = T[currentLang].m1_done;
+      const b = document.getElementById('popPlayBtn');
+      b.disabled = false; b.innerHTML = T[currentLang].m1_replay;
+      return;
+    }
+    const [uid, vid] = POP_EVENTS[popIdx];
+    const u = USERS.find(x=>x.id===uid), v = byId[vid];
+    popCounts[vid] = (popCounts[vid]||0)+1;
+    const ev = document.getElementById('popEvents');
+    ev.insertAdjacentHTML('beforeend', `<span class="pop-event">${u.emoji} ${TOPICS[v.topic].emoji}</span>`);
+    while (ev.children.length > 7) ev.removeChild(ev.firstChild);
+    popRenderCounters();
+    popIdx++;
+  }, 420);
+}
+
+/* ─────────────── Mechanics 2: boosted trees ─────────────── */
+const TREE_PRESETS = [
+  {u:'A', v:3},   // tech fan × fresh niche tech video
+  {u:'C', v:1},   // wellness fan × popular tech hit
+  {u:'F', v:8},   // cold user × fresh niche wellness
+];
+let treePreset = 0, treeTimers = [];
+function treeFacts(p){
+  const u = USERS.find(x=>x.id===p.u), v = byId[p.v];
+  const hist = u.history.map(id=>byId[id]);
+  const match = hist.filter(h=>h.topic===v.topic).length/hist.length;
+  return {u, v,
+    t1yes: match>=0.5, t1n2yes: v.views>=500,
+    t2yes: v.days<=14, t2n2yes: u.history.length>=2};
+}
+function leafVals(f){
+  const a = f.t1yes ? 0.45 : (f.t1n2yes ? 0.25 : -0.30);
+  const b = f.t2yes ? 0.20 : (f.t2n2yes ? 0.05 : -0.15);
+  return [a,b];
+}
+function treeSVG(idPrefix, rootKey, n2Key, leafYes, leafNoYes, leafNoNo){
+  const L = T[currentLang];
+  return `
+  <text x="160" y="14" text-anchor="middle" font-size="12" fill="#c084fc">${idPrefix==='a'?L.tree1_title:L.tree2_title}</text>
+  <path id="${idPrefix}-e-root-yes" class="tree-edge" d="M120 60 L75 100"/>
+  <path id="${idPrefix}-e-root-no"  class="tree-edge" d="M200 60 L245 100"/>
+  <path id="${idPrefix}-e-n2-yes"   class="tree-edge" d="M215 138 L187 180"/>
+  <path id="${idPrefix}-e-n2-no"    class="tree-edge" d="M275 138 L292 180"/>
+  <rect id="${idPrefix}-root" class="tree-node" x="60" y="22" width="200" height="38" rx="9"/>
+  <text x="160" y="46" text-anchor="middle" font-size="12" fill="#e2e8f0">${L[rootKey]}</text>
+  <rect id="${idPrefix}-leaf-yes" class="tree-leaf" x="20" y="100" width="110" height="38" rx="9"/>
+  <text x="75" y="124" text-anchor="middle" font-size="14" font-weight="700" fill="${leafYes>0?'#22c55e':'#ef4444'}">${leafYes>0?'+':''}${leafYes}</text>
+  <rect id="${idPrefix}-n2" class="tree-node" x="160" y="100" width="150" height="38" rx="9"/>
+  <text x="235" y="118" text-anchor="middle" font-size="10.5" fill="#e2e8f0">${L[n2Key]}</text>
+  <rect id="${idPrefix}-leaf-n2yes" class="tree-leaf" x="150" y="180" width="75" height="38" rx="9"/>
+  <text x="187" y="204" text-anchor="middle" font-size="13" font-weight="700" fill="${leafNoYes>0?'#22c55e':'#ef4444'}">${leafNoYes>0?'+':''}${leafNoYes}</text>
+  <rect id="${idPrefix}-leaf-n2no" class="tree-leaf" x="237" y="180" width="75" height="38" rx="9"/>
+  <text x="274" y="204" text-anchor="middle" font-size="13" font-weight="700" fill="${leafNoNo>0?'#22c55e':'#ef4444'}">${leafNoNo>0?'+':''}${leafNoNo}</text>
+  <text x="80" y="84" text-anchor="middle" font-size="10" fill="#94a3b8">${L.yes_lbl}</text>
+  <text x="238" y="84" text-anchor="middle" font-size="10" fill="#94a3b8">${L.no_lbl}</text>
+  <text x="188" y="166" text-anchor="middle" font-size="10" fill="#94a3b8">${L.yes_lbl}</text>
+  <text x="296" y="166" text-anchor="middle" font-size="10" fill="#94a3b8">${L.no_lbl}</text>`;
+}
+function renderTreePresets(){
+  const c = document.getElementById('treePresets');
+  c.innerHTML = '';
+  TREE_PRESETS.forEach((p,i)=>{
+    const u = USERS.find(x=>x.id===p.u), v = byId[p.v];
+    const b = document.createElement('button');
+    b.className = 'user-chip' + (i===treePreset?' active':'');
+    b.textContent = `${u.emoji} ${u[currentLang].split('—')[0].trim()} + ${TOPICS[v.topic].emoji} ${v[currentLang]}`;
+    b.onclick = ()=>{ treePreset=i; renderTrees(); };
+    c.appendChild(b);
+  });
+}
+function renderTrees(){
+  treeTimers.forEach(t=>clearTimeout(t)); treeTimers=[];
+  renderTreePresets();
+  document.getElementById('tree1').innerHTML = treeSVG('a','t1_root','t1_n2', 0.45, 0.25, -0.30);
+  document.getElementById('tree2').innerHTML = treeSVG('b','t2_root','t2_n2', 0.20, 0.05, -0.15);
+  document.getElementById('treeFinal').innerHTML = '';
+  const f = treeFacts(TREE_PRESETS[treePreset]);
+  const [a,b] = leafVals(f);
+  const path = [];
+  path.push(['a-root']);
+  if (f.t1yes) path.push(['a-e-root-yes','a-leaf-yes']);
+  else { path.push(['a-e-root-no','a-n2']); path.push(f.t1n2yes?['a-e-n2-yes','a-leaf-n2yes']:['a-e-n2-no','a-leaf-n2no']); }
+  path.push(['b-root']);
+  if (f.t2yes) path.push(['b-e-root-yes','b-leaf-yes']);
+  else { path.push(['b-e-root-no','b-n2']); path.push(f.t2n2yes?['b-e-n2-yes','b-leaf-n2yes']:['b-e-n2-no','b-leaf-n2no']); }
+  path.forEach((ids,i)=>{
+    treeTimers.push(setTimeout(()=>{
+      ids.forEach(id=>document.getElementById(id)?.classList.add('active'));
+      if (i===path.length-1){
+        document.getElementById('treeFinal').innerHTML = T[currentLang].m2_final(a,b);
+      }
+    }, 350*(i+1)));
+  });
+}
+
+/* ─────────────── Mechanics 3: matrix factorization ─────────────── */
+let mxFactorized = false;
+let mxPredicted = {};   // "uid-vid" -> score
+function r2(x){ return Math.round(x*100)/100; }
+function renderMatrix(){
+  const tbl = document.getElementById('mxTable');
+  let h = '<tr><th></th>' + VIDEOS.map(v=>`<th title="${v[currentLang]}">${TOPICS[v.topic].emoji}</th>`).join('') + '</tr>';
+  USERS.forEach(u=>{
+    h += `<tr><th title="${u[currentLang]}">${u.emoji}</th>`;
+    VIDEOS.forEach(v=>{
+      const key = `${u.id}-${v.id}`;
+      if (u.history.includes(v.id)) h += `<td class="hist">✓</td>`;
+      else if (mxPredicted[key] !== undefined){
+        const s = mxPredicted[key];
+        const col = s>=0.3?'#22c55e':(s>=0?'#fbbf24':'#ef4444');
+        h += `<td class="pred" style="color:${col};">${s}</td>`;
+      }
+      else h += `<td class="empty" onclick="mxClick('${u.id}',${v.id})">·</td>`;
+    });
+    h += '</tr>';
+  });
+  tbl.innerHTML = h;
+}
+function renderVecTables(){
+  const c = document.getElementById('vecTables');
+  if (!mxFactorized){ c.innerHTML=''; return; }
+  const L = T[currentLang];
+  const uRows = USERS.map(u=>{ const v=userVec(u); return `<tr><td>${u.emoji}</td><td>${r2(v.x)}</td><td>${r2(v.y)}</td></tr>`; }).join('');
+  const vRows = VIDEOS.map(v=>`<tr><td>${TOPICS[v.topic].emoji}</td><td>${v.x}</td><td>${v.y}</td></tr>`).join('');
+  c.innerHTML = `
+    <div class="vec-box"><h5>${L.m3_users_t} (6×2)</h5><table><tr><th></th><th>d₁</th><th>d₂</th></tr>${uRows}</table></div>
+    <div class="vec-box"><h5>${L.m3_vids_t} (12×2)</h5><table><tr><th></th><th>d₁</th><th>d₂</th></tr>${vRows}</table></div>`;
+}
+function mxFactorize(){
+  mxFactorized = true;
+  renderVecTables();
+  document.getElementById('mxBtn').style.display='none';
+  document.getElementById('mxMsg').innerHTML = T[currentLang].m3_after;
+}
+function mxClick(uid, vid){
+  if (!mxFactorized) return;
+  const u = USERS.find(x=>x.id===uid), v = byId[vid];
+  const uv = userVec(u);
+  const s = r2(uv.x*v.x + uv.y*v.y);
+  mxPredicted[`${uid}-${vid}`] = s;
+  renderMatrix();
+  const dc = document.getElementById('dotCalc');
+  dc.style.display='';
+  dc.innerHTML = T[currentLang].m3_calc(`${u.emoji}`, `${TOPICS[v.topic].emoji} ${v[currentLang]}`, r2(uv.x), r2(uv.y), v.x, v.y, s);
+}
+function renderMechAll(){
+  popRenderCounters();
+  renderTrees();
+  renderMatrix();
+  renderVecTables();
+}
+
 /* ─────────────── init ─────────────── */
 setLang('he');
 setTab('pop');
 judgeReset();
+renderMechAll();
 </script>
 </body>
 </html>
