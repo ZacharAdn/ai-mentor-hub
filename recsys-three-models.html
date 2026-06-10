@@ -127,7 +127,7 @@ svg text{font-family:inherit;}
 table.mx{border-collapse:collapse; margin:0 auto; font-size:.78rem;}
 table.mx td, table.mx th{border:1px solid var(--border); width:38px; height:34px; text-align:center; padding:0;}
 table.mx th{background:var(--bg-primary); color:var(--text-muted); font-size:1rem;}
-table.mx td.hist{color:var(--success); font-size:1rem;}
+table.mx td.hist{color:var(--success); font-size:1rem; cursor:pointer;}
 table.mx td.empty{color:var(--cell-empty); cursor:pointer;}
 table.mx td.empty:hover{background:rgba(129,140,248,.15);}
 table.mx td.pred{font-size:.72rem; font-weight:700; cursor:default;}
@@ -532,8 +532,12 @@ en: {
   m3_t:'⚙️ Under the hood: one big table becomes two small ones',
   m3_factor:'🪄 Factorize the matrix',
   m3_hint:'Green ✓ = real interactions (the training data). Everything else is unknown — 99.96% of the real matrix. Factorize, then click any empty cell to see how two tiny vectors fill it.',
-  m3_after:'The whole matrix is now compressed into these two small tables — taste vectors. Click any empty cell above: the score is just (user vector) · (video vector).',
+  m3_after:'The whole matrix is now compressed into these two small tables — taste vectors. Click a green ✓ cell to see how training reconstructs it, or an empty cell to see a prediction: the score is just (user vector) · (video vector).',
   m3_users_t:'User vectors', m3_vids_t:'Video vectors',
+  m3_ax1:'data–people', m3_ax2:'growth–balance',
+  tm_x_pos:'data', tm_x_neg:'people', tm_y_pos:'growth', tm_y_neg:'balance',
+  m3_axes_note:'What are these two columns? <strong>Taste axes — not videos.</strong> Nobody defined them in advance: the algorithm invents them on its own from viewing patterns. Here, a high "data–people" value = analytical content (tech, finance), low = interpersonal (sales, wellness). We use 2 axes so we can draw them; Netflix uses hundreds. Each row is a point on the taste map in the "Latent Taste" tab below.',
+  m3_recon_note:'That was a green ✓ cell — a real view from training. Notice the product comes out high: the vectors were never set by hand — the algorithm picked them precisely so the green cells reconstruct with a high score. <strong>That IS the learning.</strong> The same vectors then fill in the empty cells.',
   m3_calc:(uName,vName,ux,uy,vx,vy,s)=>`${uName} · ${vName}: (${ux})·(${vx}) + (${uy})·(${vy}) = <strong style="color:${s>=0.3?'var(--success)':(s>=0?'var(--warn)':'var(--error)')};">${s}</strong>`,
 },
 he: {
@@ -624,8 +628,12 @@ he: {
   m3_t:'⚙️ מתחת למכסה המנוע: טבלה ענקית הופכת לשתי טבלאות קטנות',
   m3_factor:'🪄 פרקו את המטריצה',
   m3_hint:'✓ ירוק = אינטראקציות אמיתיות (דאטת האימון). כל השאר לא ידוע — 99.96% מהמטריצה האמיתית. פרקו את המטריצה, ואז לחצו על תא ריק כדי לראות איך שני וקטורים זעירים ממלאים אותו.',
-  m3_after:'כל המטריצה דחוסה עכשיו לשתי הטבלאות הקטנות האלה — וקטורי טעם. לחצו על תא ריק למעלה: הציון הוא פשוט (וקטור משתמש) · (וקטור סרטון).',
+  m3_after:'כל המטריצה דחוסה עכשיו לשתי הטבלאות הקטנות האלה — וקטורי טעם. לחצו על תא ✓ ירוק כדי לראות איך האימון משחזר אותו, או על תא ריק כדי לראות חיזוי: הציון הוא פשוט (וקטור משתמש) · (וקטור סרטון).',
   m3_users_t:'וקטורי משתמשים', m3_vids_t:'וקטורי סרטונים',
+  m3_ax1:'דאטה-אנשים', m3_ax2:'צמיחה-איזון',
+  tm_x_pos:'דאטה', tm_x_neg:'אנשים', tm_y_pos:'צמיחה', tm_y_neg:'איזון',
+  m3_axes_note:'מה שתי העמודות האלה? <strong>צירי טעם — לא סרטונים.</strong> אף אחד לא הגדיר אותם מראש: האלגוריתם ממציא אותם לבד מתוך דפוסי הצפייה. כאן, ערך גבוה בציר "דאטה-אנשים" = תוכן אנליטי (טכנולוגיה, פיננסים), ערך נמוך = תוכן בין-אישי (מכירות, רווחה). אצלנו 2 צירים כדי שאפשר לצייר אותם; בנטפליקס — מאות. כל שורה בטבלה היא נקודה על מפת הטעם בטאב "טעם סמוי" למטה.',
+  m3_recon_note:'זה היה תא ✓ ירוק — צפייה אמיתית מהאימון. שימו לב שהמכפלה יוצאת גבוהה: הווקטורים לא הוגדרו ביד — האלגוריתם בחר אותם בדיוק כך שהתאים הירוקים ישוחזרו עם ציון גבוה. <strong>זה כל הלימוד.</strong> אותם וקטורים ממלאים אחר כך גם את התאים הריקים.',
   m3_calc:(uName,vName,ux,uy,vx,vy,s)=>`${uName} · ${vName}: (${ux})·(${vx}) + (${uy})·(${vy}) = <strong style="color:${s>=0.3?'var(--success)':(s>=0?'var(--warn)':'var(--error)')};">${s}</strong>`,
 }
 };
@@ -735,6 +743,11 @@ function renderALS(){
   let svg = `<rect x="0" y="0" width="${W}" height="${H}" rx="14" class="svg-panel"/>`;
   svg += `<line x1="${cx}" y1="20" x2="${cx}" y2="${H-20}" class="svg-axis" stroke-dasharray="4 5"/>`;
   svg += `<line x1="30" y1="${cy}" x2="${W-30}" y2="${cy}" class="svg-axis" stroke-dasharray="4 5"/>`;
+  const LT = T[currentLang];
+  svg += `<text x="${W-36}" y="${cy-10}" text-anchor="end" font-size="11" font-weight="600" class="svg-lbl">${LT.tm_x_pos}</text>`;
+  svg += `<text x="36" y="${cy-10}" text-anchor="start" font-size="11" font-weight="600" class="svg-lbl">${LT.tm_x_neg}</text>`;
+  svg += `<text x="${cx+10}" y="36" text-anchor="start" font-size="11" font-weight="600" class="svg-lbl">${LT.tm_y_pos}</text>`;
+  svg += `<text x="${cx+10}" y="${H-28}" text-anchor="start" font-size="11" font-weight="600" class="svg-lbl">${LT.tm_y_neg}</text>`;
   top3.forEach(r=>{
     svg += `<line x1="${px(uv.x)}" y1="${py(uv.y)}" x2="${px(r.v.x)}" y2="${py(r.v.y)}" stroke="#22c55e" stroke-width="2" opacity="0.75"/>`;
   });
@@ -973,7 +986,7 @@ function renderMatrix(){
     h += `<tr><th title="${u[currentLang]}">${u.emoji}</th>`;
     VIDEOS.forEach(v=>{
       const key = `${u.id}-${v.id}`;
-      if (u.history.includes(v.id)) h += `<td class="hist">✓</td>`;
+      if (u.history.includes(v.id)) h += `<td class="hist" onclick="mxClickHist('${u.id}',${v.id})">✓</td>`;
       else if (mxPredicted[key] !== undefined){
         const s = mxPredicted[key];
         const col = s>=0.3?'#22c55e':(s>=0?'#fbbf24':'#ef4444');
@@ -992,8 +1005,9 @@ function renderVecTables(){
   const uRows = USERS.map(u=>{ const v=userVec(u); return `<tr><td>${u.emoji}</td><td>${r2(v.x)}</td><td>${r2(v.y)}</td></tr>`; }).join('');
   const vRows = VIDEOS.map(v=>`<tr><td>${TOPICS[v.topic].emoji}</td><td>${v.x}</td><td>${v.y}</td></tr>`).join('');
   c.innerHTML = `
-    <div class="vec-box"><h5>${L.m3_users_t} (6×2)</h5><table><tr><th></th><th>d₁</th><th>d₂</th></tr>${uRows}</table></div>
-    <div class="vec-box"><h5>${L.m3_vids_t} (12×2)</h5><table><tr><th></th><th>d₁</th><th>d₂</th></tr>${vRows}</table></div>`;
+    <div class="vec-box"><h5>${L.m3_users_t} (6×2)</h5><table><tr><th></th><th>${L.m3_ax1}</th><th>${L.m3_ax2}</th></tr>${uRows}</table></div>
+    <div class="vec-box"><h5>${L.m3_vids_t} (12×2)</h5><table><tr><th></th><th>${L.m3_ax1}</th><th>${L.m3_ax2}</th></tr>${vRows}</table></div>
+    <div class="note" style="flex-basis:100%;">${L.m3_axes_note}</div>`;
 }
 function mxFactorize(){
   mxFactorized = true;
@@ -1011,6 +1025,16 @@ function mxClick(uid, vid){
   const dc = document.getElementById('dotCalc');
   dc.style.display='';
   dc.innerHTML = T[currentLang].m3_calc(`${u.emoji}`, `${TOPICS[v.topic].emoji} ${v[currentLang]}`, r2(uv.x), r2(uv.y), v.x, v.y, s);
+}
+function mxClickHist(uid, vid){
+  if (!mxFactorized) return;
+  const u = USERS.find(x=>x.id===uid), v = byId[vid];
+  const uv = userVec(u);
+  const s = r2(uv.x*v.x + uv.y*v.y);
+  const dc = document.getElementById('dotCalc');
+  dc.style.display='';
+  dc.innerHTML = T[currentLang].m3_calc(`${u.emoji}`, `${TOPICS[v.topic].emoji} ${v[currentLang]}`, r2(uv.x), r2(uv.y), v.x, v.y, s);
+  document.getElementById('mxMsg').innerHTML = T[currentLang].m3_recon_note;
 }
 function renderMechAll(){
   popRenderCounters();
