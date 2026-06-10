@@ -11,16 +11,33 @@
   --accent-purple:#818cf8; --accent-violet:#c084fc; --accent-pink:#f472b6;
   --accent-indigo:#6366f1; --accent-bright:#8b5cf6;
   --success:#22c55e; --error:#ef4444; --info:#3b82f6; --warn:#fbbf24;
+  --bg-deep:#0f172a; --glass:rgba(30,41,59,.9); --cell-empty:#475569;
+  --shadow-card:0 4px 24px rgba(0,0,0,.3); --shadow-pop:0 4px 20px rgba(0,0,0,.4);
 }
+html[data-theme="light"]{
+  --bg-primary:#f4f6fa; --bg-card:#ffffff; --border:#d9e0ea; --border-hover:#b6c2d4;
+  --text-primary:#16233c; --text-secondary:#33415e; --text-muted:#5d6b85;
+  --accent-purple:#4f46e5; --accent-violet:#7c3aed; --accent-pink:#db2777;
+  --accent-indigo:#4f46e5; --accent-bright:#7c3aed;
+  --success:#16a34a; --error:#dc2626; --info:#2563eb; --warn:#b45309;
+  --bg-deep:#eaeef7; --glass:rgba(255,255,255,.92); --cell-empty:#b6c2d4;
+  --shadow-card:0 4px 24px rgba(23,37,84,.08); --shadow-pop:0 4px 20px rgba(23,37,84,.14);
+}
+html[data-theme="light"] .user-chip.active{color:var(--accent-indigo); box-shadow:0 0 12px rgba(79,70,229,.2);}
 *{box-sizing:border-box; margin:0; padding:0;}
 body{background:var(--bg-primary); color:var(--text-primary); font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif; line-height:1.65;}
 section{max-width:1080px; margin:0 auto; padding:3rem 1.5rem;}
 h2{color:var(--accent-violet); font-size:1.9rem; margin-bottom:1rem;}
 h3{color:var(--accent-pink); font-size:1.25rem; margin-bottom:.6rem;}
 p{color:var(--text-secondary);}
-.card{background:var(--bg-card); border-radius:16px; padding:2rem; margin:1.5rem 0; border:1px solid var(--border); box-shadow:0 4px 24px rgba(0,0,0,.3);}
-.lang-toggle{position:fixed; top:1.2rem; inset-inline-end:1.5rem; z-index:1000; display:flex; background:rgba(30,41,59,.9); backdrop-filter:blur(12px); border-radius:12px; border:1px solid var(--border); overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.card{background:var(--bg-card); border-radius:16px; padding:2rem; margin:1.5rem 0; border:1px solid var(--border); box-shadow:var(--shadow-card);}
+.lang-toggle{position:fixed; top:1.2rem; inset-inline-end:1.5rem; z-index:1000; display:flex; background:var(--glass); backdrop-filter:blur(12px); border-radius:12px; border:1px solid var(--border); overflow:hidden; box-shadow:var(--shadow-pop);}
 .lang-btn{background:transparent; color:var(--text-muted); border:none; padding:.6rem 1.1rem; cursor:pointer; font-size:.95rem; font-weight:600;}
+.theme-btn{background:transparent; border:none; border-inline-start:1px solid var(--border); color:var(--text-muted); padding:.6rem .9rem; cursor:pointer; font-size:1rem; line-height:1;}
+.svg-panel{fill:var(--bg-deep); stroke:var(--border);}
+.svg-axis{stroke:var(--border);}
+.svg-lbl{fill:var(--text-muted);}
+.svg-lbl-strong{fill:var(--text-primary);}
 .lang-btn.active{background:linear-gradient(135deg,var(--accent-indigo),var(--accent-bright)); color:#fff;}
 .hero{text-align:center; padding:4.5rem 1.5rem 2.5rem;}
 .hero h1{font-size:2.7rem; background:linear-gradient(135deg,var(--accent-purple),var(--accent-violet),var(--accent-pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:1rem;}
@@ -29,7 +46,7 @@ p{color:var(--text-secondary);}
 .stat{background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:.9rem 1.4rem; min-width:140px;}
 .stat .num{font-size:1.4rem; font-weight:700; color:var(--accent-purple);}
 .stat .lbl{font-size:.85rem; color:var(--text-muted);}
-.pill{display:inline-block; background:#0f172a; border:1px solid var(--border); color:var(--accent-purple); border-radius:999px; padding:.1rem .7rem; font-size:.82rem; font-weight:600; direction:ltr;}
+.pill{display:inline-block; background:var(--bg-deep); border:1px solid var(--border); color:var(--accent-purple); border-radius:999px; padding:.1rem .7rem; font-size:.82rem; font-weight:600; direction:ltr;}
 .analogy-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; margin-top:1.5rem;}
 .contender{border-top:4px solid var(--accent-indigo);}
 .contender .emoji{font-size:2.2rem;}
@@ -100,18 +117,18 @@ svg text{font-family:inherit;}
 @keyframes popIn{from{transform:scale(.4); opacity:0;} to{transform:scale(1); opacity:1;}}
 .preset-chips{display:flex; gap:.5rem; flex-wrap:wrap; margin:.6rem 0 1rem;}
 .tree-wrap{display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:1rem;}
-.tree-node{fill:#0f172a; stroke:#334155; stroke-width:1.5;}
+.tree-node{fill:var(--bg-deep); stroke:var(--border); stroke-width:1.5;}
 .tree-node.active{stroke:#22c55e; stroke-width:3; filter:drop-shadow(0 0 6px rgba(34,197,94,.5));}
-.tree-leaf{fill:#0f172a; stroke:#475569; stroke-width:1.5;}
+.tree-leaf{fill:var(--bg-deep); stroke:var(--border-hover); stroke-width:1.5;}
 .tree-leaf.active{stroke:#22c55e; stroke-width:3; fill:rgba(34,197,94,.12);}
-.tree-edge{stroke:#334155; stroke-width:2; fill:none;}
+.tree-edge{stroke:var(--border); stroke-width:2; fill:none;}
 .tree-edge.active{stroke:#22c55e; stroke-width:3;}
 .mech-final{text-align:center; font-size:1.1rem; font-weight:700; margin-top:.8rem; min-height:1.6rem; color:var(--accent-violet);}
 table.mx{border-collapse:collapse; margin:0 auto; font-size:.78rem;}
 table.mx td, table.mx th{border:1px solid var(--border); width:38px; height:34px; text-align:center; padding:0;}
 table.mx th{background:var(--bg-primary); color:var(--text-muted); font-size:1rem;}
 table.mx td.hist{color:var(--success); font-size:1rem;}
-table.mx td.empty{color:#475569; cursor:pointer;}
+table.mx td.empty{color:var(--cell-empty); cursor:pointer;}
 table.mx td.empty:hover{background:rgba(129,140,248,.15);}
 table.mx td.pred{font-size:.72rem; font-weight:700; cursor:default;}
 .vec-tables{display:flex; gap:1.2rem; flex-wrap:wrap; justify-content:center; margin-top:1rem;}
@@ -134,6 +151,7 @@ table.mx td.pred{font-size:.72rem; font-weight:700; cursor:default;}
 <div class="lang-toggle">
   <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
   <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עב</button>
+  <button class="theme-btn" id="btn-theme" onclick="toggleTheme()" title="Light / Dark">☀️</button>
 </div>
 
 <div class="hero">
@@ -612,6 +630,22 @@ he: {
 }
 };
 
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  try{ localStorage.setItem('guideTheme', t); }catch(e){}
+  const b = document.getElementById('btn-theme');
+  if(b) b.textContent = (t === 'light') ? '🌙' : '☀️';
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('guideTheme'); }catch(e){}
+  const param = new URLSearchParams(location.search).get('theme');
+  applyTheme(param || saved || 'light');
+})();
+
 let currentLang = 'he';
 function setLang(lang){
   currentLang = lang;
@@ -698,9 +732,9 @@ function renderALS(){
   const top3 = scored.slice(0,3);
   const W=640, H=430, cx=W/2, cy=H/2, sc=180;
   const px = x => cx + x*sc, py = y => cy - y*sc;
-  let svg = `<rect x="0" y="0" width="${W}" height="${H}" rx="14" fill="#0f172a" stroke="#334155"/>`;
-  svg += `<line x1="${cx}" y1="20" x2="${cx}" y2="${H-20}" stroke="#334155" stroke-dasharray="4 5"/>`;
-  svg += `<line x1="30" y1="${cy}" x2="${W-30}" y2="${cy}" stroke="#334155" stroke-dasharray="4 5"/>`;
+  let svg = `<rect x="0" y="0" width="${W}" height="${H}" rx="14" class="svg-panel"/>`;
+  svg += `<line x1="${cx}" y1="20" x2="${cx}" y2="${H-20}" class="svg-axis" stroke-dasharray="4 5"/>`;
+  svg += `<line x1="30" y1="${cy}" x2="${W-30}" y2="${cy}" class="svg-axis" stroke-dasharray="4 5"/>`;
   top3.forEach(r=>{
     svg += `<line x1="${px(uv.x)}" y1="${py(uv.y)}" x2="${px(r.v.x)}" y2="${py(r.v.y)}" stroke="#22c55e" stroke-width="2" opacity="0.75"/>`;
   });
@@ -708,10 +742,10 @@ function renderALS(){
     const inHist = u.history.includes(v.id);
     const isTop = top3.some(r=>r.v.id===v.id);
     svg += `<circle cx="${px(v.x)}" cy="${py(v.y)}" r="${isTop?11:8}" fill="${TOPICS[v.topic].color}" opacity="${inHist?0.45:0.95}" stroke="${isTop?'#22c55e':(inHist?'#94a3b8':'none')}" stroke-width="${isTop?3:1.5}" ${inHist?'stroke-dasharray="3 3"':''}/>`;
-    svg += `<text x="${px(v.x)}" y="${py(v.y)+22}" text-anchor="middle" font-size="10" fill="#94a3b8">${TOPICS[v.topic].emoji} ${v[currentLang].slice(0,16)}</text>`;
+    svg += `<text x="${px(v.x)}" y="${py(v.y)+22}" text-anchor="middle" font-size="10" class="svg-lbl">${TOPICS[v.topic].emoji} ${v[currentLang].slice(0,16)}</text>`;
   });
   svg += `<text x="${px(uv.x)}" y="${py(uv.y)+7}" text-anchor="middle" font-size="22">⭐</text>`;
-  svg += `<text x="${px(uv.x)}" y="${py(uv.y)-16}" text-anchor="middle" font-size="11" fill="#e2e8f0">${USERS.find(x=>x.id===activeUser).emoji} ${u[currentLang].split('—')[0].trim()}</text>`;
+  svg += `<text x="${px(uv.x)}" y="${py(uv.y)-16}" text-anchor="middle" font-size="11" class="svg-lbl-strong">${USERS.find(x=>x.id===activeUser).emoji} ${u[currentLang].split('—')[0].trim()}</text>`;
   document.getElementById('tasteMap').innerHTML = svg;
   const maxS = Math.max(...scored.map(r=>r.s), 0.001);
   document.getElementById('alsList').innerHTML = top3.map((r,i)=>
@@ -877,19 +911,19 @@ function treeSVG(idPrefix, rootKey, n2Key, leafYes, leafNoYes, leafNoNo){
   <path id="${idPrefix}-e-n2-yes"   class="tree-edge" d="M215 138 L187 180"/>
   <path id="${idPrefix}-e-n2-no"    class="tree-edge" d="M275 138 L292 180"/>
   <rect id="${idPrefix}-root" class="tree-node" x="60" y="22" width="200" height="38" rx="9"/>
-  <text x="160" y="46" text-anchor="middle" font-size="12" fill="#e2e8f0">${L[rootKey]}</text>
+  <text x="160" y="46" text-anchor="middle" font-size="12" class="svg-lbl-strong">${L[rootKey]}</text>
   <rect id="${idPrefix}-leaf-yes" class="tree-leaf" x="20" y="100" width="110" height="38" rx="9"/>
   <text x="75" y="124" text-anchor="middle" font-size="14" font-weight="700" fill="${leafYes>0?'#22c55e':'#ef4444'}">${leafYes>0?'+':''}${leafYes}</text>
   <rect id="${idPrefix}-n2" class="tree-node" x="160" y="100" width="150" height="38" rx="9"/>
-  <text x="235" y="118" text-anchor="middle" font-size="10.5" fill="#e2e8f0">${L[n2Key]}</text>
+  <text x="235" y="118" text-anchor="middle" font-size="10.5" class="svg-lbl-strong">${L[n2Key]}</text>
   <rect id="${idPrefix}-leaf-n2yes" class="tree-leaf" x="150" y="180" width="75" height="38" rx="9"/>
   <text x="187" y="204" text-anchor="middle" font-size="13" font-weight="700" fill="${leafNoYes>0?'#22c55e':'#ef4444'}">${leafNoYes>0?'+':''}${leafNoYes}</text>
   <rect id="${idPrefix}-leaf-n2no" class="tree-leaf" x="237" y="180" width="75" height="38" rx="9"/>
   <text x="274" y="204" text-anchor="middle" font-size="13" font-weight="700" fill="${leafNoNo>0?'#22c55e':'#ef4444'}">${leafNoNo>0?'+':''}${leafNoNo}</text>
-  <text x="80" y="84" text-anchor="middle" font-size="10" fill="#94a3b8">${L.yes_lbl}</text>
-  <text x="238" y="84" text-anchor="middle" font-size="10" fill="#94a3b8">${L.no_lbl}</text>
-  <text x="188" y="166" text-anchor="middle" font-size="10" fill="#94a3b8">${L.yes_lbl}</text>
-  <text x="296" y="166" text-anchor="middle" font-size="10" fill="#94a3b8">${L.no_lbl}</text>`;
+  <text x="80" y="84" text-anchor="middle" font-size="10" class="svg-lbl">${L.yes_lbl}</text>
+  <text x="238" y="84" text-anchor="middle" font-size="10" class="svg-lbl">${L.no_lbl}</text>
+  <text x="188" y="166" text-anchor="middle" font-size="10" class="svg-lbl">${L.yes_lbl}</text>
+  <text x="296" y="166" text-anchor="middle" font-size="10" class="svg-lbl">${L.no_lbl}</text>`;
 }
 function renderTreePresets(){
   const c = document.getElementById('treePresets');
