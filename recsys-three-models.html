@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Models, One Judge — Recommendation Systems Visual Guide</title>
+<style>
+:root{
+  --bg-primary:#0f172a; --bg-card:#1e293b; --border:#334155; --border-hover:#475569;
+  --text-primary:#e2e8f0; --text-secondary:#cbd5e1; --text-muted:#94a3b8;
+  --accent-purple:#818cf8; --accent-violet:#c084fc; --accent-pink:#f472b6;
+  --accent-indigo:#6366f1; --accent-bright:#8b5cf6;
+  --success:#22c55e; --error:#ef4444; --info:#3b82f6; --warn:#fbbf24;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{background:var(--bg-primary); color:var(--text-primary); font-family:'Segoe UI',system-ui,-apple-system,Arial,sans-serif; line-height:1.65;}
+section{max-width:1080px; margin:0 auto; padding:3rem 1.5rem;}
+h2{color:var(--accent-violet); font-size:1.9rem; margin-bottom:1rem;}
+h3{color:var(--accent-pink); font-size:1.25rem; margin-bottom:.6rem;}
+p{color:var(--text-secondary);}
+.card{background:var(--bg-card); border-radius:16px; padding:2rem; margin:1.5rem 0; border:1px solid var(--border); box-shadow:0 4px 24px rgba(0,0,0,.3);}
+.lang-toggle{position:fixed; top:1.2rem; inset-inline-end:1.5rem; z-index:1000; display:flex; background:rgba(30,41,59,.9); backdrop-filter:blur(12px); border-radius:12px; border:1px solid var(--border); overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,.4);}
+.lang-btn{background:transparent; color:var(--text-muted); border:none; padding:.6rem 1.1rem; cursor:pointer; font-size:.95rem; font-weight:600;}
+.lang-btn.active{background:linear-gradient(135deg,var(--accent-indigo),var(--accent-bright)); color:#fff;}
+.hero{text-align:center; padding:4.5rem 1.5rem 2.5rem;}
+.hero h1{font-size:2.7rem; background:linear-gradient(135deg,var(--accent-purple),var(--accent-violet),var(--accent-pink)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:1rem;}
+.hero p{max-width:760px; margin:0 auto; font-size:1.15rem;}
+.stats-strip{display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:2rem;}
+.stat{background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:.9rem 1.4rem; min-width:140px;}
+.stat .num{font-size:1.4rem; font-weight:700; color:var(--accent-purple);}
+.stat .lbl{font-size:.85rem; color:var(--text-muted);}
+.pill{display:inline-block; background:#0f172a; border:1px solid var(--border); color:var(--accent-purple); border-radius:999px; padding:.1rem .7rem; font-size:.82rem; font-weight:600; direction:ltr;}
+.analogy-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1.2rem; margin-top:1.5rem;}
+.contender{border-top:4px solid var(--accent-indigo);}
+.contender .emoji{font-size:2.2rem;}
+.contender ul{margin:.7rem 1.2rem 0; color:var(--text-secondary);}
+.contender li{margin:.35rem 0;}
+.tag-good{color:var(--success); font-weight:600;}
+.tag-bad{color:var(--error); font-weight:600;}
+.tabs{display:flex; gap:.5rem; flex-wrap:wrap; margin-bottom:1.2rem;}
+.tab-btn{background:var(--bg-primary); border:1px solid var(--border); color:var(--text-secondary); border-radius:10px; padding:.6rem 1.2rem; cursor:pointer; font-size:.97rem; font-weight:600;}
+.tab-btn.active{background:linear-gradient(135deg,var(--accent-indigo),var(--accent-bright)); color:#fff; border-color:transparent;}
+.user-chips{display:flex; gap:.5rem; flex-wrap:wrap; margin:.8rem 0 1.2rem;}
+.user-chip{background:var(--bg-primary); border:1px solid var(--border); border-radius:999px; padding:.35rem .9rem; cursor:pointer; color:var(--text-secondary); font-size:.92rem;}
+.user-chip.active{border-color:var(--accent-purple); color:#fff; box-shadow:0 0 12px rgba(129,140,248,.35);}
+.rank-list{display:flex; flex-direction:column; gap:.5rem; margin-top:1rem;}
+.rank-row{display:flex; align-items:center; gap:.8rem; background:var(--bg-primary); border:1px solid var(--border); border-radius:10px; padding:.55rem .9rem;}
+.rank-row .pos{width:1.6rem; height:1.6rem; border-radius:50%; background:var(--accent-indigo); color:#fff; display:flex; align-items:center; justify-content:center; font-size:.85rem; font-weight:700; flex-shrink:0;}
+.rank-row .bar{height:8px; border-radius:4px; background:linear-gradient(90deg,var(--accent-indigo),var(--accent-bright)); flex-shrink:0;}
+.rank-row.true-item{border-color:var(--success); box-shadow:0 0 12px rgba(34,197,94,.25);}
+.rank-row .vname{flex:1; min-width:0; font-size:.95rem;}
+.rank-row .score{color:var(--text-muted); font-size:.85rem; direction:ltr;}
+.sliders{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.2rem; margin:1rem 0;}
+.slider-box{background:var(--bg-primary); border:1px solid var(--border); border-radius:12px; padding:1rem;}
+.slider-box label{display:flex; justify-content:space-between; font-size:.92rem; color:var(--text-secondary); margin-bottom:.4rem;}
+.slider-box input[type=range]{width:100%; accent-color:var(--accent-bright);}
+.note{background:rgba(99,102,241,.08); border:1px solid rgba(129,140,248,.35); border-radius:12px; padding:.9rem 1.2rem; margin-top:1rem; font-size:.93rem; color:var(--text-secondary);}
+.note.warn{background:rgba(251,191,36,.07); border-color:rgba(251,191,36,.4);}
+.note.good{background:rgba(34,197,94,.07); border-color:rgba(34,197,94,.4);}
+.btn-primary{background:linear-gradient(135deg,var(--accent-indigo),var(--accent-bright)); color:#fff; padding:.7rem 1.5rem; border-radius:10px; border:none; font-size:1rem; font-weight:600; cursor:pointer; transition:transform .15s;}
+.btn-primary:hover{transform:scale(1.05); box-shadow:0 0 20px rgba(99,102,241,.4);}
+.btn-primary:disabled{opacity:.4; cursor:not-allowed; transform:none; box-shadow:none;}
+.btn-secondary{background:var(--bg-primary); color:var(--text-secondary); border:1px solid var(--border); padding:.7rem 1.5rem; border-radius:10px; font-size:1rem; font-weight:600; cursor:pointer;}
+.controls{display:flex; gap:.8rem; flex-wrap:wrap; margin-top:1.4rem;}
+.step-info{background:var(--bg-primary); border:1px dashed var(--border-hover); border-radius:12px; padding:1rem 1.2rem; margin-top:1.2rem; color:var(--text-secondary); font-size:.97rem; min-height:3.4rem;}
+.history-row{display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; margin-top:1rem;}
+.vid-card{background:var(--bg-primary); border:1px solid var(--border); border-radius:10px; padding:.5rem .7rem; font-size:.85rem; text-align:center; min-width:96px;}
+.vid-card .vemoji{font-size:1.3rem;}
+.vid-card.held{border-color:var(--warn);}
+.vid-card.hidden-item{border-style:dashed; border-color:var(--warn); color:var(--warn); font-size:1.3rem; font-weight:700; display:flex; align-items:center; justify-content:center; min-height:64px;}
+.cand-grid{display:flex; gap:.5rem; flex-wrap:wrap; margin-top:1rem;}
+.cand{background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; padding:.35rem .55rem; font-size:1.1rem;}
+.cand.reveal-true{border-color:var(--success); box-shadow:0 0 10px rgba(34,197,94,.4);}
+.judge-cols{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1rem; margin-top:1.2rem;}
+.judge-col{background:var(--bg-primary); border:1px solid var(--border); border-radius:12px; padding:1rem;}
+.judge-col h4{text-align:center; color:var(--accent-purple); margin-bottom:.6rem; font-size:1rem;}
+.judge-col .mini-row{display:flex; align-items:center; gap:.5rem; border-bottom:1px solid var(--border); padding:.3rem 0; font-size:.85rem;}
+.judge-col .mini-row:last-child{border-bottom:none;}
+.judge-col .mini-pos{color:var(--text-muted); width:1.2rem; flex-shrink:0;}
+.judge-col .mini-row.true-mini{color:var(--success); font-weight:700;}
+.verdict{text-align:center; margin-top:.7rem; font-size:1.05rem; font-weight:700;}
+.lb-bars{margin-top:1.4rem; display:flex; flex-direction:column; gap:1rem;}
+.lb-row{display:flex; align-items:center; gap:1rem;}
+.lb-name{width:200px; flex-shrink:0; font-size:.95rem;}
+.lb-track{flex:1; background:var(--bg-primary); border:1px solid var(--border); border-radius:8px; height:30px; overflow:hidden;}
+.lb-fill{height:100%; width:0; border-radius:8px; background:linear-gradient(90deg,var(--accent-indigo),var(--accent-pink)); transition:width 1s ease; display:flex; align-items:center; justify-content:flex-end; padding-inline-end:.6rem; font-size:.85rem; font-weight:700; color:#fff;}
+.user-results{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:.7rem; margin-top:1.2rem;}
+.ur-cell{background:var(--bg-primary); border:1px solid var(--border); border-radius:10px; padding:.6rem; font-size:.85rem; text-align:center;}
+table.cmp{width:100%; border-collapse:collapse; margin-top:1.2rem; font-size:.93rem;}
+table.cmp th, table.cmp td{border:1px solid var(--border); padding:.65rem .8rem; text-align:start; color:var(--text-secondary);}
+table.cmp th{background:var(--bg-primary); color:var(--accent-purple);}
+.takeaways li{margin:.7rem 0; color:var(--text-secondary);}
+.takeaways{margin:1rem 1.4rem 0;}
+footer{text-align:center; padding:2.5rem 1rem; color:var(--text-muted); font-size:.9rem; border-top:1px solid var(--border); margin-top:3rem;}
+svg text{font-family:inherit;}
+@media (max-width:768px){
+  .hero h1{font-size:2rem;}
+  section{padding:2.2rem 1rem;}
+  .lang-toggle{top:.8rem; inset-inline-end:.8rem;}
+  .lang-btn{padding:.5rem .8rem; font-size:.85rem;}
+  .lb-name{width:120px;}
+}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button class="lang-btn" id="btn-en" onclick="setLang('en')">EN</button>
+  <button class="lang-btn active" id="btn-he" onclick="setLang('he')">עב</button>
+</div>
+
+<div class="hero">
+  <h1 data-i18n="hero_title">Three Models, One Judge</h1>
+  <p data-i18n="hero_subtitle">How a recommendation system decides what you'll see — and how we measure which model does it best.</p>
+  <div class="stats-strip">
+    <div class="stat"><div class="num">100,000</div><div class="lbl" data-i18n="stat_users">users</div></div>
+    <div class="stat"><div class="num">19,738</div><div class="lbl" data-i18n="stat_videos">short videos</div></div>
+    <div class="stat"><div class="num">719,405</div><div class="lbl" data-i18n="stat_inter">interactions</div></div>
+    <div class="stat"><div class="num">0.036%</div><div class="lbl" data-i18n="stat_density">matrix density</div></div>
+  </div>
+  <p style="margin-top:.8rem; font-size:.85rem; color:var(--text-muted);" data-i18n="stat_caption">MicroLens-100K — a real short-video feed dataset</p>
+</div>
+
+<section>
+  <h2 data-i18n="task_title">The task: rank, don't classify</h2>
+  <div class="card">
+    <p data-i18n="task_p1">A feed never asks "is this pair positive?". Every time a user opens the app, it asks one question: <strong>out of ~20,000 videos, which 10 do we show right now?</strong> That is a ranking problem. Three very different "brains" can answer it:</p>
+    <div class="analogy-grid">
+      <div class="card contender" style="margin:0; border-top-color:var(--info);">
+        <div class="emoji">🎧</div>
+        <h3 data-i18n="an1_t">The DJ — Popularity</h3>
+        <p data-i18n="an1_p">Plays the biggest hits for the whole party. Doesn't know you — but hits are hits, and most people are happy most of the time.</p>
+      </div>
+      <div class="card contender" style="margin:0; border-top-color:var(--warn);">
+        <div class="emoji">🧮</div>
+        <h3 data-i18n="an2_t">The Analyst — Features</h3>
+        <p data-i18n="an2_p">Looks at measurable signals: how popular, how fresh, how similar to what you watched. Learns rules that connect signals to engagement.</p>
+      </div>
+      <div class="card contender" style="margin:0; border-top-color:var(--success);">
+        <div class="emoji">🫂</div>
+        <h3 data-i18n="an3_t">The Close Friend — Latent Taste</h3>
+        <p data-i18n="an3_p">Never asks for your profile. Just watches what you (and people like you) do, and builds an intuition for your taste.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 data-i18n="cont_title">Meet the three contenders</h2>
+
+  <div class="card contender" style="border-top-color:var(--info);">
+    <h3><span data-i18n="c1_t">1 · Popularity Baseline</span> <span class="pill">Popularity Baseline</span></h3>
+    <p data-i18n="c1_how"><strong>How it thinks:</strong> count views per video in the training window, recommend the most-viewed to everyone. No learning at all.</p>
+    <ul>
+      <li data-i18n="c1_s"><span class="tag-good">Strength:</span> brutally hard to beat on sparse data — most interactions really do go to popular items. And it works for brand-new users.</li>
+      <li data-i18n="c1_w"><span class="tag-bad">Weakness:</span> everyone gets the same feed. Zero personalization, and the long tail never gets shown.</li>
+      <li data-i18n="c1_role"><strong>Role in our story:</strong> the bar. A model that can't beat the DJ doesn't deserve production.</li>
+    </ul>
+  </div>
+
+  <div class="card contender" style="border-top-color:var(--warn);">
+    <h3><span data-i18n="c2_t">2 · Feature Model</span> <span class="pill">LightGBM</span></h3>
+    <p data-i18n="c2_how"><strong>How it thinks:</strong> each (user, video) pair becomes a row of numbers — video popularity, video freshness, user activity, topic match. Gradient-boosted trees learn which combinations predict engagement, by asking thousands of tiny if/else questions on the features.</p>
+    <ul>
+      <li data-i18n="c2_s"><span class="tag-good">Strength:</span> can use ANY signal you can compute — including content signals that solve cold-start for new videos.</li>
+      <li data-i18n="c2_w"><span class="tag-bad">Weakness:</span> only as good as the features you hand-craft. Taste it can't see in a feature, it can't learn.</li>
+      <li data-i18n="c2_leak"><span class="tag-bad">Trap:</span> every feature must be computed from the training window only — otherwise the future leaks into training <span class="pill">Leakage</span>.</li>
+    </ul>
+  </div>
+
+  <div class="card contender" style="border-top-color:var(--success);">
+    <h3><span data-i18n="c3_t">3 · Latent Taste Model</span> <span class="pill">ALS · Matrix Factorization</span></h3>
+    <p data-i18n="c3_how"><strong>How it thinks:</strong> take the giant user×video table (100K × 19,738, almost all empty) and squeeze it into two small tables: every user gets a short "taste vector", every video gets one too. A match score is just the dot product between them. The vectors are <em>learned from interactions alone</em> — nobody defines what the dimensions mean.</p>
+    <ul>
+      <li data-i18n="c3_s"><span class="tag-good">Strength:</span> true personalization. Finds taste patterns no hand-crafted feature describes — the classic "Netflix" recommender.</li>
+      <li data-i18n="c3_w"><span class="tag-bad">Weakness:</span> a new user or new video has no interactions, so it has no vector — cold start is its blind spot.</li>
+      <li data-i18n="c3_role"><strong>Role in our story:</strong> the first model that genuinely learns personal taste, not global rules.</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2 data-i18n="play_title">Playground: how each brain decides</h2>
+  <p data-i18n="play_sub">A tiny toy feed: 12 workplace videos in 4 topics, 6 employees. Pick a model, pick a user, and watch the ranking logic change.</p>
+
+  <div class="card">
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-pop" onclick="setTab('pop')" data-i18n="tab_pop">🎧 Popularity</button>
+      <button class="tab-btn" id="tab-feat" onclick="setTab('feat')" data-i18n="tab_feat">🧮 Features</button>
+      <button class="tab-btn" id="tab-als" onclick="setTab('als')" data-i18n="tab_als">🫂 Latent Taste</button>
+    </div>
+
+    <div data-i18n="play_user_label" style="font-size:.9rem; color:var(--text-muted);">Choose a user:</div>
+    <div class="user-chips" id="userChips"></div>
+
+    <div id="pane-pop">
+      <div class="rank-list" id="popList"></div>
+      <div class="note warn" data-i18n="pop_note">Try switching users — <strong>nothing changes</strong>. That's the whole point of a popularity baseline: one feed for everyone.</div>
+    </div>
+
+    <div id="pane-feat" style="display:none;">
+      <div class="sliders">
+        <div class="slider-box">
+          <label><span data-i18n="sl_pop">Popularity weight</span><span id="wPopVal" style="direction:ltr;">45</span></label>
+          <input type="range" min="0" max="100" value="45" id="wPop" oninput="renderFeat()">
+        </div>
+        <div class="slider-box">
+          <label><span data-i18n="sl_fresh">Freshness weight</span><span id="wFreshVal" style="direction:ltr;">25</span></label>
+          <input type="range" min="0" max="100" value="25" id="wFresh" oninput="renderFeat()">
+        </div>
+        <div class="slider-box">
+          <label><span data-i18n="sl_match">Topic-match weight</span><span id="wMatchVal" style="direction:ltr;">30</span></label>
+          <input type="range" min="0" max="100" value="30" id="wMatch" oninput="renderFeat()">
+        </div>
+      </div>
+      <div class="rank-list" id="featList"></div>
+      <div class="note" data-i18n="feat_note">You are moving the weights by hand — the real <span class="pill">LightGBM</span> learns the equivalent of these weights (and far more complex rules) from the data itself. Notice: same sliders, different user ⇒ different feed. Personalization through the topic-match feature.</div>
+    </div>
+
+    <div id="pane-als" style="display:none;">
+      <div style="overflow-x:auto;"><svg id="tasteMap" width="640" height="430" viewBox="0 0 640 430" style="max-width:100%; display:block; margin:0 auto;"></svg></div>
+      <div class="rank-list" id="alsList"></div>
+      <div class="note" data-i18n="als_note">Every dot is a video, every ⭐ is a user — positioned by their <strong>taste vector</strong> (here 2-D for drawing; real models use 32–128 dimensions). Nobody labeled the axes: the model invented this space from interactions alone. Score = dot product — similar direction means a likely match.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 data-i18n="judge_title">The Judge Machine: Hit@10</h2>
+  <p data-i18n="judge_sub">Three models, three opinions. Who's right? We can't ask the future — but we can <em>hide</em> a piece of the past and check who finds it.</p>
+
+  <div class="card">
+    <h3 data-i18n="judge_proto_t">The protocol (what we'll run on the real data)</h3>
+    <ul class="takeaways">
+      <li data-i18n="proto_1"><strong>1 · Hide:</strong> for every user, hide the <em>last</em> video they watched (by timestamp) <span class="pill">Leave-Last-Out</span>. Last-by-time = a time split: train on the past, test on the future.</li>
+      <li data-i18n="proto_2"><strong>2 · Candidates:</strong> mix the hidden video with 99 videos the user never watched <span class="pill">1 + 99</span>. Ranking against all 19,738 is expensive — a sample gives the same model comparison.</li>
+      <li data-i18n="proto_3"><strong>3 · Rank:</strong> the model orders all 100 candidates. It has no idea which one is real.</li>
+      <li data-i18n="proto_4"><strong>4 · Score:</strong> real video in the top-10? That's a hit. <span class="pill">Hit@10</span> = % of users with a hit. Why 10? That's roughly one For-You screen.</li>
+    </ul>
+    <div class="note warn" data-i18n="proto_note">In the demo below the numbers shrink so you can see everything: ~10 candidates instead of 100, top-3 instead of top-10. Same machine, smaller wheels.</div>
+  </div>
+
+  <div class="card">
+    <h3 data-i18n="demo_t">Step through one user</h3>
+    <div data-i18n="play_user_label2" style="font-size:.9rem; color:var(--text-muted);">Choose a user:</div>
+    <div class="user-chips" id="judgeChips"></div>
+
+    <div id="judgeHistory" class="history-row"></div>
+    <div id="judgeCands" class="cand-grid"></div>
+    <div id="judgeCols" class="judge-cols"></div>
+
+    <div class="step-info" id="stepInfo"></div>
+    <div class="controls">
+      <button class="btn-primary" id="btnStep" onclick="judgeStep()" data-i18n="btn_step">Step ▶</button>
+      <button class="btn-secondary" onclick="judgeReset()" data-i18n="btn_reset">Reset</button>
+      <button class="btn-primary" id="btnRunAll" onclick="runAll()" data-i18n="btn_runall">🏁 Run all 6 users</button>
+    </div>
+
+    <div id="leaderboard" style="display:none;">
+      <h3 style="margin-top:1.8rem;" data-i18n="lb_t">The leaderboard (computed live, Hit@3 on the toy data)</h3>
+      <div class="lb-bars" id="lbBars"></div>
+      <div class="user-results" id="userResults"></div>
+      <div class="note good" id="lbInsight" data-i18n="lb_insight"></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2 data-i18n="cmp_title">Side by side</h2>
+  <div class="card" style="overflow-x:auto;">
+    <table class="cmp">
+      <thead><tr>
+        <th></th>
+        <th data-i18n="cmp_h1">🎧 Popularity</th>
+        <th data-i18n="cmp_h2">🧮 LightGBM</th>
+        <th data-i18n="cmp_h3">🫂 ALS</th>
+      </tr></thead>
+      <tbody>
+        <tr><th data-i18n="cmp_r1">What it learns</th><td data-i18n="cmp_r1a">Nothing — it counts</td><td data-i18n="cmp_r1b">Rules over hand-crafted features</td><td data-i18n="cmp_r1c">Latent taste vectors from interactions</td></tr>
+        <tr><th data-i18n="cmp_r2">Personalized?</th><td data-i18n="cmp_r2a">No — one feed for all</td><td data-i18n="cmp_r2b">Partly — via user features</td><td data-i18n="cmp_r2c">Fully — per-user vector</td></tr>
+        <tr><th data-i18n="cmp_r3">New user (cold start)</th><td data-i18n="cmp_r3a">Works fine</td><td data-i18n="cmp_r3b">Works if user features exist</td><td data-i18n="cmp_r3c">Blind — no vector yet</td></tr>
+        <tr><th data-i18n="cmp_r4">New video (cold start)</th><td data-i18n="cmp_r4a">Invisible until viewed</td><td data-i18n="cmp_r4b">Works via content features</td><td data-i18n="cmp_r4c">Blind — no vector yet</td></tr>
+        <tr><th data-i18n="cmp_r5">Main risk</th><td data-i18n="cmp_r5a">Popularity bias, no tail</td><td data-i18n="cmp_r5b">Feature leakage from the future</td><td data-i18n="cmp_r5c">Misses drift; cold start</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2 data-i18n="tk_title">Key takeaways</h2>
+  <div class="card">
+    <ul class="takeaways">
+      <li data-i18n="tk_1">🏗️ <strong>Build the judge first.</strong> Models are cheap once the evaluation harness (time split + Hit@10) exists. Without it, a leaderboard is just a list of opinions.</li>
+      <li data-i18n="tk_2">🎧 <strong>The baseline is the bar, not a ritual.</strong> In sparse implicit data, popularity is famously hard to beat. A learned model that loses to it — that's a finding, not a failure.</li>
+      <li data-i18n="tk_3">📏 <strong>Rank, don't classify.</strong> Your 50/50 training set is a construction; the world is 0.036% dense. Accuracy on the sampled set says little — Hit@10 asks the production question.</li>
+      <li data-i18n="tk_4">⏳ <strong>Time is the only honest split.</strong> Leave-last-out per user trains on the past and tests on the future. Every feature is computed from the training window only — or the future leaks in.</li>
+      <li data-i18n="tk_5">🫂 <strong>ALS = taste as geometry.</strong> Users and videos become vectors in the same space; a recommendation is a dot product. Learned from behavior alone — and therefore blind to anything with no behavior yet.</li>
+      <li data-i18n="tk_6">🔍 <strong>The leaderboard is where error analysis begins.</strong> Who did each model miss — cold users? mainstream drift? long-tail videos? That "why" is the next meeting's whole story.</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  <span data-i18n="footer_txt">Built for the Loof-style personalization track · Bonim Bina mentoring</span>
+</footer>
+
+<script>
+/* ─────────────── Toy data (verified: pop 3/6, feat 5/6, als 4/6 at Hit@3) ─────────────── */
+const TOPICS = {
+  tech:    {color:'#818cf8', emoji:'💻', en:'Tech',     he:'טכנולוגיה'},
+  sales:   {color:'#f472b6', emoji:'📈', en:'Sales',    he:'מכירות'},
+  wellness:{color:'#22c55e', emoji:'🧘', en:'Wellness', he:'רווחה'},
+  finance: {color:'#fbbf24', emoji:'💰', en:'Finance',  he:'פיננסים'},
+};
+const VIDEOS = [
+  {id:1,  topic:'tech',     views:980, days:55, x: 0.80, y: 0.55, en:'AI Tools Overview',    he:'סקירת כלי AI'},
+  {id:2,  topic:'tech',     views:310, days:10, x: 0.70, y: 0.70, en:'Git for Analysts',     he:'Git לאנליסטים'},
+  {id:3,  topic:'tech',     views:150, days: 4, x: 0.85, y: 0.40, en:'SQL Window Functions', he:'פונקציות חלון ב-SQL'},
+  {id:4,  topic:'sales',    views:870, days:70, x:-0.75, y: 0.60, en:'Q3 Wins Story',        he:'סיפורי הצלחה Q3'},
+  {id:5,  topic:'sales',    views:420, days:15, x:-0.60, y: 0.75, en:'Opening a Sales Call', he:'פתיחת שיחת מכירה'},
+  {id:6,  topic:'sales',    views:200, days: 6, x:-0.80, y: 0.45, en:'Handling Objections',  he:'טיפול בהתנגדויות'},
+  {id:7,  topic:'wellness', views:640, days:30, x:-0.65, y:-0.65, en:'Desk Stretches',       he:'מתיחות ליד השולחן'},
+  {id:8,  topic:'wellness', views:180, days: 8, x:-0.55, y:-0.80, en:'Beating Burnout',      he:'מנצחים שחיקה'},
+  {id:9,  topic:'wellness', views: 90, days: 3, x:-0.75, y:-0.55, en:'Focus Hacks',          he:'טריקים לריכוז'},
+  {id:10, topic:'finance',  views:720, days:45, x: 0.70, y:-0.60, en:'Reading a P&L',        he:'איך קוראים דוח רווח והפסד'},
+  {id:11, topic:'finance',  views:260, days:12, x: 0.60, y:-0.75, en:'Team Budgeting',       he:'תקציב לצוות'},
+  {id:12, topic:'finance',  views:120, days: 5, x: 0.80, y:-0.45, en:'Expense Reports 101',  he:'החזרי הוצאות למתחילים'},
+];
+const byId = Object.fromEntries(VIDEOS.map(v=>[v.id,v]));
+const USERS = [
+  {id:'A', emoji:'👩‍💻', en:'Dana — tech fan',            he:'דנה — חובבת טכנולוגיה',      history:[1,2],    heldOut:3},
+  {id:'B', emoji:'🧑‍💼', en:'Yossi — sales fan',          he:'יוסי — איש מכירות',           history:[4,6],    heldOut:5},
+  {id:'C', emoji:'🧘‍♀️', en:'Noa — wellness, drifting',   he:'נועה — רווחה, גולשת למיינסטרים', history:[7,8],    heldOut:1},
+  {id:'D', emoji:'📊',   en:'Avi — tech + finance',       he:'אבי — טכנולוגיה ופיננסים',    history:[3,12],   heldOut:10},
+  {id:'E', emoji:'🌀',   en:'Michal — a bit of everything', he:'מיכל — קצת מהכל',           history:[2,5,11], heldOut:1},
+  {id:'F', emoji:'🆕',   en:'Ron — brand new employee',   he:'רון — עובד חדש לגמרי',        history:[12],     heldOut:7},
+];
+
+const maxViews = Math.max(...VIDEOS.map(v=>v.views));
+const freshOf = v => 1 - v.days/100;
+const popNorm = v => v.views/maxViews;
+
+function scorePop(u, v){ return v.views/1000; }
+function featWeights(){
+  const g = id => document.getElementById(id) ? +document.getElementById(id).value : null;
+  return {pop: g('wPop') ?? 45, fresh: g('wFresh') ?? 25, match: g('wMatch') ?? 30};
+}
+const JUDGE_W = {pop:45, fresh:25, match:30};  // frozen weights for the judge (sliders affect playground only)
+function scoreFeat(u, v, w){
+  const hist = u.history.map(id=>byId[id]);
+  const match = hist.length ? hist.filter(h=>h.topic===v.topic).length/hist.length : 0;
+  return (w.pop*popNorm(v) + w.fresh*freshOf(v) + w.match*match)/100;
+}
+function userVec(u){
+  const hist = u.history.map(id=>byId[id]);
+  return {x: hist.reduce((s,h)=>s+h.x,0)/hist.length, y: hist.reduce((s,h)=>s+h.y,0)/hist.length};
+}
+function scoreALS(u, v){ const uv=userVec(u); return uv.x*v.x + uv.y*v.y; }
+
+function judgeUser(u, scorer){
+  const cands = VIDEOS.filter(v=>!u.history.includes(v.id));
+  const ranked = cands.map(v=>({v, s:scorer(u,v)})).sort((a,b)=>b.s-a.s);
+  const rank = ranked.findIndex(r=>r.v.id===u.heldOut)+1;
+  return {rank, hit: rank<=3, ranked};
+}
+const MODELS = [
+  {key:'pop',  scorer: (u,v)=>scorePop(u,v),          color:'var(--info)'},
+  {key:'feat', scorer: (u,v)=>scoreFeat(u,v,JUDGE_W), color:'var(--warn)'},
+  {key:'als',  scorer: (u,v)=>scoreALS(u,v),          color:'var(--success)'},
+];
+
+/* ─────────────── i18n ─────────────── */
+const T = {
+en: {
+  hero_title:'Three Models, One Judge',
+  hero_subtitle:'How a recommendation system decides what you\'ll see — and how we honestly measure which model does it best.',
+  stat_users:'users', stat_videos:'short videos', stat_inter:'interactions', stat_density:'matrix density',
+  stat_caption:'MicroLens-100K — a real short-video feed dataset',
+  task_title:'The task: rank, don\'t classify',
+  task_p1:'A feed never asks "is this pair positive?". Every time a user opens the app, it asks one question: <strong>out of ~20,000 videos, which 10 do we show right now?</strong> That is a ranking problem. Three very different "brains" can answer it:',
+  an1_t:'The DJ — Popularity', an1_p:'Plays the biggest hits for the whole party. Doesn\'t know you — but hits are hits, and most people are happy most of the time.',
+  an2_t:'The Analyst — Features', an2_p:'Looks at measurable signals: how popular, how fresh, how similar to what you watched. Learns rules that connect signals to engagement.',
+  an3_t:'The Close Friend — Latent Taste', an3_p:'Never asks for your profile. Just watches what you (and people like you) do, and builds an intuition for your taste.',
+  cont_title:'Meet the three contenders',
+  c1_t:'1 · Popularity Baseline',
+  c1_how:'<strong>How it thinks:</strong> count views per video in the training window, recommend the most-viewed to everyone. No learning at all.',
+  c1_s:'<span class="tag-good">Strength:</span> brutally hard to beat on sparse data — most interactions really do go to popular items. And it works for brand-new users.',
+  c1_w:'<span class="tag-bad">Weakness:</span> everyone gets the same feed. Zero personalization, and the long tail never gets shown.',
+  c1_role:'<strong>Role in our story:</strong> the bar. A model that can\'t beat the DJ doesn\'t deserve production.',
+  c2_t:'2 · Feature Model',
+  c2_how:'<strong>How it thinks:</strong> each (user, video) pair becomes a row of numbers — video popularity, video freshness, user activity, topic match. Gradient-boosted trees learn which combinations predict engagement, by asking thousands of tiny if/else questions on the features.',
+  c2_s:'<span class="tag-good">Strength:</span> can use ANY signal you can compute — including content signals that solve cold-start for new videos.',
+  c2_w:'<span class="tag-bad">Weakness:</span> only as good as the features you hand-craft. Taste it can\'t see in a feature, it can\'t learn.',
+  c2_leak:'<span class="tag-bad">Trap:</span> every feature must be computed from the training window only — otherwise the future leaks into training <span class="pill">Leakage</span>.',
+  c3_t:'3 · Latent Taste Model',
+  c3_how:'<strong>How it thinks:</strong> take the giant user×video table (100K × 19,738, almost all empty) and squeeze it into two small tables: every user gets a short "taste vector", every video gets one too. A match score is just the dot product between them. The vectors are <em>learned from interactions alone</em> — nobody defines what the dimensions mean.',
+  c3_s:'<span class="tag-good">Strength:</span> true personalization. Finds taste patterns no hand-crafted feature describes — the classic "Netflix" recommender.',
+  c3_w:'<span class="tag-bad">Weakness:</span> a new user or new video has no interactions, so it has no vector — cold start is its blind spot.',
+  c3_role:'<strong>Role in our story:</strong> the first model that genuinely learns personal taste, not global rules.',
+  play_title:'Playground: how each brain decides',
+  play_sub:'A tiny toy feed: 12 workplace videos in 4 topics, 6 employees. Pick a model, pick a user, and watch the ranking logic change.',
+  tab_pop:'🎧 Popularity', tab_feat:'🧮 Features', tab_als:'🫂 Latent Taste',
+  play_user_label:'Choose a user:', play_user_label2:'Choose a user:',
+  pop_note:'Try switching users — <strong>nothing changes</strong>. That\'s the whole point of a popularity baseline: one feed for everyone.',
+  sl_pop:'Popularity weight', sl_fresh:'Freshness weight', sl_match:'Topic-match weight',
+  feat_note:'You are moving the weights by hand — the real <span class="pill">LightGBM</span> learns the equivalent of these weights (and far more complex rules) from the data itself. Notice: same sliders, different user ⇒ different feed. Personalization through the topic-match feature.',
+  als_note:'Every dot is a video, every ⭐ is a user — positioned by their <strong>taste vector</strong> (here 2-D for drawing; real models use 32–128 dimensions). Nobody labeled the axes: the model invented this space from interactions alone. Score = dot product — similar direction means a likely match.',
+  judge_title:'The Judge Machine: Hit@10',
+  judge_sub:'Three models, three opinions. Who\'s right? We can\'t ask the future — but we can <em>hide</em> a piece of the past and check who finds it.',
+  judge_proto_t:'The protocol (what we\'ll run on the real data)',
+  proto_1:'<strong>1 · Hide:</strong> for every user, hide the <em>last</em> video they watched (by timestamp) <span class="pill">Leave-Last-Out</span>. Last-by-time = a time split: train on the past, test on the future.',
+  proto_2:'<strong>2 · Candidates:</strong> mix the hidden video with 99 videos the user never watched <span class="pill">1 + 99</span>. Ranking against all 19,738 is expensive — a sample gives the same model comparison.',
+  proto_3:'<strong>3 · Rank:</strong> the model orders all 100 candidates. It has no idea which one is real.',
+  proto_4:'<strong>4 · Score:</strong> real video in the top-10? That\'s a hit. <span class="pill">Hit@10</span> = % of users with a hit. Why 10? That\'s roughly one For-You screen.',
+  proto_note:'In the demo below the numbers shrink so you can see everything: ~10 candidates instead of 100, top-3 instead of top-10. Same machine, smaller wheels.',
+  demo_t:'Step through one user',
+  btn_step:'Step ▶', btn_reset:'Reset', btn_runall:'🏁 Run all 6 users',
+  lb_t:'The leaderboard (computed live, Hit@3 on the toy data)',
+  lb_insight:'<strong>Read the misses, not just the wins.</strong> The taste model lost Noa the moment she drifted mainstream (her vector says "wellness", her click said "hit video") — and everyone lost Ron, the cold-start user. On the real MicroLens data the podium can flip. That is exactly why the judge is built before the models.',
+  judge_hist_label:'watch history (training)', judge_hidden:'hidden',
+  step_msgs:[
+    'Meet the user. Their watch history is the training data; the yellow card is the LAST video they watched — the judge\'s secret.',
+    'Step 1 — HIDE. The last video is hidden from all models. They only ever see the history.',
+    'Step 2 — CANDIDATES. The hidden video is shuffled among videos this user never watched. One of these is the truth.',
+    'Step 3 — RANK. Each model orders the candidates by its own logic. Green = where the hidden video really landed.',
+    'Step 4 — VERDICT. Inside the top-3 (our toy Hit@10)? Hit ✓. Otherwise miss ✗. Now run all six users to fill the leaderboard.'
+  ],
+  verdict_hit:'HIT', verdict_miss:'MISS', rank_word:'rank',
+  model_names:{pop:'🎧 Popularity', feat:'🧮 LightGBM (features)', als:'🫂 ALS (taste)'},
+  cmp_title:'Side by side',
+  cmp_h1:'🎧 Popularity', cmp_h2:'🧮 LightGBM', cmp_h3:'🫂 ALS',
+  cmp_r1:'What it learns', cmp_r1a:'Nothing — it counts', cmp_r1b:'Rules over hand-crafted features', cmp_r1c:'Latent taste vectors from interactions',
+  cmp_r2:'Personalized?', cmp_r2a:'No — one feed for all', cmp_r2b:'Partly — via user features', cmp_r2c:'Fully — per-user vector',
+  cmp_r3:'New user (cold start)', cmp_r3a:'Works fine', cmp_r3b:'Works if user features exist', cmp_r3c:'Blind — no vector yet',
+  cmp_r4:'New video (cold start)', cmp_r4a:'Invisible until viewed', cmp_r4b:'Works via content features', cmp_r4c:'Blind — no vector yet',
+  cmp_r5:'Main risk', cmp_r5a:'Popularity bias, no tail', cmp_r5b:'Feature leakage from the future', cmp_r5c:'Misses drift; cold start',
+  tk_title:'Key takeaways',
+  tk_1:'🏗️ <strong>Build the judge first.</strong> Models are cheap once the evaluation harness (time split + Hit@10) exists. Without it, a leaderboard is just a list of opinions.',
+  tk_2:'🎧 <strong>The baseline is the bar, not a ritual.</strong> In sparse implicit data, popularity is famously hard to beat. A learned model that loses to it — that\'s a finding, not a failure.',
+  tk_3:'📏 <strong>Rank, don\'t classify.</strong> Your 50/50 training set is a construction; the world is 0.036% dense. Accuracy on the sampled set says little — Hit@10 asks the production question.',
+  tk_4:'⏳ <strong>Time is the only honest split.</strong> Leave-last-out per user trains on the past and tests on the future. Every feature is computed from the training window only — or the future leaks in.',
+  tk_5:'🫂 <strong>ALS = taste as geometry.</strong> Users and videos become vectors in the same space; a recommendation is a dot product. Learned from behavior alone — and therefore blind to anything with no behavior yet.',
+  tk_6:'🔍 <strong>The leaderboard is where error analysis begins.</strong> Who did each model miss — cold users? mainstream drift? long-tail videos? That "why" is the next meeting\'s whole story.',
+  footer_txt:'Built for the Loof-style personalization track · Bonim Bina mentoring',
+  views_word:'views', days_word:'days old', score_word:'score',
+},
+he: {
+  hero_title:'שלושה מודלים, שופט אחד',
+  hero_subtitle:'איך מערכת המלצות מחליטה מה תראו — ואיך מודדים ביושר איזה מודל עושה את זה הכי טוב.',
+  stat_users:'משתמשים', stat_videos:'סרטונים קצרים', stat_inter:'אינטראקציות', stat_density:'צפיפות המטריצה',
+  stat_caption:'MicroLens-100K — דאטהסט אמיתי של פיד וידאו קצר',
+  task_title:'המשימה: לדרג, לא לסווג',
+  task_p1:'פיד אף פעם לא שואל "האם הזוג הזה חיובי?". בכל פתיחת אפליקציה יש שאלה אחת: <strong>מתוך ~20,000 סרטונים, אילו 10 מציגים עכשיו?</strong> זו בעיית דירוג. שלושה "מוחות" שונים לגמרי יכולים לענות עליה:',
+  an1_t:'הדי-ג\'יי — פופולריות', an1_p:'מנגן את הלהיטים הגדולים לכל המסיבה. לא מכיר אותך — אבל להיט זה להיט, ורוב האנשים מרוצים רוב הזמן.',
+  an2_t:'האנליסט — פיצ\'רים', an2_p:'מסתכל על אותות מדידים: כמה פופולרי, כמה טרי, כמה דומה למה שצפית. לומד חוקים שמחברים אותות ל-engagement.',
+  an3_t:'החבר הקרוב — טעם סמוי', an3_p:'לא מבקש פרופיל. פשוט רואה מה אתה (ואנשים שדומים לך) עושים, ובונה אינטואיציה לטעם שלך.',
+  cont_title:'הכירו את שלושת המתמודדים',
+  c1_t:'1 · רף הפופולריות',
+  c1_how:'<strong>איך הוא חושב:</strong> סופרים צפיות לכל סרטון בחלון האימון, וממליצים לכולם על הנצפים ביותר. אפס למידה.',
+  c1_s:'<span class="tag-good">חוזקה:</span> קשה לנצח אותו בדאטה דליל — רוב האינטראקציות באמת הולכות לפריטים פופולריים. ועובד גם למשתמש חדש לגמרי.',
+  c1_w:'<span class="tag-bad">חולשה:</span> כולם מקבלים את אותו הפיד. אפס פרסונליזציה, והזנב הארוך לא מוצג לעולם.',
+  c1_role:'<strong>התפקיד בסיפור שלנו:</strong> הרף. מודל שלא מנצח את הדי-ג\'יי לא מגיע לפרודקשן.',
+  c2_t:'2 · מודל הפיצ\'רים',
+  c2_how:'<strong>איך הוא חושב:</strong> כל זוג (משתמש, סרטון) הופך לשורת מספרים — פופולריות הסרטון, הטריות שלו, פעילות המשתמש, התאמת נושא. עצי החלטה משודרגים (gradient boosting) לומדים אילו צירופים מנבאים engagement, דרך אלפי שאלות if/else קטנות על הפיצ\'רים.',
+  c2_s:'<span class="tag-good">חוזקה:</span> יכול להשתמש בכל אות שאפשר לחשב — כולל אותות תוכן שפותרים cold-start לסרטון חדש.',
+  c2_w:'<span class="tag-bad">חולשה:</span> טוב בדיוק כמו הפיצ\'רים שבנינו לו ביד. טעם שלא נראה בפיצ\'ר — הוא לא ילמד.',
+  c2_leak:'<span class="tag-bad">מלכודת:</span> כל פיצ\'ר חייב להיות מחושב מחלון האימון בלבד — אחרת העתיד דולף לתוך האימון <span class="pill">Leakage</span>.',
+  c3_t:'3 · מודל הטעם הסמוי',
+  c3_how:'<strong>איך הוא חושב:</strong> לוקחים את טבלת המשתמש×סרטון הענקית (100 אלף × 19,738, כמעט כולה ריקה) ודוחסים אותה לשתי טבלאות קטנות: כל משתמש מקבל "וקטור טעם" קצר, וכל סרטון גם. ציון התאמה הוא פשוט מכפלה פנימית ביניהם. הוקטורים <em>נלמדים מהאינטראקציות בלבד</em> — אף אחד לא מגדיר מה הממדים אומרים.',
+  c3_s:'<span class="tag-good">חוזקה:</span> פרסונליזציה אמיתית. מוצא דפוסי טעם ששום פיצ\'ר ידני לא מתאר — הממליץ הקלאסי של "נטפליקס".',
+  c3_w:'<span class="tag-bad">חולשה:</span> משתמש חדש או סרטון חדש בלי אינטראקציות הם בלי וקטור — נקודת העיוורון שלו היא cold start.',
+  c3_role:'<strong>התפקיד בסיפור שלנו:</strong> המודל הראשון שבאמת לומד טעם אישי, לא חוקים גלובליים.',
+  play_title:'מגרש משחקים: איך כל מוח מחליט',
+  play_sub:'פיד-צעצוע קטן: 12 סרטוני ידע ארגוניים ב-4 נושאים, 6 עובדים. בחרו מודל, בחרו משתמש, ותראו את היגיון הדירוג משתנה.',
+  tab_pop:'🎧 פופולריות', tab_feat:'🧮 פיצ\'רים', tab_als:'🫂 טעם סמוי',
+  play_user_label:'בחרו משתמש:', play_user_label2:'בחרו משתמש:',
+  pop_note:'נסו להחליף משתמש — <strong>שום דבר לא משתנה</strong>. זו בדיוק הנקודה של רף פופולריות: פיד אחד לכולם.',
+  sl_pop:'משקל פופולריות', sl_fresh:'משקל טריות', sl_match:'משקל התאמת נושא',
+  feat_note:'אתם מזיזים את המשקלים ביד — ה-<span class="pill">LightGBM</span> האמיתי לומד את המקבילה של המשקלים האלה (וחוקים מורכבים בהרבה) מהדאטה בעצמו. שימו לב: אותם סליידרים, משתמש אחר = פיד אחר. הפרסונליזציה מגיעה דרך פיצ\'ר התאמת הנושא.',
+  als_note:'כל נקודה היא סרטון, כל ⭐ הוא משתמש — ממוקמים לפי <strong>וקטור הטעם</strong> שלהם (כאן דו-ממדי בשביל הציור; מודלים אמיתיים עובדים עם 32–128 ממדים). אף אחד לא נתן שמות לצירים: המודל המציא את המרחב הזה מהאינטראקציות בלבד. ציון = מכפלה פנימית — כיוון דומה פירושו התאמה סבירה.',
+  judge_title:'מכונת השיפוט: Hit@10',
+  judge_sub:'שלושה מודלים, שלוש דעות. מי צודק? אי אפשר לשאול את העתיד — אבל אפשר <em>להסתיר</em> חתיכה מהעבר ולבדוק מי מוצא אותה.',
+  judge_proto_t:'הפרוטוקול (מה שנריץ על הדאטה האמיתי)',
+  proto_1:'<strong>1 · מסתירים:</strong> לכל משתמש מסתירים את הסרטון <em>האחרון</em> שצפה בו (לפי timestamp) <span class="pill">Leave-Last-Out</span>. אחרון-לפי-זמן = חלוקה בזמן: מאמנים על העבר, בוחנים על העתיד.',
+  proto_2:'<strong>2 · מועמדים:</strong> מערבבים את הסרטון המוסתר עם 99 סרטונים שהמשתמש מעולם לא ראה <span class="pill">1 + 99</span>. לדרג מול כל 19,738 זה יקר — דגימה נותנת את אותה השוואת מודלים.',
+  proto_3:'<strong>3 · מדרגים:</strong> המודל מסדר את כל 100 המועמדים. אין לו מושג מי האמיתי.',
+  proto_4:'<strong>4 · שופטים:</strong> הסרטון האמיתי בטופ-10? פגיעה. <span class="pill">Hit@10</span> = אחוז המשתמשים עם פגיעה. למה 10? זה בערך מסך אחד של For You.',
+  proto_note:'בדמו למטה המספרים מוקטנים כדי שתראו הכל: ~10 מועמדים במקום 100, טופ-3 במקום טופ-10. אותה מכונה, גלגלים קטנים.',
+  demo_t:'צעד-צעד על משתמש אחד',
+  btn_step:'צעד ▶', btn_reset:'איפוס', btn_runall:'🏁 הרץ על כל 6 המשתמשים',
+  lb_t:'לוח התוצאות (מחושב לייב, Hit@3 על דאטת הצעצוע)',
+  lb_insight:'<strong>קראו את ההחטאות, לא רק את הפגיעות.</strong> מודל הטעם איבד את נועה ברגע שגלשה למיינסטרים (הווקטור שלה אומר "רווחה", הקליק שלה אמר "להיט") — ואת רון, משתמש ה-cold-start, כולם איבדו. על הדאטה האמיתי של MicroLens הפודיום יכול להתהפך. בדיוק בגלל זה בונים את השופט לפני המודלים.',
+  judge_hist_label:'היסטוריית צפייה (אימון)', judge_hidden:'מוסתר',
+  step_msgs:[
+    'הכירו את המשתמש. היסטוריית הצפייה היא דאטת האימון; הכרטיס הצהוב הוא הסרטון האחרון שצפה בו — הסוד של השופט.',
+    'שלב 1 — מסתירים. הסרטון האחרון מוסתר מכל המודלים. הם רואים רק את ההיסטוריה.',
+    'שלב 2 — מועמדים. הסרטון המוסתר מעורבב בין סרטונים שהמשתמש מעולם לא ראה. אחד מהם הוא האמת.',
+    'שלב 3 — מדרגים. כל מודל מסדר את המועמדים לפי ההיגיון שלו. ירוק = איפה שהסרטון המוסתר באמת נחת.',
+    'שלב 4 — גזר הדין. בתוך הטופ-3 (ה-Hit@10 של הצעצוע)? פגיעה ✓. אחרת החטאה ✗. עכשיו הריצו את כל ששת המשתמשים למילוי לוח התוצאות.'
+  ],
+  verdict_hit:'פגיעה', verdict_miss:'החטאה', rank_word:'מקום',
+  model_names:{pop:'🎧 פופולריות', feat:'🧮 LightGBM (פיצ\'רים)', als:'🫂 ALS (טעם)'},
+  cmp_title:'זה מול זה',
+  cmp_h1:'🎧 פופולריות', cmp_h2:'🧮 LightGBM', cmp_h3:'🫂 ALS',
+  cmp_r1:'מה הוא לומד', cmp_r1a:'כלום — הוא סופר', cmp_r1b:'חוקים על פיצ\'רים שבנינו ביד', cmp_r1c:'וקטורי טעם סמויים מאינטראקציות',
+  cmp_r2:'מפרסונל?', cmp_r2a:'לא — פיד אחד לכולם', cmp_r2b:'חלקית — דרך פיצ\'רים של המשתמש', cmp_r2c:'לגמרי — וקטור לכל משתמש',
+  cmp_r3:'משתמש חדש (cold start)', cmp_r3a:'עובד מצוין', cmp_r3b:'עובד אם יש פיצ\'רים על המשתמש', cmp_r3c:'עיוור — אין וקטור עדיין',
+  cmp_r4:'סרטון חדש (cold start)', cmp_r4a:'שקוף עד שצופים בו', cmp_r4b:'עובד דרך פיצ\'רים של תוכן', cmp_r4c:'עיוור — אין וקטור עדיין',
+  cmp_r5:'הסיכון המרכזי', cmp_r5a:'הטיית פופולריות, בלי זנב', cmp_r5b:'דליפת פיצ\'רים מהעתיד', cmp_r5c:'מפספס דריפט; cold start',
+  tk_title:'נקודות מפתח',
+  tk_1:'🏗️ <strong>בונים את השופט קודם.</strong> מודלים זולים ברגע שתשתית ההערכה (חלוקה בזמן + Hit@10) קיימת. בלעדיה, לוח תוצאות הוא רק רשימת דעות.',
+  tk_2:'🎧 <strong>הרף הוא רף, לא טקס.</strong> בדאטה דליל implicit קשה מאוד לנצח את הפופולריות. מודל לומד שמפסיד לה — זה ממצא, לא כישלון.',
+  tk_3:'📏 <strong>מדרגים, לא מסווגים.</strong> סט ה-50/50 שבניתם הוא בנייה שלכם; העולם בצפיפות 0.036%. דיוק על הסט הדגום אומר מעט — Hit@10 שואל את שאלת הפרודקשן.',
+  tk_4:'⏳ <strong>זמן הוא החלוקה הישרה היחידה.</strong> Leave-last-out לכל משתמש מאמן על העבר ובוחן על העתיד. כל פיצ\'ר מחושב מחלון האימון בלבד — אחרת העתיד דולף פנימה.',
+  tk_5:'🫂 <strong>ALS = טעם כגיאומטריה.</strong> משתמשים וסרטונים הופכים לוקטורים באותו מרחב; המלצה היא מכפלה פנימית. נלמד מהתנהגות בלבד — ולכן עיוור לכל מה שעוד אין לו התנהגות.',
+  tk_6:'🔍 <strong>לוח התוצאות הוא תחילת ניתוח השגיאות.</strong> את מי כל מודל פספס — משתמשים קרים? דריפט למיינסטרים? סרטוני זנב? ה"למה" הזה הוא כל הסיפור של המפגש הבא.',
+  footer_txt:'נבנה למסלול הפרסונליזציה בסגנון Loof · מנטורינג בונים בינה',
+  views_word:'צפיות', days_word:'ימים', score_word:'ציון',
+}
+};
+
+let currentLang = 'he';
+function setLang(lang){
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = lang==='he' ? 'rtl' : 'ltr';
+  document.getElementById('btn-en').classList.toggle('active', lang==='en');
+  document.getElementById('btn-he').classList.toggle('active', lang==='he');
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+  });
+  renderChips(); renderActivePane(); judgeRender();
+  if (lbShown) renderLeaderboard(false);
+}
+
+/* ─────────────── Playground ─────────────── */
+let activeTab = 'pop';
+let activeUser = 'A';
+
+function vName(v){ return `${TOPICS[v.topic].emoji} ${v[currentLang]}`; }
+function renderChips(){
+  for (const containerId of ['userChips','judgeChips']){
+    const c = document.getElementById(containerId);
+    c.innerHTML = '';
+    USERS.forEach(u=>{
+      const b = document.createElement('button');
+      b.className = 'user-chip' + ((containerId==='userChips'? activeUser:judgeUserId)===u.id ? ' active':'');
+      b.textContent = `${u.emoji} ${u[currentLang]}`;
+      b.onclick = ()=>{
+        if(containerId==='userChips'){ activeUser=u.id; renderChips(); renderActivePane(); }
+        else { judgeUserId=u.id; judgeReset(); renderChips(); }
+      };
+      c.appendChild(b);
+    });
+  }
+}
+function setTab(tab){
+  activeTab = tab;
+  ['pop','feat','als'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('pane-'+t).style.display = t===tab ? '' : 'none';
+  });
+  renderActivePane();
+}
+function renderActivePane(){
+  if (activeTab==='pop') renderPop();
+  else if (activeTab==='feat') renderFeat();
+  else renderALS();
+}
+function rankRowHTML(pos, v, score, barPx){
+  return `<div class="rank-row">
+    <div class="pos">${pos}</div>
+    <div class="vname">${vName(v)}</div>
+    <div class="bar" style="width:${barPx}px;"></div>
+    <div class="score">${score}</div>
+  </div>`;
+}
+function renderPop(){
+  const sorted = [...VIDEOS].sort((a,b)=>b.views-a.views);
+  const el = document.getElementById('popList');
+  el.innerHTML = sorted.slice(0,6).map((v,i)=>
+    rankRowHTML(i+1, v, `${v.views} ${T[currentLang].views_word}`, Math.round(v.views/maxViews*140))
+  ).join('');
+}
+function renderFeat(){
+  const w = featWeights();
+  document.getElementById('wPopVal').textContent = document.getElementById('wPop').value;
+  document.getElementById('wFreshVal').textContent = document.getElementById('wFresh').value;
+  document.getElementById('wMatchVal').textContent = document.getElementById('wMatch').value;
+  const u = USERS.find(x=>x.id===activeUser);
+  const scored = VIDEOS.filter(v=>!u.history.includes(v.id))
+    .map(v=>({v, s:scoreFeat(u,v,w)})).sort((a,b)=>b.s-a.s);
+  const maxS = Math.max(...scored.map(r=>r.s), 0.001);
+  document.getElementById('featList').innerHTML = scored.slice(0,5).map((r,i)=>
+    rankRowHTML(i+1, r.v, `${T[currentLang].score_word} ${r.s.toFixed(2)}`, Math.round(r.s/maxS*140))
+  ).join('');
+}
+function renderALS(){
+  const u = USERS.find(x=>x.id===activeUser);
+  const uv = userVec(u);
+  const scored = VIDEOS.filter(v=>!u.history.includes(v.id))
+    .map(v=>({v, s:scoreALS(u,v)})).sort((a,b)=>b.s-a.s);
+  const top3 = scored.slice(0,3);
+  const W=640, H=430, cx=W/2, cy=H/2, sc=180;
+  const px = x => cx + x*sc, py = y => cy - y*sc;
+  let svg = `<rect x="0" y="0" width="${W}" height="${H}" rx="14" fill="#0f172a" stroke="#334155"/>`;
+  svg += `<line x1="${cx}" y1="20" x2="${cx}" y2="${H-20}" stroke="#334155" stroke-dasharray="4 5"/>`;
+  svg += `<line x1="30" y1="${cy}" x2="${W-30}" y2="${cy}" stroke="#334155" stroke-dasharray="4 5"/>`;
+  top3.forEach(r=>{
+    svg += `<line x1="${px(uv.x)}" y1="${py(uv.y)}" x2="${px(r.v.x)}" y2="${py(r.v.y)}" stroke="#22c55e" stroke-width="2" opacity="0.75"/>`;
+  });
+  VIDEOS.forEach(v=>{
+    const inHist = u.history.includes(v.id);
+    const isTop = top3.some(r=>r.v.id===v.id);
+    svg += `<circle cx="${px(v.x)}" cy="${py(v.y)}" r="${isTop?11:8}" fill="${TOPICS[v.topic].color}" opacity="${inHist?0.45:0.95}" stroke="${isTop?'#22c55e':(inHist?'#94a3b8':'none')}" stroke-width="${isTop?3:1.5}" ${inHist?'stroke-dasharray="3 3"':''}/>`;
+    svg += `<text x="${px(v.x)}" y="${py(v.y)+22}" text-anchor="middle" font-size="10" fill="#94a3b8">${TOPICS[v.topic].emoji} ${v[currentLang].slice(0,16)}</text>`;
+  });
+  svg += `<text x="${px(uv.x)}" y="${py(uv.y)+7}" text-anchor="middle" font-size="22">⭐</text>`;
+  svg += `<text x="${px(uv.x)}" y="${py(uv.y)-16}" text-anchor="middle" font-size="11" fill="#e2e8f0">${USERS.find(x=>x.id===activeUser).emoji} ${u[currentLang].split('—')[0].trim()}</text>`;
+  document.getElementById('tasteMap').innerHTML = svg;
+  const maxS = Math.max(...scored.map(r=>r.s), 0.001);
+  document.getElementById('alsList').innerHTML = top3.map((r,i)=>
+    rankRowHTML(i+1, r.v, `${T[currentLang].score_word} ${r.s.toFixed(2)}`, Math.round(Math.max(r.s,0)/maxS*140))
+  ).join('');
+}
+
+/* ─────────────── Judge demo ─────────────── */
+let judgeUserId = 'A';
+let judgeStepN = 0;
+let lbShown = false;
+
+function judgeRender(){
+  const u = USERS.find(x=>x.id===judgeUserId);
+  const histEl = document.getElementById('judgeHistory');
+  const candEl = document.getElementById('judgeCands');
+  const colsEl = document.getElementById('judgeCols');
+  // history row
+  let h = `<span style="font-size:.85rem; color:var(--text-muted); width:100%;">${u.emoji} ${u[currentLang]} · ${T[currentLang].judge_hist_label}:</span>`;
+  u.history.forEach(id=>{
+    const v = byId[id];
+    h += `<div class="vid-card"><div class="vemoji">${TOPICS[v.topic].emoji}</div>${v[currentLang]}</div>`;
+  });
+  const hv = byId[u.heldOut];
+  if (judgeStepN === 0){
+    h += `<div class="vid-card held"><div class="vemoji">${TOPICS[hv.topic].emoji}</div>${hv[currentLang]}</div>`;
+  } else {
+    h += `<div class="vid-card hidden-item" style="min-width:96px;">?</div>`;
+  }
+  histEl.innerHTML = h;
+  // candidates
+  if (judgeStepN >= 2){
+    const cands = VIDEOS.filter(v=>!u.history.includes(v.id));
+    const shuffled = [...cands].sort((a,b)=>(a.id*7)%13-(b.id*7)%13);
+    candEl.innerHTML = shuffled.map(v=>{
+      const revealTrue = judgeStepN>=3 && v.id===u.heldOut;
+      return `<div class="cand ${revealTrue?'reveal-true':''}" title="${v[currentLang]}">${TOPICS[v.topic].emoji}</div>`;
+    }).join('');
+    candEl.style.display='flex';
+  } else { candEl.innerHTML=''; }
+  // model columns
+  if (judgeStepN >= 3){
+    colsEl.innerHTML = MODELS.map(m=>{
+      const res = judgeUser(u, m.scorer);
+      const rows = res.ranked.slice(0,4).map((r,i)=>{
+        const isTrue = r.v.id===u.heldOut;
+        return `<div class="mini-row ${isTrue?'true-mini':''}"><span class="mini-pos">${i+1}</span> ${vName(r.v)}</div>`;
+      }).join('');
+      const trueRow = res.rank>4 ? `<div class="mini-row true-mini"><span class="mini-pos">${res.rank}</span> ${vName(byId[u.heldOut])}</div>` : '';
+      const verdict = judgeStepN>=4
+        ? `<div class="verdict" style="color:${res.hit?'var(--success)':'var(--error)'};">${res.hit?'✓ '+T[currentLang].verdict_hit:'✗ '+T[currentLang].verdict_miss} · ${T[currentLang].rank_word} ${res.rank}</div>`
+        : '';
+      return `<div class="judge-col"><h4>${T[currentLang].model_names[m.key]}</h4>${rows}${res.rank>4?'<div style="text-align:center;color:var(--text-muted);">⋮</div>':''}${trueRow}${verdict}</div>`;
+    }).join('');
+  } else { colsEl.innerHTML=''; }
+  document.getElementById('stepInfo').innerHTML = T[currentLang].step_msgs[judgeStepN];
+  document.getElementById('btnStep').disabled = judgeStepN>=4;
+}
+function judgeStep(){ if (judgeStepN<4){ judgeStepN++; judgeRender(); } }
+function judgeReset(){ judgeStepN=0; judgeRender(); }
+
+function runAll(){
+  lbShown = true;
+  document.getElementById('leaderboard').style.display='';
+  renderLeaderboard(true);
+  document.getElementById('leaderboard').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+function renderLeaderboard(animate){
+  const results = MODELS.map(m=>{
+    let hits=0;
+    const per = USERS.map(u=>{
+      const r = judgeUser(u, m.scorer);
+      if (r.hit) hits++;
+      return {u, ...r};
+    });
+    return {m, hits, per};
+  });
+  const bars = document.getElementById('lbBars');
+  bars.innerHTML = results.map(r=>`
+    <div class="lb-row">
+      <div class="lb-name">${T[currentLang].model_names[r.m.key]}</div>
+      <div class="lb-track"><div class="lb-fill" data-w="${r.hits/USERS.length*100}" style="width:${animate?0:r.hits/USERS.length*100}%;">${r.hits}/6</div></div>
+    </div>`).join('');
+  if (animate){
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      bars.querySelectorAll('.lb-fill').forEach(f=>{ f.style.width = f.dataset.w+'%'; });
+    }));
+  }
+  const ur = document.getElementById('userResults');
+  ur.innerHTML = USERS.map(u=>{
+    const cells = results.map(r=>{
+      const p = r.per.find(x=>x.u.id===u.id);
+      return `<span style="color:${p.hit?'var(--success)':'var(--error)'};">${p.hit?'✓':'✗'}</span>`;
+    }).join(' · ');
+    return `<div class="ur-cell">${u.emoji} ${u[currentLang].split('—')[0].trim()}<br>${cells}</div>`;
+  }).join('');
+  document.getElementById('lbInsight').innerHTML = T[currentLang].lb_insight;
+}
+
+/* ─────────────── init ─────────────── */
+setLang('he');
+setTab('pop');
+judgeReset();
+</script>
+</body>
+</html>
