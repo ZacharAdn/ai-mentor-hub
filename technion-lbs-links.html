@@ -3,57 +3,103 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>טכניון · שירותים מבוססי מיקום — קישורים</title>
+<title>טכניון · שירותים מבוססי מיקום</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;700;800&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #fbfbfd;
+    --surface: #ffffff;
+    --ink: #111827;
+    --muted: #8b93a1;
+    --line: #ececf1;
+    --accent: #e11d48;
+    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 8px 24px -12px rgba(17,24,39,.12);
+  }
+
   body {
-    font-family: -apple-system, "Heebo", "Arial Hebrew", sans-serif;
-    background: #f1f5f9; color: #0f172a;
-    min-height: 100vh; padding: 6vh 5vw 8vh; line-height: 1.5;
+    font-family: "Heebo", -apple-system, "Arial Hebrew", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 8vh 6vw;
+    -webkit-font-smoothing: antialiased;
   }
-  .wrap { max-width: 560px; margin: 0 auto; }
-  header { text-align: center; margin-bottom: 2.5rem; }
-  header h1 { font-size: clamp(1.5rem, 6vw, 2.1rem); font-weight: 800; letter-spacing: -.02em; }
-  header p { font-size: 1rem; color: #64748b; margin-top: .5rem; }
 
-  .lead {
-    background: #fff; border-radius: 16px; padding: 1.1rem 1.2rem; margin-bottom: 1.5rem;
-    border-right: 5px solid #dc2626; box-shadow: 0 2px 12px rgba(15,23,42,.07);
-    font-size: .97rem; color: #475569;
+  .wrap { width: 100%; max-width: 420px; }
+
+  header { margin-bottom: 2.75rem; }
+  h1 {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+    line-height: 1.15;
   }
-  .lead strong { color: #dc2626; }
-
-  a.card {
-    display: block; background: #fff; border-radius: 16px;
-    padding: 1.25rem 1.3rem; margin-bottom: 1rem;
-    text-decoration: none; color: inherit;
-    border-right: 5px solid var(--c);
-    box-shadow: 0 2px 12px rgba(15,23,42,.07);
-    transition: transform .12s ease, box-shadow .12s ease;
+  .sub {
+    margin-top: .5rem;
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: .01em;
   }
-  a.card:active { transform: scale(.985); }
-  a.card:hover { box-shadow: 0 6px 20px rgba(15,23,42,.12); }
-  a.card h2 { font-size: 1.15rem; font-weight: 700; color: var(--c); }
-  a.card p { font-size: .9rem; color: #64748b; margin-top: .25rem; }
-  a.card .go { font-size: .85rem; font-weight: 600; color: var(--c); margin-top: .6rem; display: block; }
 
-  .survey { --c: #dc2626; }
-  .zac    { --c: #2563eb; }
-  .eli    { --c: #059669; }
+  .links { display: flex; flex-direction: column; gap: .625rem; }
+
+  a.link {
+    display: flex; align-items: center; gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.125rem 1.25rem;
+    text-decoration: none;
+    color: var(--ink);
+    box-shadow: var(--shadow);
+    transition: border-color .15s ease, transform .12s ease;
+  }
+  a.link:hover { border-color: #d6d6de; }
+  a.link:active { transform: scale(.99); }
+
+  a.link .label { flex: 1; font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; }
+  a.link .note  { font-size: .8rem; font-weight: 500; color: var(--muted); }
+  a.link .arrow { color: var(--muted); flex-shrink: 0; transition: transform .15s ease; }
+  a.link:hover .arrow { transform: translateX(-3px); }
+
+  a.primary {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+  a.primary .label { color: #fff; }
+  a.primary .note  { color: #a8adb8; }
+  a.primary .arrow { color: #a8adb8; }
+  a.primary:hover { border-color: var(--ink); }
 
   footer {
-    margin-top: 2.5rem; text-align: center;
-    font-size: .9rem; color: #64748b;
-    border-top: 1px solid #e2e8f0; padding-top: 1.5rem;
+    margin-top: 2.75rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    font-size: .8125rem; font-weight: 500; color: var(--muted);
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
   }
-  footer strong { color: #0f172a; }
+  footer .day { font-weight: 700; color: var(--ink); }
 
   @media (prefers-color-scheme: dark) {
-    body { background: #0f172a; color: #f1f5f9; }
-    .lead, a.card { background: #1e293b; box-shadow: 0 2px 12px rgba(0,0,0,.35); }
-    .lead, a.card p, footer { color: #94a3b8; }
-    footer { border-top-color: #334155; }
-    footer strong { color: #f1f5f9; }
+    :root {
+      --bg: #0b0d12;
+      --surface: #14171e;
+      --ink: #f3f4f6;
+      --muted: #767d8c;
+      --line: #22262f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px -12px rgba(0,0,0,.5);
+    }
+    a.link:hover { border-color: #2e3440; }
+    a.primary { background: #f3f4f6; border-color: #f3f4f6; }
+    a.primary .label { color: #0b0d12; }
+    a.primary .note, a.primary .arrow { color: #6b7280; }
+    a.primary:hover { border-color: #f3f4f6; }
   }
 </style>
 </head>
@@ -61,35 +107,41 @@
 <div class="wrap">
 
   <header>
-    <h1>שירותים מבוססי מיקום</h1>
-    <p>טכניון · 016833 · קישורים מהמפגש</p>
+    <h1>שירותים<br>מבוססי מיקום</h1>
+    <div class="sub">טכניון · 016833</div>
   </header>
 
-  <div class="lead">
-    <strong>קודם כל — השאלון.</strong> הוא אנונימי לגמרי, לוקח שש דקות, ובלעדיו אין לנו דרך לדעת מה עבד ומה לא. מי שעוד לא מילא, זה הרגע.
-  </div>
+  <nav class="links">
 
-  <a class="card survey" href="https://docs.google.com/forms/d/e/1FAIpQLSelhf66F6cHKo4N5HnH5tIvomgQJTvPGROsRiXGiZe4lQeW9g/viewform" target="_blank" rel="noopener">
-    <h2>שאלון המשוב</h2>
-    <p>אנונימי לחלוטין · שש דקות · בלי שם ובלי שם צוות</p>
-    <span class="go">למילוי השאלון ←</span>
-  </a>
+    <a class="link primary" href="https://docs.google.com/forms/d/e/1FAIpQLSelhf66F6cHKo4N5HnH5tIvomgQJTvPGROsRiXGiZe4lQeW9g/viewform" target="_blank" rel="noopener">
+      <span class="label">שאלון המשוב</span>
+      <span class="note">בלי שם · 6 דק'</span>
+      <svg class="arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
 
-  <a class="card zac" href="https://www.linkedin.com/in/zacharadn" target="_blank" rel="noopener">
-    <h2>זכר עדינייב · לינקדאין</h2>
-    <p>המתרגל · בינה מלאכותית ודאטה</p>
-    <span class="go">להתחבר ←</span>
-  </a>
+    <a class="link" href="https://www.linkedin.com/in/zacharadn" target="_blank" rel="noopener">
+      <span class="label">זכר עדינייב</span>
+      <span class="note">לינקדאין</span>
+      <svg class="arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
 
-  <a class="card eli" href="https://www.linkedin.com/in/elisafra" target="_blank" rel="noopener">
-    <h2>אלי ספרא · לינקדאין</h2>
-    <p>המרצה · עולם המיקום</p>
-    <span class="go">להתחבר ←</span>
-  </a>
+    <a class="link" href="https://www.linkedin.com/in/elisafra" target="_blank" rel="noopener">
+      <span class="label">אלי ספרא</span>
+      <span class="note">לינקדאין</span>
+      <svg class="arrow" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+
+  </nav>
 
   <footer>
-    <strong>יום ההדגמות · 21/07 · 12:30</strong><br>
-    שווה לפרסם את הפרויקט בלינקדאין ולתייג אותנו. בהצלחה.
+    <span>יום ההדגמות</span>
+    <span class="day">21/07 · 12:30</span>
   </footer>
 
 </div>
