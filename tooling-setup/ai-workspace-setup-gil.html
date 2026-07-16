@@ -104,7 +104,7 @@ footer a{color:var(--accent-indigo); text-decoration:none; font-weight:500;}
 
   <div class="callout">
     <h3>מה עושים כאן, ולמה</h3>
-    <p>כלי אחד להתקנה: <strong>אובסידיאן</strong> - המחברת החכמה שתשמש כזיכרון של המערכת. <strong>קלוד דסקטופ</strong> כבר מותקן אצלך, אז ראינו אותו יחד במפגש - הוא מופיע כאן רק לשלמות. זה כל מה שצריך. שלב 2 למטה הוא טכני, הוא נעשה איתי במפגשים, ולא בטוח שתצטרך אותו בכלל.</p>
+    <p>כלי אחד להתקנה: <strong>אובסידיאן</strong> - המחברת החכמה שתשמש כזיכרון של המערכת. <strong>קלוד דסקטופ</strong> כבר מותקן אצלך, אז ראינו אותו יחד במפגש - ולמטה מחכה לך תזכורת מצולמת של בדיוק מה שעשינו. זה כל מה שצריך. שלב 2 למטה הוא טכני, הוא נעשה איתי במפגשים, ולא בטוח שתצטרך אותו בכלל.</p>
   </div>
 
   <div class="stage-title">שלב 1 <span class="tag tag-now">להתקנה עכשיו</span></div>
@@ -115,27 +115,42 @@ footer a{color:var(--accent-indigo); text-decoration:none; font-weight:500;}
     <div class="step-header">
       <div class="step-number">1</div>
       <div class="step-title-container">
-        <h2>התקנת קלוד דסקטופ</h2>
-        <div class="duration">כ-5 דקות</div>
+        <h2>קלוד דסקטופ - מה שראינו במפגש</h2>
+        <div class="duration">מותקן כבר אצלך - כאן רק נזכרים במה שעשינו</div>
       </div>
     </div>
     <div class="step-content">
       <div class="step-description">
-        קלוד דסקטופ היא האפליקציה הרשמית של Claude למחשב. זו תהיה נקודת המפגש היומית שלך עם הסוכן. יש לך כבר מנוי לקלוד, אז רק נתקין ונתחבר.
+        קלוד דסקטופ היא האפליקציה של Claude שיושבת על המחשב עצמו, בלי דפדפן. אצלך היא כבר מותקנת, אז אין מה להתקין. במפגש עברנו עליה יחד, והקטעים הקצרים כאן צולמו מתוך המפגש עצמו - כדי שתוכל להיזכר בדיוק במה שעשינו.
       </div>
       <div class="instructions">
-        <h3>עקוב אחרי השלבים:</h3>
+        <h3>מה שעשינו במפגש, שלב אחרי שלב:</h3>
         <ol class="instruction-list">
-          <li>פתח את הקישור <a class="ext-link" href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> (נפתח בטאב חדש)</li>
-          <li>הורד את הגרסה למחשב שלך: <strong>macOS</strong> אם זה מק, <strong>Windows</strong> אם זה חלונות</li>
-          <li>הרץ את הקובץ שהורדת. במק: גרור את האייקון לתיקיית <strong>Applications</strong>. בחלונות: לחץ על הקובץ ואשר את ההתקנה</li>
-          <li>פתח את קלוד דסקטופ, ולחץ <strong>Sign in</strong></li>
-          <li>התחבר עם אותו חשבון שבו אתה כבר משתמש במנוי שלך</li>
+          <li>פותחים את קלוד דסקטופ, ולמעלה לוחצים על <strong>Code</strong>. זה הסוכן שיודע לעבוד בשבילך על קבצים אמיתיים במחשב. לא צריך לדעת לכתוב קוד - זה רק השם של הכלי.
+            <img src="gifs-gil/code-tab.gif" alt="מעבר מהכפתור Home לכפתור Code בקלוד דסקטופ" style="max-width:100%; border-radius:12px; margin:14px 0;">
+            <div style="font-size:.92rem; color:var(--text-muted);">בסרטון: לוחצים למעלה על הכפתור Code - העיגול הירוק שציירתי במפגש מסמן אותו.</div>
+          </li>
+          <li>בוחרים תיקייה לעבודה: מתחת לתיבת הכתיבה יש כפתור עם שם תיקייה, ליד המילה <strong>Local</strong>. לוחצים עליו, ובחלון שנפתח בוחרים את התיקייה שלנו - <strong>gil_stocks</strong>, זו שיצרנו במפגש.
+            <img src="gifs-gil/choose-folder-click.png" alt="הכפתור עם שם התיקייה, ליד Local, מתחת לתיבת הכתיבה" style="max-width:100%; border-radius:12px; margin:14px 0;">
+            <div style="font-size:.92rem; color:var(--text-muted);">בתמונה: הכפתור מסומן באדום. אצלך יהיה כתוב עליו gil_stocks אחרי הבחירה הראשונה.</div>
+          </li>
+          <li>חיבורים לשירותים שלך: בהגדרות של קלוד יש מסך בשם <strong>Connectors</strong> - בעברית: חיבורים. שם מחברים את קלוד לשירותים כמו גוגל דרייב או ג'ימייל. במפגש ראית שאצלי גוגל דרייב כבר מחובר (מסומן בוי).
+            <img src="gifs-gil/connectors.gif" alt="מסך החיבורים Connectors בהגדרות של קלוד" style="max-width:100%; border-radius:12px; margin:14px 0;">
+            <div style="font-size:.92rem; color:var(--text-muted);">בסרטון: נכנסים להגדרות, לוחצים בצד על Connectors, ורואים את רשימת החיבורים - כל חיבור אפשר לנתק בכל רגע.</div>
+          </li>
+          <li>אישור לפני כל פעולה: במצב <strong>Manual</strong> (ידני), הסוכן עוצר לפני כל פעולה במחשב, מסביר מה הוא רוצה לעשות, ומחכה. רק אחרי שלוחצים <strong>Allow once</strong> (אשר פעם אחת) הוא ממשיך.
+            <img src="gifs-gil/permissions.gif" alt="הסוכן מבקש אישור לפני ביצוע פעולה ומחכה ללחיצה" style="max-width:100%; border-radius:12px; margin:14px 0;">
+            <div style="font-size:.92rem; color:var(--text-muted);">בסרטון: הסוכן שואל אם מותר לו להריץ פעולה, אני לוחץ אישור - ורק אז הוא מתחיל לעבוד.</div>
+          </li>
+          <li>המצב הזה נקרא <strong>Manual</strong> והוא ברירת המחדל: הכפתור נמצא למטה משמאל, מתחת לתיבת הכתיבה. יש מצבים נוספים שבהם הסוכן מקבל יותר חופש - בינתיים נשארים על Manual, המצב הכי בטוח, וכל השאר נלמד יחד בהמשך.
+            <img src="gifs-gil/manual-mode.png" alt="תפריט המצבים של הסוכן, מצב Manual מסומן כברירת מחדל" style="max-width:100%; border-radius:12px; margin:14px 0;">
+            <div style="font-size:.92rem; color:var(--text-muted);">בתמונה: לחיצה על הכפתור למטה משמאל פותחת את התפריט - מוודאים שמסומן Manual.</div>
+          </li>
         </ol>
       </div>
       <div class="tip">
-        <div class="tip-title">איך יודעים שזה עבד?</div>
-        <p>נפתח חלון צ'אט של קלוד ישירות מהמחשב, בלי דפדפן. נסה לכתוב לו "שלום" ולראות שהוא עונה.</p>
+        <div class="tip-title">התשובה לשאלה ששאלת במפגש</div>
+        <p>שאלת אם הסוכן יכול לעשות דברים בלי בקרה. כל עוד המצב הוא Manual - כל פעולה במחשב מחייבת אישור שלך לפני שהיא קורית. ואם משהו לא מסתדר או לא נראה כמו בסרטונים - עצור וכתוב לי, נעבור על זה יחד.</p>
       </div>
     </div>
   </div>
@@ -182,25 +197,6 @@ footer a{color:var(--accent-indigo); text-decoration:none; font-weight:500;}
 
   <div class="step">
     <div class="step-header">
-      <div class="step-number">★</div>
-      <div class="step-title-container">
-        <h2>מניעת הטיות: אצלך זה כבר סגור</h2>
-        <div class="duration">אפס</div>
-      </div>
-    </div>
-    <div class="step-content">
-      <div class="step-description">
-        כאן היה אמור לשבת פרומפט שמבקש מקלוד להיות אובייקטיבי. אצלך הוא מיותר. מסמך ההוראות שלך למניעת הטיות חזק ממה שהייתי נותן לך, ואתה צדקת במפגש כשאמרת שבקשה מנומסת לאובייקטיביות היא לא מספיק חזקה.
-      </div>
-      <div class="tip">
-        <div class="tip-title">מה כן נעשה עם זה</div>
-        <p>נעבור עליו יחד במפגש. אני רוצה להראות לך איפה אפשר לחזק אותו עוד: לא בניסוח, אלא במבנה. סוכן שמקבל תפקיד של תוקף התזה, ושלא יודע מראש מה הפוזיציה שלך, מוטה פחות מסוכן שמתבקש יפה להיות הוגן.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-header">
       <div class="step-number">🔒</div>
       <div class="step-title-container">
         <h2>שמור שהמידע שלך פרטי</h2>
@@ -222,13 +218,12 @@ footer a{color:var(--accent-indigo); text-decoration:none; font-weight:500;}
     </div>
   </div>
 
-  <div class="stage-title">שלב 2 <span class="tag">להצצה בלבד, לא חובה</span></div>
+  <div class="stage-title">שלב 2 <span class="tag">שלב טכני שלא בטוח שתצטרך</span></div>
   <div class="stage-sub">סביבת הפיתוח המלאה. זה החלק הטכני, וזה הצד שבו אני מוביל את הבנייה. לא בטוח בכלל שתצטרך אותו, ובוודאי לא עכשיו.</div>
 
   <div class="callout">
     <h3>מה זה, ולמה זה כאן</h3>
     <p>ההתקנות בשלב הזה הן <strong>Node.js</strong> (מנוע הרצה), <strong>Claude Code</strong> (הסוכן שבונה קוד ומסמכים), <strong>Git</strong> (מעקב אחרי שינויים), ו-<strong>VS Code</strong> (סביבת כתיבת קוד). זה עולם של שורת פקודה, והוא טכני בהרבה משלב 1.</p>
-    <p style="margin-top:12px;">אני משאיר את זה כאן כדי שתדע מה קיים ולאן זה הולך, לא בתור משימה. את מה שנצטרך מכאן נעשה יחד במפגש, על המסך, ובקצב שלך. אם בסוף מתברר שאתה לא צריך את זה בכלל - גם זו תשובה טובה.</p>
     <p style="margin-top:12px;">רק אם מתחשק לך להציץ: <a href="claude-code-installation-guide.html">מדריך התקנת Claude Code המלא (Windows + Mac)</a></p>
   </div>
 
