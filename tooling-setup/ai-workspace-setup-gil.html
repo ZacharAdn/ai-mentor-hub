@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הקמת סביבת העבודה לסוכני AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-primary:#0f172a; --bg-card:#1e293b; --bg-soft:#172033; --border:#334155; --border-hover:#475569;
+  --text-primary:#e2e8f0; --text-secondary:#cbd5e1; --text-muted:#94a3b8;
+  --accent-purple:#818cf8; --accent-violet:#c084fc; --accent-pink:#f472b6; --accent-indigo:#6366f1;
+  --code-bg:#0b1120; --code-text:#7ee787; --glass:rgba(30,41,59,.9);
+  --ok-bg:rgba(34,197,94,.12); --ok-border:#22c55e; --ok-text:#4ade80;
+  --warn-bg:rgba(249,115,22,.12); --warn-border:#f97316; --warn-text:#fb923c;
+  --shadow:0 10px 40px rgba(0,0,0,.35);
+}
+html[data-theme="light"]{
+  --bg-primary:#f4f6fa; --bg-card:#ffffff; --bg-soft:#f8f9ff; --border:#d9e0ea; --border-hover:#b6c2d4;
+  --text-primary:#16233c; --text-secondary:#33415e; --text-muted:#5d6b85;
+  --accent-purple:#4f46e5; --accent-violet:#7c3aed; --accent-pink:#db2777; --accent-indigo:#4f46e5;
+  --code-bg:#1a1a2e; --code-text:#7ee787; --glass:rgba(255,255,255,.92);
+  --ok-bg:#e8f5e9; --ok-border:#4caf50; --ok-text:#2e7d32;
+  --warn-bg:#fff3e0; --warn-border:#ff9800; --warn-text:#e65100;
+  --shadow:0 10px 40px rgba(0,0,0,.1);
+}
+*{margin:0; padding:0; box-sizing:border-box;}
+body{font-family:'Heebo',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--bg-primary); color:var(--text-primary); line-height:1.8;}
+
+.theme-bar{position:fixed; top:1.1rem; inset-inline-end:1.3rem; z-index:1000; display:flex; background:var(--glass); backdrop-filter:blur(12px); border:1px solid var(--border); border-radius:12px; overflow:hidden; box-shadow:var(--shadow);}
+.theme-btn{background:transparent; border:none; color:var(--text-secondary); padding:.55rem .85rem; cursor:pointer; font-size:1.05rem; line-height:1;}
+
+.hero{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); color:#fff; padding:56px 20px; text-align:center;}
+.hero h1{font-size:2.6rem; font-weight:700; margin-bottom:14px; background:linear-gradient(135deg,#818cf8,#c084fc,#f472b6); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;}
+.hero p{font-size:1.15rem; color:#a0a0b8; max-width:640px; margin:0 auto;}
+.hero .badge{display:inline-block; background:rgba(129,140,248,.2); color:#a5b4fc; padding:8px 16px; border-radius:20px; font-size:.9rem; margin-top:18px; border:1px solid rgba(129,140,248,.3);}
+
+.container{max-width:900px; margin:0 auto; padding:40px 20px;}
+
+.stage-title{display:flex; align-items:center; gap:12px; margin:38px 0 8px; font-size:1.7rem; font-weight:700; color:var(--text-primary);}
+.stage-title .tag{font-size:.8rem; font-weight:600; padding:5px 12px; border-radius:20px;}
+.tag-now{background:var(--ok-bg); color:var(--ok-text); border:1px solid var(--ok-border);}
+.tag-later{background:var(--warn-bg); color:var(--warn-text); border:1px solid var(--warn-border);}
+.stage-sub{color:var(--text-muted); margin-bottom:22px; font-size:1.02rem;}
+
+.step{background:var(--bg-card); border-radius:18px; margin-bottom:26px; overflow:hidden; border:1px solid var(--border); box-shadow:var(--shadow);}
+.step-header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); color:#fff; padding:22px 28px; display:flex; align-items:center; gap:18px;}
+.step-number{width:48px; height:48px; background:linear-gradient(135deg,var(--accent-indigo),var(--accent-violet)); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700; flex-shrink:0;}
+.step-title-container h2{font-size:1.35rem; font-weight:600;}
+.step-title-container .duration{font-size:.9rem; color:#a0a0b8; margin-top:4px;}
+.step-content{padding:26px 28px;}
+.step-description{font-size:1.08rem; color:var(--text-secondary); margin-bottom:22px; padding:18px; background:var(--bg-soft); border-radius:12px; border-inline-start:4px solid var(--accent-indigo);}
+
+.instructions{margin-top:20px;}
+.instructions h3{font-size:1.05rem; font-weight:600; margin-bottom:12px; color:var(--text-primary);}
+.instruction-list{list-style:none; counter-reset:instruction;}
+.instruction-list li{counter-increment:instruction; padding:14px 56px 14px 15px; margin-bottom:9px; background:var(--bg-soft); border-radius:12px; position:relative; border:1px solid var(--border); color:var(--text-secondary);}
+.instruction-list li strong{color:var(--text-primary);}
+.instruction-list li::before{content:counter(instruction); position:absolute; inset-inline-end:15px; top:50%; transform:translateY(-50%); width:30px; height:30px; background:linear-gradient(135deg,var(--accent-indigo),var(--accent-violet)); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:600; font-size:.9rem;}
+
+.code-block{background:var(--code-bg); color:var(--code-text); padding:15px 20px; border-radius:8px; font-family:'Courier New',monospace; margin:15px 0; overflow-x:auto; direction:ltr; text-align:left;}
+code{background:var(--bg-soft); border:1px solid var(--border); border-radius:5px; padding:1px 6px; font-family:'Courier New',monospace; direction:ltr; display:inline-block;}
+.ext-link{color:var(--accent-indigo); font-weight:600; text-decoration:underline;}
+.prompt-box{background:var(--bg-soft); border:1px dashed var(--border-hover); border-radius:12px; padding:16px 18px; margin:14px 0; color:var(--text-primary); font-size:1.02rem; line-height:1.9;}
+
+.tip{background:var(--ok-bg); border-inline-start:4px solid var(--ok-border); padding:18px; border-radius:0 12px 12px 0; margin:18px 0;}
+.tip-title{font-weight:600; color:var(--ok-text); margin-bottom:6px;}
+.tip p{color:var(--text-secondary);}
+.warning{background:var(--warn-bg); border-inline-start:4px solid var(--warn-border); padding:18px; border-radius:0 12px 12px 0; margin:18px 0;}
+.warning-title{font-weight:600; color:var(--warn-text); margin-bottom:6px;}
+.warning p{color:var(--text-secondary);}
+
+.callout{background:var(--bg-card); border:1px solid var(--border); border-radius:16px; padding:24px 26px; margin-bottom:30px; box-shadow:var(--shadow);}
+.callout h3{color:var(--accent-violet); font-size:1.15rem; margin-bottom:10px;}
+.callout p{color:var(--text-secondary);}
+.callout a{color:var(--accent-indigo); font-weight:600;}
+
+.success-banner{background:linear-gradient(135deg,#22c55e,#16a34a); color:#fff; padding:26px; border-radius:18px; text-align:center; margin:30px 0;}
+.success-banner h3{font-size:1.4rem; margin-bottom:8px;}
+
+footer{text-align:center; padding:36px 20px; color:var(--text-muted);}
+footer a{color:var(--accent-indigo); text-decoration:none; font-weight:500;}
+
+@media (max-width:600px){
+  .hero h1{font-size:2rem;}
+  .step-header{flex-direction:column; text-align:center;}
+  .instruction-list li{padding-inline-end:48px;}
+}
+</style>
+</head>
+<body>
+
+<div class="theme-bar">
+  <button class="theme-btn" id="btn-theme" onclick="toggleTheme()" title="בהיר / כהה">🌙</button>
+</div>
+
+<div class="hero">
+  <h1>הקמת סביבת העבודה שלך</h1>
+  <p>מדריך פשוט וידידותי להקמת סביבת העבודה לבניית סוכני AI. אין צורך בניסיון טכני קודם. אם משהו נתקע - זה בסדר גמור, נשלים יחד בתחילת המפגש.</p>
+  <div class="badge">שלב 1 בלבד עכשיו: כ-15 דקות</div>
+</div>
+
+<div class="container">
+
+  <div class="callout">
+    <h3>מה עושים כאן, ולמה</h3>
+    <p>שני כלים בשלב הראשון: <strong>קלוד דסקטופ</strong> - אפליקציית השיחה שדרכה תעבוד יום-יום, ו<strong>אובסידיאן</strong> - המחברת החכמה שתשמש כזיכרון של המערכת. רק שני אלה נדרשים עכשיו. כל השאר (שלב 2 למטה) הוא בונוס למפגשים המתקדמים, ונעשה אותו יחד. אין צורך להתקין אותו לבד.</p>
+  </div>
+
+  <div class="stage-title">שלב 1 <span class="tag tag-now">להתקנה עכשיו</span></div>
+  <div class="stage-sub">שני הכלים שאיתם נתחיל במפגש הראשון.</div>
+
+  <!-- Step 1: Claude Desktop -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div class="step-title-container">
+        <h2>התקנת קלוד דסקטופ</h2>
+        <div class="duration">כ-5 דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-description">
+        קלוד דסקטופ היא האפליקציה הרשמית של Claude למחשב. זו תהיה נקודת המפגש היומית שלך עם הסוכן. יש לך כבר מנוי לקלוד, אז רק נתקין ונתחבר.
+      </div>
+      <div class="instructions">
+        <h3>עקוב אחרי השלבים:</h3>
+        <ol class="instruction-list">
+          <li>פתח את הקישור <a class="ext-link" href="https://claude.ai/download" target="_blank" rel="noopener">claude.ai/download</a> (נפתח בטאב חדש)</li>
+          <li>הורד את הגרסה למחשב שלך: <strong>macOS</strong> אם זה מק, <strong>Windows</strong> אם זה חלונות</li>
+          <li>הרץ את הקובץ שהורדת. במק: גרור את האייקון לתיקיית <strong>Applications</strong>. בחלונות: לחץ על הקובץ ואשר את ההתקנה</li>
+          <li>פתח את קלוד דסקטופ, ולחץ <strong>Sign in</strong></li>
+          <li>התחבר עם אותו חשבון שבו אתה כבר משתמש במנוי שלך</li>
+        </ol>
+      </div>
+      <div class="tip">
+        <div class="tip-title">איך יודעים שזה עבד?</div>
+        <p>נפתח חלון צ'אט של קלוד ישירות מהמחשב, בלי דפדפן. נסה לכתוב לו "שלום" ולראות שהוא עונה.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Obsidian -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div class="step-title-container">
+        <h2>התקנת אובסידיאן</h2>
+        <div class="duration">כ-5 דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-description">
+        אובסידיאן היא מחברת דיגיטלית שמורכבת מקבצים פשוטים במחשב שלך. אנחנו נשתמש בה כ"זיכרון" של המערכת: כאן יישמרו הנתונים, ההגדרות והידע שהסוכן צובר. הכל נשאר אצלך במחשב.
+      </div>
+      <div class="instructions">
+        <h3>עקוב אחרי השלבים:</h3>
+        <ol class="instruction-list">
+          <li>פתח את הקישור <a class="ext-link" href="https://obsidian.md" target="_blank" rel="noopener">obsidian.md</a> (נפתח בטאב חדש), ולחץ על כפתור ההורדה הגדול</li>
+          <li>ההורדה מזהה לבד את סוג המחשב שלך. הרץ את הקובץ שהורד ואשר את ברירות המחדל</li>
+          <li>פתח את אובסידיאן. במסך הפתיחה בחר <strong>Create new vault</strong> (יצירת כספת חדשה)</li>
+          <li>תן לה שם, למשל <strong>Portfolio</strong>, ובחר מיקום נוח במחשב (למשל שולחן העבודה)</li>
+          <li>לחץ <strong>Create</strong>. זהו - יש לך מחברת חכמה ריקה, מוכנה לעבודה</li>
+        </ol>
+      </div>
+      <div class="tip">
+        <div class="tip-title">מה זו "כספת" (vault)?</div>
+        <p>פשוט תיקייה במחשב שאובסידיאן מנהל. כל מה שנכתוב שם הוא קבצים רגילים שלך, לא בענן של אף אחד. אתה הבעלים המלא של הזיכרון הזה.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="success-banner">
+    <h3>מצוין, סיימת את שלב 1</h3>
+    <p>קלוד דסקטופ ואובסידיאן מותקנים. זה כל מה שצריך למפגש הראשון.</p>
+  </div>
+
+  <div class="callout" style="border-inline-start:4px solid var(--ok-border);">
+    <h3>שלב 2 (בהמשך) מומלץ מאוד</h3>
+    <p>סביבת הפיתוח המלאה שבהמשך המסמך שווה מאוד. גם אם לא תגיע לכולה עכשיו - יש בה סעיף שחשוב במיוחד: <strong>סעיף 6</strong>, הגדרות פרטיות ואובייקטיביות. הוא מפורט במלואו במדריך המלא. כדי שלא תפספס, הנה גרסה מהירה של שתי ההגדרות, לעשות כבר עכשיו:</p>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">★</div>
+      <div class="step-title-container">
+        <h2>בקש מקלוד להיות אובייקטיבי</h2>
+        <div class="duration">דקה</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-description">
+        קלוד, כמו כלים דומים, נוטה להסכים איתך. אתה רוצה בדיוק ההיפך: מידע לא מוטה, ומישהו שיגיד לך כשאתה טועה. הדבק את הטקסט הבא ב-Claude Desktop, תחת Settings, אחר כך General, ושם Instructions for Claude, או בתחילת כל שיחה חשובה.
+      </div>
+      <div class="prompt-box">
+        אני רוצה שתהיה אובייקטיבי איתי, לא מסכים אוטומטית. אל תגיד לי מה שנוח לי לשמוע. אם אתה חושב שאני טועה - אמור לי, ולמה. כשאתה מסכם דוח או מידע, הפרד בבירור בין עובדה לפרשנות, וסמן איפה יש חוסר ודאות או הטיה אפשרית. ההחלטה נשארת שלי, ואתה נותן לי תמונה נקייה.
+      </div>
+      <div class="tip">
+        <div class="tip-title">למה זה חשוב לך</div>
+        <p>זה בדיוק העיקרון שאתה חוזר אליו: לעשות מה שה-AI לא יודע. הפרומפט הזה מוריד את ההטיה ומשאיר את השיפוט אצלך.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">🔒</div>
+      <div class="step-title-container">
+        <h2>שמור שהמידע שלך פרטי</h2>
+        <div class="duration">דקה</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-description">
+        כברירת מחדל, השיחות שלך עשויות לשמש לשיפור המודל. אתה עובד עם נתוני תיק אישיים, אז כדאי לכבות את זה.
+      </div>
+      <div class="instructions">
+        <h3>עקוב אחרי השלבים:</h3>
+        <ol class="instruction-list">
+          <li>פתח את הקישור <a class="ext-link" href="https://claude.ai/settings" target="_blank" rel="noopener">ההגדרות של קלוד</a> (נפתח בטאב חדש)</li>
+          <li>עבור ללשונית <strong>Privacy</strong> (פרטיות)</li>
+          <li>כבה את האפשרות <strong>Help improve Claude</strong>. זהו, הנתונים שלך נשארים פרטיים</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage-title">שלב 2 <span class="tag tag-now">מומלץ מאוד</span></div>
+  <div class="stage-sub">סביבת הפיתוח המלאה שדרכה בונים סוכנים חזקים יותר. מומלץ מאוד. גם אם לא תגיע לכולה עכשיו - לפחות סעיף 6 שלה: הפרטיות והאובייקטיביות שראית למעלה בגרסה מהירה, מפורטות במדריך המלא.</div>
+
+  <div class="callout">
+    <h3>מה כולל שלב 2</h3>
+    <p><strong>Node.js</strong> (מנוע הרצה), <strong>Claude Code</strong> (הסוכן שבונה עבורנו קוד ומסמכים), <strong>Git</strong> (מעקב אחרי שינויים), ו-<strong>VS Code</strong> (סביבת כתיבת קוד). זה הצד שבו אני מוביל את הבנייה. המדריך המלא, צעד-אחר-צעד עם תמונות, וכולל את סעיף 6 (פרטיות ואובייקטיביות) בהרחבה, נמצא כאן:</p>
+    <p style="margin-top:12px;"><a href="claude-code-installation-guide.html">מדריך התקנת Claude Code המלא (Windows + Mac)</a></p>
+  </div>
+
+  <div class="tip">
+    <div class="tip-title">מוזמן לנסות</div>
+    <p>אתה מוזמן להתחיל בשלב 2 כבר עכשיו. בכל דבר שאתה נתקע בו - אל תילחם בו לבד, תתייעץ איתי ונבין ביחד אם שווה להסתבך או לדלג. הקצב שלך, ואני איתך לאורך הדרך.</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>בונים בינה - סביבת עבודה לסוכני AI</p>
+</footer>
+
+<script>
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  try{ localStorage.setItem('guideTheme', t); }catch(e){}
+  const b = document.getElementById('btn-theme');
+  if(b) b.textContent = (t === 'light') ? '🌙' : '☀️';
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('guideTheme'); }catch(e){}
+  const param = new URLSearchParams(location.search).get('theme');
+  applyTheme(param || saved || 'light');
+})();
+</script>
+</body>
+</html>

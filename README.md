@@ -22,7 +22,9 @@ The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-men
 | Guide | Topic |
 |-------|-------|
 | [logistic-regression.html](interactive-ml-concepts/logistic-regression.html) | Logistic regression with live sliders and scatter plots |
+| [how-models-learn.html](interactive-ml-concepts/how-models-learn.html) | How models learn, step by step — logistic line nudged per-point, tree built split-by-split, forest voting (real in-browser training) |
 | [decision-tree.html](interactive-ml-concepts/decision-tree.html) | Decision trees and overfitting — tree-depth slider |
+| [overfitting-explorer.html](interactive-ml-concepts/overfitting-explorer.html) | Overfitting, validation set, leakage & model comparison — real in-browser models, live decision boundary, train/test U-curve |
 | [confusion-matrix-explorer.html](interactive-ml-concepts/confusion-matrix-explorer.html) | Confusion matrix, precision, recall — threshold slider |
 | [cnn.html](interactive-ml-concepts/cnn.html) | Convolutional neural networks — animated diagrams |
 | [llm-guide.html](interactive-ml-concepts/llm-guide.html) | LLM fundamentals |
@@ -45,6 +47,7 @@ The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-men
 |-------|-------|
 | [index.html](index.html) | Claude Code installation — Windows (also serves as the site landing page) |
 | [claude-code-installation-guide.html](tooling-setup/claude-code-installation-guide.html) | Claude Code installation — Windows, Mac, VS Code |
+| [ai-workspace-setup-gil.html](tooling-setup/ai-workspace-setup-gil.html) | Non-technical beginner setup (Gil) — Stage 1: Claude Desktop + Obsidian; Stage 2 (bonus, later): dev stack via the main guide |
 | [git-github-setup.html](tooling-setup/git-github-setup.html) | From zero to first push — GitHub signup, Git install, config, commit/push via the VS Code UI |
 | [technion-lbs-setup.html](tooling-setup/technion-lbs-setup.html) | Technion LBS course dev environment setup |
 | [geoai-rg-setup.html](tooling-setup/geoai-rg-setup.html) | GeoAI / RG Innovation dev environment setup (Geo-AI-Course org) |
