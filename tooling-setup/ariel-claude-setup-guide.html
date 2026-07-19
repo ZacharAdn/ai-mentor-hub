@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מדריך התקנת קלוד — סגל אריאל</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1a1a2e;
+            line-height: 1.8;
+        }
+
+        .top-nav {
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-logo {
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-logo span {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #a0a0b8;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            color: #8fa3f0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .prerequisites {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .prerequisites h2 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prerequisites ul {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .prerequisites li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .prerequisites li .icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step {
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .step-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 25px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-title-container h2 {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .step-title-container .duration {
+            font-size: 0.9rem;
+            color: #a0a0b8;
+            margin-top: 5px;
+        }
+
+        .step-content { padding: 30px; }
+
+        .step-description {
+            font-size: 1.05rem;
+            color: #666;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
+            border-right: 4px solid #667eea;
+        }
+
+        .gif-container {
+            margin: 25px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+            background: #f5f5f5;
+        }
+
+        .gif-container img {
+            width: 100%;
+            display: block;
+        }
+
+        .media-placeholder {
+            padding: 45px 20px;
+            text-align: center;
+            color: #888;
+            font-size: 0.95rem;
+            background: repeating-linear-gradient(45deg, #f5f5f5, #f5f5f5 12px, #eeeef2 12px, #eeeef2 24px);
+        }
+
+        .gif-label {
+            background: #1a1a2e;
+            color: white;
+            padding: 12px 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .gif-label::before {
+            content: "צפו";
+            background: #667eea;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .instruction-list {
+            list-style: none;
+            counter-reset: instruction;
+        }
+
+        .instruction-list li {
+            counter-increment: instruction;
+            padding: 15px 60px 15px 15px;
+            margin-bottom: 10px;
+            background: #fafbff;
+            border-radius: 12px;
+            position: relative;
+            border: 1px solid #e8e8f0;
+        }
+
+        .instruction-list li::before {
+            content: counter(instruction);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .tip {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border-right: 4px solid #4caf50;
+            padding: 20px;
+            border-radius: 12px 0 0 12px;
+            margin: 20px 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 8px;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            border-right: 4px solid #ff9800;
+            padding: 20px;
+            border-radius: 12px 0 0 12px;
+            margin: 20px 0;
+        }
+
+        .warning-title {
+            font-weight: 600;
+            color: #e65100;
+            margin-bottom: 8px;
+        }
+
+        .success-banner {
+            background: linear-gradient(135deg, #4caf50, #45a049);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .success-banner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <div class="nav-logo">🎓 <span>סגל אריאל × קלוד</span></div>
+</nav>
+
+<div class="hero">
+    <h1>מדריך התקנת קלוד</h1>
+    <p>מסלול אחד פשוט, צעד אחרי צעד, כולל כל הפתרונות מהמפגש בזום. בסוף המדריך: קלוד מותקן, מחובר למנוי של האוניברסיטה, ובונה עבורכם.</p>
+    <div class="badge">מעודכן 19/07/2026 · לקראת יום העיון באינטל 27/07</div>
+</div>
+
+<div class="container">
+
+    <!-- לפני שמתחילים -->
+    <div class="prerequisites">
+        <h2>✅ לפני שמתחילים</h2>
+        <ul>
+            <li><span class="icon">💻</span> מתקינים על הלפטופ האישי שאיתו מגיעים לאינטל ב-27/7. לא על מחשב משרד או אוניברסיטה: מחשבים מנוהלים חסומים ע"י יחידת המחשוב, וההתקנה תיכשל שם ("אין אפשרות לפעול במחשב שלך").</li>
+            <li><span class="icon">📧</span> צריך שתהיה לכם הזמנה למנוי במייל, מהשולח Anthropic. המיילים מתעכבים לפעמים בכמה דקות. לא רואים? חפשו בתיבה את המילה Anthropic ובדקו גם ב-Spam וב-Promotions.</li>
+        </ul>
+    </div>
+
+    <!-- שלב 1 -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-number">1</div>
+            <div class="step-title-container">
+                <h2>הצטרפות למנוי דרך לינק ההזמנה</h2>
+                <div class="duration">כ-3 דקות</div>
+            </div>
+        </div>
+        <div class="step-content">
+            <ol class="instruction-list">
+                <li>פתחו את מייל ההזמנה מאנטרופיק ולחצו על הלינק. קיבלתם כמה לינקים (במייל או בצ'אט)? השתמשו רק באחרון. לינקים ישנים פגים, ואם מופיע "invalid" או "expired" זה בדיוק הסימן: בקשו לינק חדש ולחצו עליו פעם אחת בלבד.</li>
+                <li>חשוב למי שכבר השתמש בקלוד פעם: לפני הלחיצה על הלינק, היכנסו ל-claude.ai, לחצו על השם שלכם ובחרו Log out. סגירת החלון איננה התנתקות. בלי Log out מפורש ההזמנה תיתפס על החשבון הישן.</li>
+                <li>במסך ההרשמה בחרו "Continue with Google" והתחברו עם חשבון ה-Google שאליו נשלחה ההזמנה. זו הדרך שעבדה חלק במפגש: היא עוקפת את קוד האימות במייל, שאצל רבים פשוט לא הגיע.</li>
+            </ol>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/01_signin_google.png" alt="מסך ההתחברות של קלוד עם כפתור Continue with Google">
+                <div class="gif-label">מסך ההתחברות. הכפתור העליון, Continue with Google, הוא הדרך. ההודעה האדומה למטה היא בדיוק השגיאה שמקבלים בנתיב קוד-המייל, ולכן עוקפים אותו</div>
+            </div>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/03_google_flow.gif" alt="הדגמה חיה: התחברות דרך Continue with Google">
+                <div class="gif-label">כך זה נראה בפועל, מתוך המפגש: התחברות עם Google עד הכניסה לאפליקציה</div>
+            </div>
+
+            <div class="tip">
+                <div class="tip-title">💡 טיפ מהמפגש</div>
+                אם אחרי ה-Log out המערכת עדיין מתעקשת להיכנס לחשבון הישן, פתחו את הלינק בחלון גלישה בסתר (Incognito) ומשם הכל זורם.
+            </div>
+
+            <div class="warning">
+                <div class="warning-title">⚠️ נרשמתם עם קוד למייל והקוד לא מגיע?</div>
+                זה העיכוב המוכר של אנטרופיק. או שממתינים כמה דקות ובודקים שוב (כולל Spam/Promotions), או שפשוט חוזרים ומתחברים דרך Google.
+            </div>
+        </div>
+    </div>
+
+    <!-- שלב 2 -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-number">2</div>
+            <div class="step-title-container">
+                <h2>הורדת האפליקציה למחשב</h2>
+                <div class="duration">כ-3 דקות</div>
+            </div>
+        </div>
+        <div class="step-content">
+            <ol class="instruction-list">
+                <li>בסיום ההרשמה יופיע כפתור "Download for Windows" (אם זו מערכת ההפעלה שלכם). לחלופין, היכנסו ל-claude.ai/download והורידו את הגרסה למערכת שלכם.</li>
+                <li>במחשב Windows יוצגו שתי אפשרויות: x64 ו-ARM64. כמעט תמיד הנכונה היא x64 (כל מחשב עם מעבד Intel או AMD). גרסת ARM64 מיועדת רק למחשבי Snapdragon. לא בטוחים? הגדרות ⬅ מערכת ⬅ אודות ⬅ "סוג המערכת".</li>
+                <li>אשרו את תנאי השימוש, אבל אל תסמנו את האפשרות לשלוח לכם פרסומות.</li>
+                <li>הריצו את קובץ ההתקנה. אם Windows מציג אזהרת אבטחה, לחצו "More info" ואז "Run anyway".</li>
+                <li>בסיום, ודאו שהאפליקציה קיימת: לחצו על "התחל" והקלידו Claude.</li>
+                <li>רוצים קיצור דרך קבוע? לחצו עכבר ימני על אייקון האפליקציה בשורת המשימות ובחרו "Pin to taskbar".</li>
+            </ol>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/02_download_page.png" alt="עמוד ההורדה של קלוד">
+                <div class="gif-label">עמוד ההורדה, Download Claude. בוחרים את הגרסה של מערכת ההפעלה שלכם, וב-Windows בוחרים x64</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- שלב 3 -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-number">3</div>
+            <div class="step-title-container">
+                <h2>התחברות באפליקציה ובדיקה שאתם על המנוי הנכון</h2>
+                <div class="duration">כ-2 דקות</div>
+            </div>
+        </div>
+        <div class="step-content">
+            <ol class="instruction-list">
+                <li>פתחו את האפליקציה והתחברו, שוב דרך "Continue with Google", עם אותו חשבון שאיתו נרשמתם בשלב 1.</li>
+                <li>מופיע דיאלוג ששואל באיזה חשבון להשתמש? בחרו "Ariel Lecturers", לא את החשבון האישי.</li>
+                <li>בדיקת ודאות (חשוב!): לחצו על השם שלכם בפינה (בדרך כלל שמאל-למטה). אמורים לראות את "Ariel Lecturers", בחרו בו.</li>
+                <li>בהתחברות הראשונה האפליקציה תבקש כמה אישורים (למשל פתיחת קישורים). אישורי הבסיס האלה בטוחים, אשרו. מצלמה, מיקרופון או גישה רחבה לקבצים? אין צורך לאשר כרגע, והכל הפיך בהגדרות.</li>
+            </ol>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/03b_account_button.png" alt="כפתור השם בפינת האפליקציה" style="max-width: 420px; margin: 0 auto;">
+                <div class="gif-label">זה הכפתור: השם שלכם בפינה השמאלית-תחתונה. לוחצים עליו כדי לראות ולהחליף חשבון</div>
+            </div>
+
+            <div class="warning">
+                <div class="warning-title">⚠️ כתוב "Free" או שמופיע מסך תשלום?</div>
+                אתם על החשבון הפרטי ולא על המנוי של האוניברסיטה. אף אחד לא משלם כלום: פשוט החליפו ל-Ariel Lecturers דרך אותו בורר חשבונות. אם "Ariel Lecturers" לא מופיע בכלל ברשימה, כתבו לזכר: כנראה שהמייל שלכם עוד לא שויך למושב.
+            </div>
+        </div>
+    </div>
+
+    <!-- שלב 4 -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-number">4</div>
+            <div class="step-title-container">
+                <h2>הפעלת Code והתקנת גיט</h2>
+                <div class="duration">כ-5 דקות</div>
+            </div>
+        </div>
+        <div class="step-content">
+            <div class="step-description">
+                החלק הזה הופך את קלוד מצ'אט לסוכן שבונה עבורכם אתרים וכלים על המחשב. בו נעבוד באינטל.
+            </div>
+            <ol class="instruction-list">
+                <li>באפליקציה לחצו על Code (בתפריט למעלה משמאל).</li>
+                <li>לחצו על Open folder ופתחו תיקייה חדשה וריקה, במקום נוח. זו התיקייה שבה קלוד יעבוד: יכתוב קבצים, יקרא אותם ויריץ פקודות.</li>
+                <li>קלוד יבקש להתקין גיט (Git, מערכת לניהול וגיבוי קוד). מתקינים לפי הלינק שהוא נותן: בכל מסכי ההתקנה פשוט לוחצים Next עם ברירות המחדל, ובסוף Install.</li>
+                <li>אחרי שהגיט הותקן, קלוד עלול להמשיך לבקש אותו. זה מוכר: לחצו על כפתור הבית (Home) ואז חזרו ל-Code, וההודעה תיעלם. אם לא, סגרו את האפליקציה לגמרי ופתחו מחדש.</li>
+            </ol>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/04_code_folder_mode.png" alt="האפליקציה עם לשוניות Home ו-Code">
+                <div class="gif-label">כך נראית האפליקציה: לשוניות Home ו-Code למעלה משמאל, ולמטה בתיבת הכתיבה הכפתור Project or folder לבחירת תיקייה</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- שלב 5 -->
+    <div class="step">
+        <div class="step-header">
+            <div class="step-number">5</div>
+            <div class="step-title-container">
+                <h2>הבקשה הראשונה: לוודא שהכל עובד</h2>
+                <div class="duration">כ-5 דקות</div>
+            </div>
+        </div>
+        <div class="step-content">
+            <ol class="instruction-list">
+                <li>ודאו שנבחרה תיקייה (הכפתור למטה, Open folder). קלוד יוצר הכל בתוך התיקייה הזו.</li>
+                <li>כתבו לקלוד קוד בקשה פשוטה מהעולם שלכם, למשל: "תבנה לי אתר פשוט לקורס חדש שאני מכין, עם שם הקורס ושלושה נושאים".</li>
+                <li>קלוד ישאל שאלות הבהרה ויבקש אישורים תוך כדי עבודה. לא חייבים להבין כל שאלה: אפשר לענות "תחליט אתה" או "תשאיר פשוט" והוא ימשיך. ככל שהבקשה מפורטת יותר, הוא ישאל פחות. את רמת האישורים שולטים דרך מצב העבודה (mode): מומלץ Auto, שמאשר לבד את כל מה שבטוח ושואל אתכם על כל השאר.</li>
+                <li>נראה שהוא נתקע ולא קורה כלום? הוא כנראה חושב או עובד. תנו לו רגע.</li>
+                <li>בסיום הוא יפתח לכם את התוצאה. הגעתם לכאן? אתם מוכנים ל-27/7.</li>
+            </ol>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/05b_mode_selector.png" alt="בורר מצב העבודה ליד בחירת התיקייה">
+                <div class="gif-label">בורר מצב העבודה, מתחת לתיבת הכתיבה: לוחצים על Manual ומחליפים ל-Auto. במצב Auto הוא מאשר לבד את מה שבטוח ושואל רק על השאר</div>
+            </div>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/05_first_prompt.gif" alt="הדגמה חיה: הבקשה הראשונה בקלוד קוד">
+                <div class="gif-label">מתוך המפגש: בחירת תיקייה, כתיבת הבקשה הראשונה, וקלוד יוצא לדרך</div>
+            </div>
+
+            <div class="gif-container">
+                <img src="ariel-guide-media/06_result_site.gif" alt="האתר שקלוד בנה במפגש">
+                <div class="gif-label">והתוצאה מהמפגש עצמו: אתר שלם שקלוד בנה מבקשה אחת, בלי שורת קוד אחת שלנו</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- מגבלות שימוש -->
+    <div class="warning">
+        <div class="warning-title">⏳ מגבלות שימוש, חשוב לקראת ה-27</div>
+        המנוי הוא Pro, והשימוש מוגבל בחלון מתגלגל של כ-5 שעות: בתוך החלון יש מכסה, וכשהיא נגמרת ממתינים לחידוש. כדי לא להיתקע באמצע הסדנה, אל תשרפו את המכסה ביום שלפני, והגיעו רעננים. לבדיקת השימוש: לוחצים על השם שלכם, אחר כך Settings, אחר כך Usage.
+    </div>
+
+    <!-- מה מביאים -->
+    <div class="success-banner">
+        <h3>🎒 מה מביאים ל-27/7 באינטל</h3>
+        <p>אותו לפטופ שהתקנתם עליו, מטען, וחיבור מאומת ל-"Ariel Lecturers" (לא Free).<br>
+        נתקעתם בשלב כלשהו? פנו לזכר לפני המועד, כדי שלא תגיעו בלי סביבה עובדת.</p>
+    </div>
+
+    <!-- יצירת קשר -->
+    <div class="prerequisites">
+        <h2>📞 נתקעתם? מוזמנים לפנות</h2>
+        <ul>
+            <li><span class="icon">💬</span> <span>וואטסאפ: <a href="https://wa.me/972503533080" style="color:#667eea; font-weight:600; text-decoration:none;">050-3533080</a> (זכר עדינייב)</span></li>
+            <li><span class="icon">📧</span> <span>מייל: <a href="mailto:zachar.adn@gmail.com" style="color:#667eea; font-weight:600; text-decoration:none;">zachar.adn@gmail.com</a></span></li>
+        </ul>
+    </div>
+
+</div>
+
+<footer>
+    נבנה עבור סגל אוניברסיטת אריאל · מעודכן לפי מפגש ההתקנה 19/07/2026 · זכר עדינייב, בונים בינה
+</footer>
+
+</body>
+</html>
