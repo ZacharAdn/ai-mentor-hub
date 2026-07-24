@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>מהנדסים בינה — המודעות המנצחות לקמפיין הוובינר</title>
+<style>
+  @font-face {
+    font-family: 'Heebo'; font-style: normal; font-weight: 100 900;
+    src: url('assets/fonts/heebo-hebrew.woff2') format('woff2');
+    unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+FB1D-FB4F;
+  }
+  @font-face {
+    font-family: 'Heebo'; font-style: normal; font-weight: 100 900;
+    src: url('assets/fonts/heebo-latin.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+2000-206F;
+  }
+  :root {
+    --bg: #0B1120; --bg-alt: #162032; --card: #1E293B; --card-line: #334155;
+    --text: #F8FAFC; --muted: #94A3B8;
+    --gold: #D4AF37; --gold-light: #F3E5AB; --blue: #38BDF8;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Heebo', system-ui, sans-serif;
+    background: var(--bg); color: var(--text);
+    direction: rtl; line-height: 1.6;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 22px; }
+  header {
+    padding: 64px 0 44px; text-align: center;
+    background:
+      radial-gradient(900px 480px at 50% -10%, #1B2A45 0%, rgba(22,32,50,0) 65%),
+      var(--bg);
+    border-bottom: 1px solid rgba(212,175,55,0.25);
+  }
+  .kicker { color: var(--gold-light); font-weight: 700; font-size: 16px; letter-spacing: 0.05em; }
+  h1 { font-size: clamp(30px, 5vw, 50px); font-weight: 900; margin: 12px 0 10px; }
+  h1 .gold {
+    background: linear-gradient(160deg, var(--gold-light) 10%, var(--gold) 75%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { color: var(--muted); font-size: 17px; max-width: 760px; margin: 0 auto; }
+  .datepill {
+    display: inline-block; margin-top: 22px;
+    border: 1.5px solid rgba(212,175,55,0.55); border-radius: 999px;
+    padding: 8px 26px; color: var(--gold-light); font-weight: 700; font-size: 17px;
+    background: rgba(212,175,55,0.06);
+  }
+  section { padding: 52px 0 8px; }
+  h2 { font-size: 28px; font-weight: 900; margin-bottom: 8px; }
+  h2 .num { color: var(--gold); }
+  .lead { color: var(--muted); max-width: 860px; margin-bottom: 26px; }
+  .grid { display: grid; gap: 18px; }
+  .cards-3 { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .panel {
+    background: var(--card); border: 1px solid var(--card-line);
+    border-radius: 16px; padding: 22px 24px;
+  }
+  .panel h3 { font-size: 18px; margin-bottom: 6px; }
+  .panel p { color: var(--muted); font-size: 15px; }
+  .panel .src { display: block; margin-top: 10px; font-size: 12.5px; color: #64748B; direction: ltr; text-align: left; word-break: break-all; }
+  table {
+    width: 100%; border-collapse: collapse; direction: ltr; text-align: left;
+    font-size: 14.5px; background: var(--card); border-radius: 14px; overflow: hidden;
+  }
+  th, td { padding: 12px 16px; border-bottom: 1px solid var(--card-line); vertical-align: top; }
+  th { background: var(--bg-alt); color: var(--gold-light); font-weight: 700; }
+  td { color: var(--text); }
+  td .s { color: #64748B; font-size: 12.5px; }
+  .table-scroll { overflow-x: auto; border-radius: 14px; border: 1px solid var(--card-line); }
+  .ad {
+    display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px;
+    background: var(--card); border: 1px solid var(--card-line);
+    border-radius: 20px; padding: 30px; margin-bottom: 30px;
+  }
+  @media (max-width: 900px) { .ad { grid-template-columns: 1fr; } }
+  .rank {
+    display: inline-flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  }
+  .rank .badge {
+    background: linear-gradient(160deg, var(--gold-light) 0%, var(--gold) 75%);
+    color: var(--bg); font-weight: 900; font-size: 15px;
+    border-radius: 999px; padding: 5px 18px;
+  }
+  .rank .score { color: var(--muted); font-size: 14px; }
+  .rank .fixed-tag { color: #4ADE80; font-size: 13.5px; font-weight: 700; border: 1px solid rgba(74,222,128,0.4); border-radius: 999px; padding: 3px 12px; }
+  .ad h3 { font-size: 24px; font-weight: 900; margin-bottom: 4px; }
+  .ad .angle { color: var(--muted); font-size: 14.5px; margin-bottom: 18px; }
+  .copyblock {
+    background: var(--bg); border: 1px solid var(--card-line);
+    border-radius: 14px; padding: 20px 22px;
+    font-size: 15.5px; white-space: pre-wrap; position: relative;
+  }
+  .fieldlbl { color: var(--gold-light); font-size: 13px; font-weight: 700; margin: 16px 0 6px; letter-spacing: 0.04em; }
+  .headline-box {
+    background: var(--bg); border: 1px solid var(--card-line); border-radius: 12px;
+    padding: 12px 18px; font-weight: 700; font-size: 17px;
+  }
+  .copybtn {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--bg-alt); color: var(--muted);
+    border: 1px solid var(--card-line); border-radius: 8px;
+    font-family: inherit; font-size: 12.5px; padding: 5px 12px; cursor: pointer;
+  }
+  .copybtn:hover { color: var(--gold-light); border-color: var(--gold); }
+  .fixes { margin-top: 18px; }
+  .fixes li { color: var(--muted); font-size: 14px; margin: 6px 0 6px 0; list-style: none; padding-right: 22px; position: relative; }
+  .fixes li::before { content: '✓'; color: #4ADE80; position: absolute; right: 0; }
+  .media img { width: 100%; border-radius: 14px; border: 1px solid var(--card-line); display: block; }
+  .media .cap { color: #64748B; font-size: 12.5px; margin-top: 8px; text-align: center; }
+  .vidgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; align-items: start; }
+  video { width: 100%; border-radius: 14px; border: 1px solid var(--card-line); display: block; background: #000; }
+  .note {
+    border-right: 3px solid var(--gold); background: rgba(212,175,55,0.07);
+    border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 20px 0;
+    color: var(--text); font-size: 15px;
+  }
+  .checklist li { list-style: none; padding-right: 26px; position: relative; margin: 9px 0; font-size: 15.5px; }
+  .checklist li::before { content: '☐'; position: absolute; right: 0; color: var(--gold); }
+  footer { padding: 44px 0 60px; color: #64748B; font-size: 13.5px; text-align: center; border-top: 1px solid var(--card-line); margin-top: 60px; }
+  footer a { color: var(--muted); }
+  .srcs { font-size: 12.5px; color: #64748B; direction: ltr; text-align: left; margin-top: 18px; line-height: 1.9; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="kicker">בונים בינה · קמפיין מטא · טסט 400 ₪</div>
+    <h1>מהנדסים בינה — <span class="gold">המודעות המנצחות</span></h1>
+    <p class="sub">15 גרסאות קופי משלושה כותבי AI בלתי-תלויים → פאנל שופטים → אודיט מול סטנדרט מודעות ממירות (מחקר רשת מקורות 2024-2026) → תיקונים → החבילה הזאת.</p>
+    <div class="datepill">וובינר חי וחינמי · רביעי 29.7 · 20:30 · בזום</div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2><span class="num">01 ·</span> איך יודעים שמודעה ממירה — תמצית המחקר</h2>
+  <p class="lead">ארבעה סוכני מחקר סרקו מקורות ראשוניים: ניסויי AdEspresso בתקציב אמיתי, בנצ'מרקים של WordStream (מעל 1,000 קמפיינים), דאטה של Motion (578 אלף קריאייטיבים), מחקרי Unbounce (57 מיליון המרות) והנחיות מטא הרשמיות. אלה העקרונות שהאודיט נמדד מולם:</p>
+  <div class="grid cards-3">
+    <div class="panel"><h3>ההוק חי ב-125 התווים הראשונים</h3><p>מובייל חותך את הטקסט אחרי ~125 תווים. השורה הראשונה חייבת לעבוד לבד: קריאת קהל + הבטחה. רוב הגולשים לא לוחצים "עוד".</p><span class="src">Meta Business Help / leadsync.me</span></div>
+    <div class="panel"><h3>קריאת קהל בשורה 1</h3><p>בטופס Instant (חיכוך אפסי) הקופי הוא מסנן האיכות היחיד — "מהנדסים, כלכלנים" במפורש, לפני הקליק ולא אחריו.</p><span class="src">adlibrary.com · thedigitalexchange.co</span></div>
+    <div class="panel"><h3>מספרים ספציפיים, לא תארים</h3><p>מספר קונקרטי בהוק הוא מנגנון עצירת הגלילה החזק ביותר בסקרי משווקים. ‏9.6/10 עובד; "קורס מדהים" לא.</p><span class="src">databox.com</span></div>
+    <div class="panel"><h3>הפער בין קופי טוב לגרוע: פי 2.4</h3><p>בניסוי AdEspresso עם אותה תמונה ואותו קהל, גרסת הקופי לבדה שינתה את עלות הליד פי 2.4. קופי בינוני-ארוך ניצח את הקצר בלידגן קר.</p><span class="src">adespresso.com — $1,000 experiment</span></div>
+    <div class="panel"><h3>שפה פשוטה ממירה כפול</h3><p>רמת קריאה של כיתות ה'-ז' המירה 11.1% מול 5.3% לניסוח "מקצועי" — גם אצל מהנדסים. הז'רגון נשאר בוובינר, לא במודעה.</p><span class="src">Unbounce — 57M conversions</span></div>
+    <div class="panel"><h3>כפתור פעולה, ניסוח גוף ראשון</h3><p>‏CTA תואם-פעולה ניצח את "למידע נוסף" ב-50.6% בעלות לליד. ניסוח בעלות ("שריינו לי מקום") מרים קליקים עד 90% מול גוף שני.</p><span class="src">AdEspresso CTA test · ContentVerve</span></div>
+    <div class="panel"><h3>לא מפרסמים את ההקלטה</h3><p>הבטחת replay במודעה מורידה הגעה חיה. את ההקלטה מזכירים אחרי ההרשמה — במייל האישור, לא בקופי.</p><span class="src">Livestorm · Univid</span></div>
+    <div class="panel"><h3>פנים אמיתיות מרימות CTR</h3><p>פנים אנושיות אמיתיות (לא איור) מושכות את העין בפיד; פורטרט המרצים הוא נכס המרה, לא קישוט. ‏UGC-נטיב מנצח ליטוש: ‏CTR ‏1.8% מול 1.1%.</p><span class="src">lineardesign.com · Reloop/Meta case</span></div>
+    <div class="panel"><h3>דחיפות אמת בלבד</h3><p>‏59% מההרשמות לוובינר נופלות בשבוע האחרון — התאריך והשעה הם הדדליין האמיתי, ומוצגים בכל נכס. בלי "נותרו 3 מקומות" מפוברק.</p><span class="src">entrepreneurshq.com</span></div>
+    <div class="panel"><h3>מבחן 2 השניות</h3><p>מי זה בשביל + מה מקבלים — חייבים להיקרא בשתי שניות של גלילה. הוק-תועלת-הוכחה-CTA, כולם מצביעים על אותה הצעה.</p><span class="src">Facebook IQ / profiletree</span></div>
+    <div class="panel"><h3>וידאו: הוק עד שנייה 3</h3><p>בלי אינטרו לוגו. ‏9-15 שניות לפיד קר, כתוביות צרובות (85% צופים בלי סאונד), הצעה עד שנייה 5. הצגת ההצעה מוקדם = ‏CPA נמוך ב-23%.</p><span class="src">Motion · 3Play/Facebook IQ</span></div>
+    <div class="panel"><h3>בתקציב זעיר: 2-3 קונספטים</h3><p>‏400 ₪ לא קונים סיגנל ל-5 מודעות. סט מודעות אחד, 2-3 קריאייטיבים, חוק הריגה כתוב מראש: ‏2-3x עלות-יעד בלי ליד — כיבוי.</p><span class="src">Meta Performance 5 · motionapp.com</span></div>
+  </div>
+
+  <div class="fieldlbl" style="margin-top:28px">BENCHMARKS (planning anchors, not promises)</div>
+  <div class="table-scroll"><table>
+    <tr><th>Metric</th><th>Benchmark</th><th>Source</th></tr>
+    <tr><td>Cost per free-webinar registration</td><td>$1-3 good · $3-10 workable · target &lt;$20</td><td class="s">Major Impact Media · beknownonline</td></tr>
+    <tr><td>Education vertical, leads objective</td><td>CTR 1.86% · CVR 10.08% · CPL $28.22</td><td class="s">WordStream 2025, 1,000+ campaigns</td></tr>
+    <tr><td>Facebook CPM, Israel</td><td>~$8-9 median (June dip ~$4.85)</td><td class="s">Superads, $3B dataset</td></tr>
+    <tr><td>Instant Form vs landing page</td><td>67% vs 50% completion, same CPL</td><td class="s">AdEspresso $2,000 experiment</td></tr>
+    <tr><td>Higher-Intent form type</td><td>-20-40% volume, +15-25% lead quality</td><td class="s">Meta lead-gen practitioner guide 2026</td></tr>
+    <tr><td>Video hook rate (3s views / impressions)</td><td>&lt;25% kill · 30-40% good · 40%+ elite</td><td class="s">Motion Creative Benchmarks 2026</td></tr>
+    <tr><td>Live show-up rate, webinars</td><td>47.7% avg (Livestorm 2026)</td><td class="s">Livestorm Benchmark Report</td></tr>
+    <tr><td>Min. spend per creative for a signal</td><td>~$50-100 engagement · $200-500 conversion</td><td class="s">roaspig.com · motionapp.com</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <h2><span class="num">02 ·</span> פסיקת האודיט</h2>
+  <p class="lead">כל מודעה נבדקה מול רובריקה משוקללת (10 קריטריונים) על ידי סוכן אודיט שראה את הקריאייטיב האמיתי. כל החמש עברו עם תיקונים ("pass-with-fixes") — התיקונים יושמו, והגרסאות בעמוד הזה הן אחרי תיקון. שלושה ליקויים חזרו כמעט בכולן: הבטחת הקלטה במודעה (מוריד הגעה חיה), היעדר קריאת קהל בשורה 1, והצעה קטנה מדי על הקריאייטיב.</p>
+  <div class="table-scroll"><table>
+    <tr><th>Rank</th><th>Ad</th><th>Audit score (pre-fix)</th><th>Verdict</th><th>Wave</th></tr>
+    <tr><td>1</td><td>FINAL-2 — "סוגר את הטאב"</td><td>59 → fixed</td><td>Unanimous top-3 of all three copy judges; critical creative-hook mismatch fixed by re-render</td><td>Wave 1</td></tr>
+    <tr><td>2</td><td>FINAL-3 — "9.6"</td><td>69 → fixed</td><td>Highest pre-fix score; proof-led exception, cleanest attribution</td><td>Wave 1</td></tr>
+    <tr><td>3</td><td>FINAL-1 — "הנתונים ישנים"</td><td>59 → fixed</td><td>The validated landing-page hook; creative gained faces + action CTA</td><td>Wave 1</td></tr>
+    <tr><td>4</td><td>FINAL-4 — "הכלל שלא ניסחת"</td><td>58 → fixed</td><td>Distinct respect-angle; wrong course-format headline on creative fixed</td><td>Reserve (24-48h swap)</td></tr>
+    <tr><td>5</td><td>Video — motion static</td><td>67 → fixed</td><td>Ken-Burns motion added, replay line removed, audience kicker added</td><td>Reels only</td></tr>
+  </table></div>
+  <div class="note">המלצת ההשקה (מהמחקר, לא טעם אישי): גל ראשון = שלוש מודעות בלבד — FINAL-2, FINAL-3, FINAL-1 — בסט מודעות אחד. ‏FINAL-4 נכנסת כמחליפה בבדיקת 24-48 שעות. הווידאו רץ במקביל בפלייסמנט רילס בלבד, שם הסטטיקים חלשים ממילא.</div>
+</section>
+
+<section>
+  <h2><span class="num">03 ·</span> המודעות — קופי סופי + קריאייטיב</h2>
+
+  <!-- FINAL-2 -->
+  <div class="ad">
+    <div>
+      <div class="rank"><span class="badge">מקום 1 · גל ראשון</span><span class="fixed-tag">תוקן ואושר</span></div>
+      <h3>"סוגר את הטאב"</h3>
+      <div class="angle">סצנת קונפליקט טהורה — הבחירה הראשונה של כל שלושת השופטים. הקריאייטיב רונדר מחדש עם ההוק של המודעה עצמה.</div>
+      <div class="fieldlbl">HEADLINE (כותרת מתחת לקריאייטיב)</div>
+      <div class="headline-box">הקורסים בנויים למתכנתים. אתה לא</div>
+      <div class="fieldlbl">PRIMARY TEXT</div>
+      <div class="copyblock" id="copy-f2"><button class="copybtn" onclick="cp('copy-f2')">העתקה</button>עשרים דקות אתה בודק עוד קורס בינה מלאכותית. מגיע ל'דרישות קדם: היכרות עם פייתון' — וסוגר את הטאב. שוב.
+
+וזה לא שהמספרים מפחידים אותך. אתה מהנדס, כלכלן, איש תפעול — אתה חי מספרים: גיליונות שאתה מכיר בעל פה, חישובים שאתה עושה בראש, תחום שאתה מבין יותר טוב מכל תוכנה שנכתבה עליו.
+
+אתה פשוט לא מתכנת. ואין לך שום כוונה להפוך לאחד.
+
+מעבירים: ד"ר אלי ספרא (דוקטורט מהטכניון, יותר מ-20 שנות הוראה למהנדסים) וזכר עדינייב (Data Scientist, בעברו ראש צוות AI).
+
+ברביעי 29.7 בשעה 20:30 אנחנו מעבירים וובינר חי בזום, בחינם, שבנוי על ההנחה ההפוכה: ניקח קובץ אקסל אמיתי ומבולגן של פרויקטים, ונבנה ממנו בשידור כלי שעובד — בלי שתכתוב שורת קוד אחת. הקוד נכתב בשבילך.
+
+מי שבשידור שואל בזמן אמת — אפשר להגיע עם דוגמה מהתחום שלך.
+
+בוא תראה איך זה נראה כשמישהו בונה בשבילך — לחץ על "הרשמה" ושריין לך מקום.</div>
+      <ul class="fixes">
+        <li>קריאייטיב הותאם להוק של המודעה (היה חוסר-התאמה קריטי: ההוק של מודעה אחרת)</li>
+        <li>הבטחת ההקלטה הוסרה — עברה למייל האישור</li>
+        <li>קריאת קהל "מהנדס, כלכלן, איש תפעול" נוספה בפסקה השנייה</li>
+        <li>שורת התאריך על הקריאייטיב הוגדלה והוזהבה</li>
+      </ul>
+    </div>
+    <div class="media"><img src="scene-hook-1080x1350-v2.png" alt="" loading="lazy"><div class="cap">scene-hook-1080x1350-v2.png · 4:5</div></div>
+  </div>
+
+  <!-- FINAL-3 -->
+  <div class="ad">
+    <div>
+      <div class="rank"><span class="badge">מקום 2 · גל ראשון</span><span class="fixed-tag">תוקן ואושר</span></div>
+      <h3>"9.6" — מובלת הוכחה</h3>
+      <div class="angle">החריגה המכוונת מהדוקטרינה: פיד קר סולח לישירות. הציון הגבוה באודיט (69). קהל + הוכחה מאוחדים בשורה הראשונה.</div>
+      <div class="fieldlbl">HEADLINE</div>
+      <div class="headline-box">וובינר חינם למהנדסים — רביעי 29.7, 20:30</div>
+      <div class="fieldlbl">PRIMARY TEXT</div>
+      <div class="copyblock" id="copy-f3"><button class="copybtn" onclick="cp('copy-f3')">העתקה</button>מהנדסים, כלכלנים ואנשי תפעול נתנו לקורס הזה ציון המלצה 9.6 מתוך 10. סקר משוב אנונימי, אוניברסיטת אריאל, 2026.
+
+עוד מספרים מאותו סקר: קפיצה מ-1.2 ל-3.9 (מתוך 5) בשליטה בכלים מעשיים, ו-16 מתוך 18 משתתפים ממשיכים להשתמש בכלי שבנו גם אחרי שהקורס נגמר. הפורמט הזה כבר רץ שלוש פעמים — באריאל, בטכניון וברמת גן.
+
+ברביעי 29.7 בשעה 20:30 אנחנו פותחים שעה אחת מהפורמט הזה לכולם — וובינר חי בזום, ללא עלות: קובץ אקסל מבולגן של פרויקטים הופך בשידור לכלי עובד, בלי לכתוב שורת קוד. הקוד נכתב בשבילך.
+
+מעבירים: ד"ר אלי ספרא (דוקטורט מהטכניון, יותר מ-20 שנות הוראה למהנדסים) וזכר עדינייב (Data Scientist, בעברו ראש צוות AI).
+
+עשר הדקות האחרונות שמורות לשאלות שלכם — בשידור בלבד. בוא לראות איך זה נראה מבפנים. לחיצה על הרשמה — ושריינתם מקום.</div>
+      <ul class="fixes">
+        <li>שורה 1 חדשה: קהל + הוכחה + ייחוס בתוך 125 תווים</li>
+        <li>כותרת הוחלפה מנשא-הוכחה כפול לנשא-הצעה (וובינר חינם + תאריך)</li>
+        <li>ההצעה על הקריאייטיב הוגדלה פי 2 (הייתה הטקסט הקטן בקנבס)</li>
+        <li>"בקורסים" → "בקורס" + ייחוס אריאל (דיוק המספר לסקר אחד)</li>
+        <li>הבטחת ההקלטה הוחלפה באלמנט לייב-בלבד (שאלות בשידור)</li>
+      </ul>
+    </div>
+    <div class="media"><img src="proof-96-1080x1350-v2.png" alt="" loading="lazy"><div class="cap">proof-96-1080x1350-v2.png · 4:5 (יש גם 1:1)</div></div>
+  </div>
+
+  <!-- FINAL-1 -->
+  <div class="ad">
+    <div>
+      <div class="rank"><span class="badge">מקום 3 · גל ראשון</span><span class="fixed-tag">תוקן ואושר</span></div>
+      <h3>"הנתונים ישנים"</h3>
+      <div class="angle">ההוק המאומת מדף הנחיתה, בעיבוד החזק ביותר מבין שלושת הכותבים. הקריאייטיב קיבל פנים אמיתיות וכפתור פעולה.</div>
+      <div class="fieldlbl">HEADLINE</div>
+      <div class="headline-box">הנתונים שלך ישנים. בוא נעיר אותם</div>
+      <div class="fieldlbl">PRIMARY TEXT</div>
+      <div class="copyblock" id="copy-f1"><button class="copybtn" onclick="cp('copy-f1')">העתקה</button>מהנדס, כלכלן, איש תפעול? שנים של ניסיון, מאות גיליונות אקסל — וכשמגיעה החלטה גדולה, אתה סוגר את הקובץ וסומך על תחושת בטן.
+
+הנתונים כבר שם: כל פרויקט שנסגר, כל חריגה, כל לוח זמנים שנמתח. הכול שמור אצלך במחשב — ולא אומר כלום. יושב בתיקיות, שקט.
+
+ברביעי 29.7 בשעה 20:30, בשידור חי בזום וללא עלות, ד"ר אלי ספרא (דוקטורט מהטכניון, יותר מ-20 שנות הוראת דאטה למהנדסים) וזכר עדינייב (Data Scientist, בעברו ראש צוות AI) עושים דבר אחד: לוקחים קובץ אקסל מבולגן של פרויקטים מהעבר והופכים אותו, מול העיניים שלך, לכלי עובד — כזה שמסתכל על הפרויקטים שרצים עכשיו ואומר: שים לב לזה.
+
+בלי לכתוב שורת קוד. הקוד נכתב בשבילך.
+
+מי שנמצא בשידור שואל על הנתונים של עצמו — ומקבל תשובה חיה, שם.
+
+בוא תראה מה הנתונים שלך יודעים להגיד. ההרשמה חינם ולוקחת חצי דקה.</div>
+      <ul class="fixes">
+        <li>קריאת קהל נפתחת את שורה 1 (בתוך חלון 125 התווים)</li>
+        <li>קרדנציאלי המרצים שולבו בפסקת ההצעה (הוכחה מוקדם יותר)</li>
+        <li>הבטחת ההקלטה הוחלפה באלמנט לייב-בלבד</li>
+        <li>בקריאייטיב: רצועת פנים אמיתיות של המרצים + כפתור "שריינו מקום — חינם"</li>
+        <li>סגירה בגוף ראשון עם חיכוך אפסי ("לוקחת חצי דקה")</li>
+      </ul>
+    </div>
+    <div class="media"><img src="invite-1080x1350-v2.png" alt="" loading="lazy"><div class="cap">invite-1080x1350-v2.png · 4:5 (יש גם 1:1)</div></div>
+  </div>
+
+  <!-- FINAL-4 -->
+  <div class="ad">
+    <div>
+      <div class="rank"><span class="badge">רזרבה · החלפה ב-24-48ש</span><span class="fixed-tag">תוקן ואושר</span></div>
+      <h3>"הכלל שאתה יודע — ואף פעם לא ניסחת"</h3>
+      <div class="angle">הזווית הרביעית, שונה באמת: כבוד לאינטואיציה המקצועית במקום איום או הוכחה. נכנסת אם אחת משלוש הראשונות נהרגת.</div>
+      <div class="fieldlbl">HEADLINE</div>
+      <div class="headline-box">הכלל שאתה יודע — ואף פעם לא ניסחת</div>
+      <div class="fieldlbl">PRIMARY TEXT</div>
+      <div class="copyblock" id="copy-f4"><button class="copybtn" onclick="cp('copy-f4')">העתקה</button>אם אתה מהנדס, כלכלן או איש תפעול — אתה מכיר את הרגע: עוד חריגה קטנה נכנסה לדוח. לסמן ולהמשיך, או שזה סימן ראשון למשהו גדול?
+
+בדיעבד אתה תמיד יודע להגיד איפה זה התחיל. בזמן אמת זו הכרעה של שנייה — על סמך כלל שאתה יודע, אבל אף פעם לא עצרת לנסח.
+
+ברביעי 29.7 בשעה 20:30, בשידור חי בזום וללא עלות, נעשה את זה בשעה אחת: נפתח קובץ אקסל מבולגן של חברת בנייה ונבנה ממנו מול העיניים שלך כלי עובד — כזה שמוצא בפרויקטים מהעבר את הכלל שאף אחד לא ניסח, ואז עובר על הפרויקטים שרצים עכשיו ומסמן איפה כדאי לעצור ולהסתכל.
+
+בלי לכתוב שורת קוד. הקוד נכתב בשבילך.
+
+מעבירים: ד"ר אלי ספרא (דוקטורט מהטכניון, יותר מ-20 שנות הוראה למהנדסים) וזכר עדינייב (Data Scientist, בעברו ראש צוות AI). את הפורמט הזה העברנו כבר שלוש פעמים — באריאל, בטכניון וברמת גן.
+
+בסוף השידור נשארים לשאלות שלך על הדאטה שלך — בשידור חי בלבד.
+
+בוא תבדוק אם הכלי רואה את מה שאתה רואה. שריינו לי מקום — רביעי 29.7, 20:30.</div>
+      <ul class="fixes">
+        <li>כותרת הקריאייטיב תוקנה — "שעה תיאוריה. שעה פרקטיקה." תיארה את הקורס (שעתיים), לא את הוובינר של שעה</li>
+        <li>קריאת קהל נפתחת את שורה 1; הסצנה הכללית הפכה למיקרו-סצנה קונקרטית</li>
+        <li>הבטחת ההקלטה הוסרה; נוספה שורת "בשעה אחת" + הוכחת שלושת הקורסים</li>
+        <li>סגירה בגוף ראשון: "שריינו לי מקום"</li>
+      </ul>
+    </div>
+    <div class="media"><img src="lecturers-1080x1350-v2.png" alt="" loading="lazy"><div class="cap">lecturers-1080x1350-v2.png · 4:5</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04 ·</span> וידאו — לרילס בלבד</h2>
+  <p class="lead">מקבץ תנועה (Ken Burns) על שלושת הכרטיסים המתוקנים, 11 שניות, אילם עם טקסט צרוב. ההוק בפריים הראשון כולל קריאת קהל. משודך לקופי של FINAL-1. בפיד הרגיל הסטטיקים צפויים לנצח (CPA נמוך ב-28% בממוצע לסטטיק בלידגן) — לכן הווידאו רץ ברילס, שם סטטיק 4:5 נחתך ממילא.</p>
+  <div class="vidgrid">
+    <div><video src="ad-main-4x5-v2.mp4" controls muted playsinline preload="metadata"></video><div class="cap" style="color:#64748B;font-size:12.5px;margin-top:8px;text-align:center">ad-main-4x5-v2.mp4 · פיד (אופציונלי)</div></div>
+    <div><video src="ad-main-9x16-v2.mp4" controls muted playsinline preload="metadata"></video><div class="cap" style="color:#64748B;font-size:12.5px;margin-top:8px;text-align:center">ad-main-9x16-v2.mp4 · רילס/סטוריז</div></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05 ·</span> הגדרות העלאה — העתק-הדבק</h2>
+  <div class="table-scroll"><table>
+    <tr><th>Setting</th><th>Value</th></tr>
+    <tr><td>Objective</td><td>Leads → Instant Form, <b>Higher Intent</b> type</td></tr>
+    <tr><td>Budget</td><td>400 ILS lifetime · end 29.7 at 20:00</td></tr>
+    <tr><td>Ad set (one!)</td><td>Israel · 28-55 · Hebrew · interests: Civil engineering, Industrial engineering, Project management, AutoCAD, GIS, Surveying, Excel, Economics · Advantage expansion OFF</td></tr>
+    <tr><td>Placements</td><td>FB Feed + IG Feed (statics) · Reels (video only)</td></tr>
+    <tr><td>Ads wave 1</td><td>FINAL-2, FINAL-3, FINAL-1 (+video on Reels)</td></tr>
+    <tr><td>Form fields</td><td>Name · Email (manual entry!) · "מה התחום המקצועי שלך?" (הנדסה / כלכלה / תפעול / אחר)</td></tr>
+    <tr><td>Form intro card</td><td>וובינר חי וחינמי · רביעי 29.7 · 20:30 · בזום — מאקסל מבולגן לכלי עובד, בלי שורת קוד</td></tr>
+    <tr><td>Thank-you screen</td><td>"בדקו את המייל" + כפתור הוספה ליומן / קבוצת WhatsApp</td></tr>
+    <tr><td>Auto-enhancements</td><td>OFF (RTL casualties)</td></tr>
+    <tr><td>Kill rule</td><td>80-100 ILS spent, zero registrations → pause creative · check at 24h</td></tr>
+  </table></div>
+  <div class="note" style="margin-top:24px">חסמים לפני העלאה: (1) אישור תאריך 29.7 מול אלי — התאריך צרוב בכל הנכסים; (2) דף פייסבוק עסקי + Business Manager + חשבון מודעות (הקמה של זק — ביקורת חשבון חדש אוכלת עד יממה); (3) חיבור הנרשמים למערכת המיילים (automatic-mails) לשליחת אישור + לינק זום.</div>
+  <ul class="checklist">
+    <li>תצוגה מקדימה במובייל: עברית לא מתהפכת, כותרות לא נחתכות</li>
+    <li>שאלת הסינון בטופס עם הזנה ידנית למייל (לא autofill בלבד)</li>
+    <li>ייצוא לידים פעמיים ביום + מייל אישור מיידי עם לינק הזום</li>
+    <li>תזכורות: יום לפני · שעה לפני · הודעת וואטסאפ בפתיחה</li>
+  </ul>
+</section>
+
+<footer>
+  <div class="wrap">
+    נבנה 24.7.2026 · בונים בינה · הופק אוטומטית: 3 כותבי AI → פאנל שיפוט → אודיט מחקר-רשת → תיקונים<br>
+    מקורות מלאים בתיעוד הקמפיין (self-management vault · Business/Marketing)
+  </div>
+</footer>
+
+</div>
+
+<script>
+function cp(id) {
+  const el = document.getElementById(id);
+  const btn = el.querySelector('.copybtn');
+  const text = el.innerText.replace(/^העתקה\n?/, '').replace(/^הועתק ✓\n?/, '');
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    btn.textContent = 'הועתק ✓';
+    setTimeout(() => { btn.textContent = 'העתקה'; }, 1600);
+  });
+}
+</script>
+</body>
+</html>
