@@ -260,7 +260,8 @@
     return fetch(SB + path, opts).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       document.getElementById('conn-warn').style.display = 'none';
-      return r.status === 204 ? null : r.json();
+      // 201/204 writes come back with an empty body - r.json() would throw on them
+      return r.text().then(function (t) { return t ? JSON.parse(t) : null; });
     });
   }
   function connFail(e) { document.getElementById('conn-warn').style.display = 'block'; throw e; }
