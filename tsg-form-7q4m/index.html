@@ -251,6 +251,7 @@
   ];
   var LV_LABEL = {}; LEVELS.forEach(function (l) { LV_LABEL[l.id] = l.label; });
 
+  var PRESET_TEAMS = ['צוות שליו', 'מעיין'];   // known participants — always offered in the picker
   var state = { marks: [], must: [], notes: [], team: localStorage.getItem('tsgTeam') || '' };
 
   // ---------- helpers ----------
@@ -278,6 +279,7 @@
   var sel = document.getElementById('team-sel'), newIn = document.getElementById('team-new');
   function teams() {
     var t = {};
+    PRESET_TEAMS.forEach(function (p) { t[p] = 1; });
     state.marks.forEach(function (m) { t[m.team] = 1; });
     if (state.team) t[state.team] = 1;
     return Object.keys(t).sort();
