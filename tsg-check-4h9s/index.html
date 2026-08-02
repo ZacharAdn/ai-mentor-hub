@@ -94,7 +94,7 @@
   }
 
   // Supabase: real CORS request to the REST gateway. A 401 still proves the network path works.
-  probe('https://zsbsuobtuiffqebbbvck.supabase.co/rest/v1/', { mode: 'cors' })
+  probe('https://ncsfobfcfcaxraclxynq.supabase.co/rest/v1/', { mode: 'cors' })
     .then(function (ok) {
       setRow('chk-db', ok, 'note-db', ok ? 'החיבור עובד' : 'לא הצלחנו להגיע - כנראה חסום ברשת');
     });
