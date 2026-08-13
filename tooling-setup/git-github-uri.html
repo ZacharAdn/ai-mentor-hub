@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>גיט וגיטהאב — ההתקנה, בעשר דקות | אורי</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-primary:#0f172a; --bg-card:#1e293b; --bg-deep:#0b1120; --border:#334155;
+  --text-primary:#e2e8f0; --text-secondary:#cbd5e1; --text-muted:#94a3b8;
+  --accent-purple:#818cf8; --accent-violet:#c084fc; --accent-pink:#f472b6;
+  --accent-indigo:#6366f1;
+  --success:#22c55e; --error:#ef4444; --info:#3b82f6; --warn:#fbbf24;
+  --glass:rgba(30,41,59,.9);
+  --shadow-card:0 4px 24px rgba(0,0,0,.3);
+  --code-bg:#0b1120; --code-text:#a5f3fc;
+}
+html[data-theme="light"]{
+  --bg-primary:#f4f6fa; --bg-card:#ffffff; --bg-deep:#eaeef7; --border:#d9e0ea;
+  --text-primary:#16233c; --text-secondary:#33415e; --text-muted:#5d6b85;
+  --accent-purple:#4f46e5; --accent-violet:#7c3aed; --accent-pink:#db2777;
+  --accent-indigo:#4f46e5;
+  --success:#16a34a; --error:#dc2626; --info:#2563eb; --warn:#b45309;
+  --glass:rgba(255,255,255,.92);
+  --shadow-card:0 4px 24px rgba(23,37,84,.08);
+  --code-bg:#111827; --code-text:#7dd3fc;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  background:var(--bg-primary); color:var(--text-primary);
+  font-family:'Heebo',system-ui,-apple-system,Arial,sans-serif; line-height:1.75;
+  padding-bottom:60px;
+}
+code{
+  direction:ltr; unicode-bidi:embed; display:inline-block;
+  background:var(--code-bg); color:var(--code-text);
+  padding:2px 8px; border-radius:5px; font-size:.92em;
+  font-family:'SF Mono',Menlo,Consolas,monospace;
+}
+
+/* ---------- theme toggle ---------- */
+.lang-toggle{
+  position:fixed; top:14px; left:14px; z-index:100;
+  display:flex; gap:6px; background:var(--glass);
+  border:1px solid var(--border); border-radius:10px; padding:5px;
+  backdrop-filter:blur(8px);
+}
+.lang-toggle button{
+  background:none; border:none; cursor:pointer; font-size:1.05rem;
+  padding:4px 10px; border-radius:7px; color:var(--text-secondary);
+}
+.lang-toggle button:hover{background:var(--bg-deep);}
+
+/* ---------- hero ---------- */
+.hero{
+  background:linear-gradient(135deg,#6366f1 0%,#c084fc 55%,#f472b6 100%);
+  color:#fff; padding:52px 20px 44px; text-align:center;
+}
+.hero h1{font-size:2.1rem; font-weight:700; margin-bottom:10px;}
+.hero p{font-size:1.05rem; max-width:640px; margin:0 auto; opacity:.95;}
+.badge{
+  display:inline-block; margin-top:18px; background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.4); padding:6px 18px; border-radius:20px;
+  font-weight:500; font-size:.95rem;
+}
+.container{max-width:840px; margin:0 auto; padding:34px 20px;}
+
+/* ---------- cards ---------- */
+.card{
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:14px; padding:24px; margin-bottom:22px; box-shadow:var(--shadow-card);
+}
+.card h2{font-size:1.3rem; color:var(--accent-violet); margin-bottom:10px;}
+
+.vocab{border-right:4px solid var(--accent-indigo);}
+.vocab-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+.vocab-item{background:var(--bg-deep); border-radius:10px; padding:14px 16px;}
+.vocab-item .t{font-weight:700; color:var(--accent-purple); margin-bottom:4px;}
+@media(max-width:640px){.vocab-grid{grid-template-columns:1fr;}}
+
+/* ---------- steps ---------- */
+.step{
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:14px; margin-bottom:22px; overflow:hidden; box-shadow:var(--shadow-card);
+}
+.step-header{
+  display:flex; align-items:center; gap:14px;
+  padding:18px 22px; background:var(--bg-deep); border-bottom:1px solid var(--border);
+}
+.step-number{
+  width:38px; height:38px; flex:0 0 38px; border-radius:50%;
+  background:linear-gradient(135deg,#6366f1,#c084fc); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem;
+}
+.step-header h2{font-size:1.2rem; color:var(--text-primary); margin:0;}
+.duration{font-size:.85rem; color:var(--text-muted);}
+.step-content{padding:22px;}
+.step-desc{color:var(--text-secondary); margin-bottom:16px;}
+ol.steps-list{margin:0 20px 0 0; padding:0;}
+ol.steps-list li{margin-bottom:12px; color:var(--text-secondary);}
+ol.steps-list li strong{color:var(--text-primary);}
+
+/* ---------- ask-claude block ---------- */
+.ask{
+  background:linear-gradient(135deg,rgba(99,102,241,.14),rgba(192,132,252,.14));
+  border:1px solid var(--accent-indigo); border-radius:12px; padding:16px 18px; margin:16px 0;
+}
+.ask-title{font-weight:700; color:var(--accent-purple); margin-bottom:10px;}
+.ask-text{
+  background:var(--bg-deep); border:1px dashed var(--border); border-radius:9px;
+  padding:13px 15px; color:var(--text-primary); font-size:1.02rem;
+}
+
+/* ---------- callouts ---------- */
+.tip,.warning,.skip,.note{border-radius:11px; padding:15px 18px; margin:16px 0; font-size:.97rem;}
+.tip{background:rgba(59,130,246,.11); border-right:4px solid var(--info); color:var(--text-secondary);}
+.warning{background:rgba(251,191,36,.12); border-right:4px solid var(--warn); color:var(--text-secondary);}
+.skip{background:rgba(34,197,94,.12); border-right:4px solid var(--success); color:var(--text-secondary);}
+.note{background:var(--bg-deep); border-right:4px solid var(--text-muted); color:var(--text-muted); font-size:.9rem;}
+.tip-title,.warning-title,.skip-title{font-weight:700; margin-bottom:5px; color:var(--text-primary);}
+
+/* ---------- screenshot ---------- */
+figure{margin:18px 0;}
+figure img{
+  width:100%; border-radius:11px; border:1px solid var(--border);
+  box-shadow:var(--shadow-card); display:block;
+}
+figcaption{font-size:.87rem; color:var(--text-muted); margin-top:8px; text-align:center;}
+
+/* ---------- mock illustrations ---------- */
+.mock{
+  background:var(--bg-deep); border:1px solid var(--border); border-radius:11px;
+  padding:18px; margin:16px 0;
+}
+.mock-label{
+  font-size:.78rem; color:var(--text-muted); letter-spacing:.4px;
+  margin-bottom:12px; text-transform:uppercase;
+}
+.field{
+  background:var(--bg-card); border:1px solid var(--border); border-radius:8px;
+  padding:9px 13px; margin-bottom:10px; direction:ltr; text-align:left;
+  color:var(--text-muted); font-size:.93rem;
+}
+.field b{display:block; color:var(--text-primary); font-size:.78rem; margin-bottom:3px;}
+.radio{
+  display:flex; align-items:flex-start; gap:10px; padding:11px 13px;
+  border:1px solid var(--border); border-radius:8px; margin-bottom:8px;
+  color:var(--text-muted); font-size:.92rem; background:var(--bg-card);
+}
+.radio .dot{
+  width:15px; height:15px; flex:0 0 15px; border-radius:50%;
+  border:2px solid var(--text-muted); margin-top:4px;
+}
+.radio.picked{border-color:var(--success); background:rgba(34,197,94,.1); color:var(--text-primary);}
+.radio.picked .dot{border-color:var(--success); background:var(--success); box-shadow:inset 0 0 0 3px var(--bg-card);}
+.radio .pick-tag{
+  margin-right:auto; font-size:.78rem; font-weight:700; color:var(--success); white-space:nowrap;
+}
+
+/* ---------- finish ---------- */
+.finish{
+  background:linear-gradient(135deg,#16a34a22,#22c55e22);
+  border:1px solid var(--success); border-radius:14px; padding:26px; text-align:center;
+}
+.finish h2{color:var(--success); margin-bottom:14px;}
+.check{
+  display:flex; align-items:center; gap:11px; justify-content:flex-start;
+  background:var(--bg-card); border:1px solid var(--border); border-radius:9px;
+  padding:11px 15px; margin-bottom:9px; text-align:right; color:var(--text-secondary);
+}
+.check span:first-child{font-size:1.15rem;}
+footer{text-align:center; color:var(--text-muted); font-size:.87rem; padding:26px 20px 0;}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button id="btn-theme" onclick="toggleTheme()" title="מצב תצוגה">🌙</button>
+</div>
+
+<div class="hero">
+  <h1>גיט וגיטהאב — ההתקנה</h1>
+  <p>שני דברים להתקין לפני המפגש, כדי שנוכל להעלות את ספריית התרגילים לאוויר ותצא עם כתובת אמיתית שאפשר לשלוח למאמנים.</p>
+  <div class="badge">⏱️ עשר דקות · מותאם לווינדוס</div>
+</div>
+
+<div class="container">
+
+  <div class="card vocab">
+    <h2>קודם כל, שתי מילים שלא אותו דבר</h2>
+    <p style="color:var(--text-secondary)">אלה שתי מילים שכדאי שיהיו לך מדויקות, כי הן חוזרות בכל שיחה על פיתוח. הן נשמעות דומה והן שני דברים נפרדים לגמרי.</p>
+    <div class="vocab-grid">
+      <div class="vocab-item">
+        <div class="t">גיט</div>
+        תוכנה שיושבת <strong>על המחשב שלך</strong> ושומרת גרסאות של הקבצים. כמו היסטוריית שינויים בגוגל דוקס, רק לכל תיקייה.
+      </div>
+      <div class="vocab-item">
+        <div class="t">גיטהאב</div>
+        אתר <strong>בענן</strong> ששומר עותק של התיקייה, ויודע גם להגיש אותה כאתר אינטרנט עם כתובת. שם תשב הספרייה שלך.
+      </div>
+    </div>
+    <div class="tip" style="margin-bottom:0">
+      <div class="tip-title">💡 למה שניהם</div>
+      גיט לבד שומר גרסאות אבל אף אחד חוץ ממך לא רואה כלום. גיטהאב לבד הוא רק אתר. ביחד: אתה עובד על המחשב, דוחף לענן, ומקבל כתובת שאפשר לשלוח בוואטסאפ.
+    </div>
+  </div>
+
+  <!-- ============ STEP 1 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div>
+        <h2>לפתוח חשבון גיטהאב</h2>
+        <div class="duration">כשלוש דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">כאן הספרייה תגור, ומכאן תגיע הכתובת שתשלח למאמנים. אם כבר יש לך חשבון, דלג לשלב 2.</div>
+
+      <ol class="steps-list">
+        <li>גש ל־<strong><a href="https://github.com/signup" target="_blank" style="color:var(--accent-purple)">github.com/signup</a></strong></li>
+        <li>הזן <strong>מייל</strong> שאתה באמת בודק, כי יגיע לשם קוד אימות.</li>
+        <li>בחר <strong>סיסמה</strong> באורך 12 תווים ומעלה.</li>
+        <li>בחר <strong>שם משתמש</strong>. שים לב לזה רגע, ההסבר מתחת לתמונה.</li>
+        <li>פתור את שאלת האימות, הזן את הקוד שהגיע למייל, ובחר את התכנית <strong>החינמית</strong>. אין שום צורך בתשלום.</li>
+      </ol>
+
+      <div class="mock">
+        <div class="mock-label">איור להמחשה של מסך ההרשמה</div>
+        <div class="field"><b>Email</b>uri…@gmail.com</div>
+        <div class="field"><b>Password</b>••••••••••••</div>
+        <div class="field"><b>Username</b>uri-shchori</div>
+        <div class="field" style="background:linear-gradient(135deg,#6366f1,#c084fc); color:#fff; text-align:center; border:none;">Continue</div>
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 שם המשתמש נכנס לכתובת של האתר שלך</div>
+        הכתובת של ספריית התרגילים תיראה בערך כך: <code>uri-shchori.github.io/drills</code>. כלומר השם שתבחר הוא מה שהמאמנים יראו. עדיף משהו פשוט באנגלית עם השם שלך, ולא כינוי.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 2 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div>
+        <h2>לבדוק אם גיט כבר מותקן</h2>
+        <div class="duration">דקה</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">יכול להיות שגיט כבר יושב אצלך במחשב מהתקנות קודמות. אין טעם להתקין פעמיים, אז קודם בודקים. את הבדיקה קלוד יעשה בשבילך.</div>
+
+      <div class="ask">
+        <div class="ask-title">🤖 פתח את קלוד במצב קוד, והדבק בדיוק את זה:</div>
+        <div class="ask-text">תבדוק אם גיט מותקן אצלי במחשב ותגיד לי איזו גרסה. אם הוא לא מותקן, תגיד לי את זה בפירוש.</div>
+      </div>
+
+      <div class="skip">
+        <div class="skip-title">✅ קלוד ענה עם מספר גרסה, משהו בסגנון <code>git version 2.55.0</code></div>
+        מצוין, גיט כבר מותקן. <strong>דלג ישר לשלב 4.</strong>
+      </div>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ קלוד ענה שהוא לא מותקן, או החזיר <code>'git' is not recognized</code></div>
+        זה בסדר גמור וזה המצב הרגיל. המשך לשלב 3.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 3 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div>
+        <h2>להתקין את גיט</h2>
+        <div class="duration">כחמש דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">את ההתקנה הזו עושים ידנית, כי זו תוכנה עם חלונות שצריך ללחוץ בהם. קלוד לא יכול ללחוץ בשבילך.</div>
+
+      <ol class="steps-list">
+        <li>גש ל־<strong><a href="https://git-scm.com/download/win" target="_blank" style="color:var(--accent-purple)">git-scm.com/download/win</a></strong></li>
+        <li>לחץ על <strong>Click here to download</strong> למעלה. ההורדה לא מתחילה לבד, צריך ללחוץ על הקישור.</li>
+        <li>פתח את הקובץ שירד והרץ אותו.</li>
+        <li>לחץ <strong>Next</strong> על כל המסכים. ברירות המחדל טובות, <strong>חוץ ממסך אחד</strong> שמופיע מתחת.</li>
+      </ol>
+
+      <figure>
+        <img src="../gifs/git-uri/git-download-win.png" alt="מסך ההורדה של גיט לווינדוס, עם הקישור Click here to download">
+        <figcaption>כך נראה העמוד. הקישור להורדה הוא השורה הראשונה בתוך המסגרת</figcaption>
+      </figure>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ המסך היחיד שבו לא לוחצים Next בעיניים עצומות</div>
+        במהלך ההתקנה יופיע מסך בכותרת <strong>Adjusting your PATH environment</strong>. שם יש שלוש אפשרויות, ואתה בוחר את <strong>האמצעית</strong>. זו האפשרות שמאפשרת לקלוד למצוא את גיט אחר כך. אם תבחר את הראשונה, קלוד לא ימצא אותו ונבזבז על זה זמן במפגש.
+      </div>
+
+      <div class="mock">
+        <div class="mock-label">איור להמחשה של המסך הזה</div>
+        <div class="radio"><span class="dot"></span><span>Use Git from Git Bash only</span></div>
+        <div class="radio picked">
+          <span class="dot"></span>
+          <span>Git from the command line and also from 3rd-party software</span>
+          <span class="pick-tag">זו האפשרות</span>
+        </div>
+        <div class="radio"><span class="dot"></span><span>Use Git and optional Unix tools from the Command Prompt</span></div>
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 אחרי שההתקנה נגמרה</div>
+        סגור את קלוד לגמרי, לא רק את החלון, ופתח מחדש. תוכנה שכבר רצה לא רואה תוכנות שהותקנו אחריה. אם אחרי זה קלוד עדיין לא מוצא את גיט, עשה ריסטארט למחשב וזה ייפתר.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 4 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">4</div>
+      <div>
+        <h2>להגיד לגיט מי אתה</h2>
+        <div class="duration">שתי דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">כל שמירת גרסה נושאת שם ומייל, וגיט לא ממציא אותם לבד. פעם אחת מגדירים, וזה נשאר לתמיד על המחשב הזה.</div>
+
+      <div class="ask">
+        <div class="ask-title">🤖 הדבק לקלוד, והחלף את המייל במייל שאיתו נרשמת בשלב 1:</div>
+        <div class="ask-text">תגדיר לי בגיט את השם והמייל שלי. השם הוא אורי שחורי והמייל הוא ‎<span style="color:var(--accent-pink)">המייל שלך כאן</span>‎. אחרי זה תראה לי שההגדרה נשמרה.</div>
+      </div>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ שיהיה אותו מייל</div>
+        המייל כאן חייב להיות זהה למייל שאיתו פתחת את חשבון הגיטהאב. אם הם שונים, גיטהאב לא יידע שאלה אתה, וזה מבלבל אחר כך.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DONE ============ -->
+  <div class="finish">
+    <h2>🎉 זהו, סיימת</h2>
+    <div style="max-width:520px; margin:0 auto">
+      <div class="check"><span>✅</span><span>יש לי חשבון גיטהאב ואני יודע מה שם המשתמש שלי</span></div>
+      <div class="check"><span>✅</span><span>קלוד מזהה את גיט ומחזיר מספר גרסה</span></div>
+      <div class="check"><span>✅</span><span>השם והמייל שלי מוגדרים בגיט</span></div>
+      <p style="margin-top:18px; color:var(--text-secondary)">
+        זה כל מה שצריך לפני המפגש. את כל השאר נעשה ביחד, ואתה יוצא עם כתובת חיה.
+      </p>
+    </div>
+  </div>
+
+  <div class="note">
+    נתקעת באיזשהו שלב? אל תילחם בזה יותר מחמש דקות. תצלם את המסך, תשלח לי בוואטסאפ, ונפתור את זה בהתחלת המפגש. גם זה בסדר.
+  </div>
+
+  <footer>נכתב במיוחד לאורי · בונים בינה · אוגוסט 2026</footer>
+</div>
+
+<script>
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  try{ localStorage.setItem('guideTheme', t); }catch(e){}
+  const b = document.getElementById('btn-theme');
+  if(b) b.textContent = (t === 'light') ? '🌙' : '☀️';
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('guideTheme'); }catch(e){}
+  const param = new URLSearchParams(location.search).get('theme');
+  applyTheme(param || saved || 'light');
+})();
+</script>
+</body>
+</html>
