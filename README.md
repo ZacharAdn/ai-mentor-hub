@@ -49,6 +49,7 @@ The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-men
 | [claude-code-installation-guide.html](tooling-setup/claude-code-installation-guide.html) | Claude Code installation — Windows, Mac, VS Code |
 | [ai-workspace-setup-gil.html](tooling-setup/ai-workspace-setup-gil.html) | Non-technical beginner setup (Gil) — Stage 1: Claude Desktop + Obsidian; Stage 2 (bonus, later): dev stack via the main guide |
 | [git-github-setup.html](tooling-setup/git-github-setup.html) | From zero to first push — GitHub signup, Git install, config, commit/push via the VS Code UI |
+| [git-github-uri.html](tooling-setup/git-github-uri.html) | Minimal Windows-only prerequisite for Uri — GitHub signup + Git install/config only, verification steps delegated to Claude instead of a terminal |
 | [technion-lbs-setup.html](tooling-setup/technion-lbs-setup.html) | Technion LBS course dev environment setup |
 | [geoai-rg-setup.html](tooling-setup/geoai-rg-setup.html) | GeoAI / RG Innovation dev environment setup (Geo-AI-Course org) |
 | [whatsapp-setup.html](tooling-setup/whatsapp-setup.html) | WhatsApp Skill installation |
