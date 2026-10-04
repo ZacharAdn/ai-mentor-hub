@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>סקיל וואטסאפ ב-Codex על Windows - מדריך התקנה</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    (function () {
+      var t = 'light';
+      try {
+        var q = new URLSearchParams(location.search).get('theme');
+        if (q === 'light' || q === 'dark') { t = q; localStorage.setItem('guideTheme', q); }
+        else { var s = localStorage.getItem('guideTheme'); if (s === 'light' || s === 'dark') t = s; }
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
+  <style>
+    :root {
+      --green-primary: #22C55E;
+      --green-glow: rgba(34, 197, 94, 0.4);
+      --green-soft: rgba(34, 197, 94, 0.1);
+      --bg-darkest: #0a0f0d;
+      --bg-dark: #111827;
+      --bg-card: #1a2332;
+      --text-primary: #f3f4f6;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-glow: rgba(34, 197, 94, 0.3);
+      --yellow: #fbbf24;
+      --yellow-soft: rgba(251, 191, 36, 0.1);
+      --yellow-border: rgba(251, 191, 36, 0.3);
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --blue-soft: rgba(59, 130, 246, 0.1);
+      --blue-border: rgba(59, 130, 246, 0.3);
+      --btn-text: #ffffff;
+    }
+
+    html[data-theme="light"] {
+      --green-primary: #15803d;
+      --green-glow: rgba(21, 128, 61, 0.3);
+      --green-soft: rgba(21, 128, 61, 0.09);
+      --bg-darkest: #f4f6fa;
+      --bg-dark: #eef2f7;
+      --bg-card: #ffffff;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #6b7280;
+      --border-subtle: #d9e0ea;
+      --border-glow: rgba(21, 128, 61, 0.35);
+      --yellow: #92400e;
+      --yellow-soft: rgba(245, 158, 11, 0.12);
+      --yellow-border: rgba(180, 83, 9, 0.35);
+      --red: #b91c1c;
+      --blue: #1d4ed8;
+      --blue-soft: rgba(59, 130, 246, 0.09);
+      --blue-border: rgba(29, 78, 216, 0.3);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--bg-darkest);
+      color: var(--text-primary);
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    .top-bar {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 10;
+    }
+
+    .theme-btn {
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 100px;
+      padding: 6px 14px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      margin-bottom: 32px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--green-primary); }
+
+    .hero { text-align: center; margin-bottom: 48px; }
+    .skill-icon { font-size: 4rem; margin-bottom: 16px; }
+    h1 { font-size: 2.3rem; font-weight: 800; margin-bottom: 16px; }
+    .subtitle { color: var(--text-secondary); font-size: 1.2rem; }
+
+    .difficulty {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--green-soft);
+      border-radius: 100px;
+      color: var(--green-primary);
+      margin-top: 16px;
+      font-size: 0.9rem;
+    }
+
+    .section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section h2 .num {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: var(--green-primary);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 1rem;
+    }
+
+    .section h3 { font-size: 1.1rem; font-weight: 600; margin: 24px 0 12px; color: var(--green-primary); }
+
+    p { color: var(--text-secondary); margin-bottom: 16px; }
+    ul.plain { color: var(--text-secondary); padding-right: 20px; margin-bottom: 16px; }
+
+    .highlight {
+      background: var(--green-soft);
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: var(--green-primary);
+      font-weight: 500;
+    }
+
+    .warning {
+      background: var(--yellow-soft);
+      border: 1px solid var(--yellow-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+    }
+    .warning-icon { font-size: 1.5rem; }
+    .warning p { margin: 0; color: var(--yellow); }
+    .warning a { color: var(--yellow); }
+
+    .info {
+      background: var(--blue-soft);
+      border: 1px solid var(--blue-border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      margin: 16px 0;
+      display: flex;
+      gap: 12px;
+    }
+    .info p { margin: 0; color: var(--blue); }
+    .info a { color: var(--blue); }
+
+    .steps-list { list-style: none; counter-reset: step; }
+    .steps-list > li {
+      position: relative;
+      padding: 16px 0;
+      padding-inline-start: 48px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .steps-list > li:last-child { border-bottom: none; }
+    .steps-list > li::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      inset-inline-start: 0;
+      top: 16px;
+      width: 28px;
+      height: 28px;
+      background: var(--bg-dark);
+      border: 2px solid var(--green-primary);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--green-primary);
+    }
+
+    code {
+      background: var(--bg-dark);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: 'Menlo', 'Consolas', monospace;
+      font-size: 0.9rem;
+      color: var(--green-primary);
+      direction: ltr;
+      display: inline-block;
+    }
+
+    .code-block {
+      background: var(--bg-dark);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 20px;
+      margin: 16px 0;
+      overflow-x: auto;
+    }
+    .code-block code {
+      background: none;
+      padding: 0;
+      display: block;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      direction: rtl;
+      text-align: right;
+      font-family: 'Heebo', 'Consolas', monospace;
+      color: var(--text-primary);
+    }
+    .code-block.ltr code { direction: ltr; text-align: left; white-space: pre; font-family: 'Menlo', 'Consolas', monospace; }
+    .code-block .comment { color: var(--text-muted); }
+    .code-block .key { color: var(--yellow); }
+    .code-block .value { color: var(--green-primary); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary { background: linear-gradient(135deg, #22C55E 0%, #15803d 100%); color: var(--btn-text); }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px var(--green-glow); }
+    .btn-secondary { background: var(--bg-dark); color: var(--text-primary); border: 1px solid var(--border-subtle); }
+
+    .cta-buttons { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
+    .feature { background: var(--bg-dark); padding: 16px; border-radius: 12px; text-align: center; }
+    .feature-icon { font-size: 2rem; margin-bottom: 8px; }
+    .feature-title { font-weight: 600; margin-bottom: 4px; }
+    .feature-desc { font-size: 0.85rem; color: var(--text-secondary); }
+
+    .pricing-note {
+      background: linear-gradient(135deg, var(--green-soft), transparent);
+      border: 1px solid var(--border-glow);
+      border-radius: 16px;
+      padding: 24px;
+      margin: 24px 0;
+    }
+    .pricing-note h3 { color: var(--text-primary); margin-bottom: 8px; }
+
+    table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+    th, td { padding: 12px 16px; text-align: right; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); }
+    th { background: var(--bg-dark); font-weight: 600; color: var(--text-primary); }
+    td code { font-size: 0.8rem; }
+
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--text-secondary);
+      border-top: 1px solid var(--border-subtle);
+      margin-top: 48px;
+    }
+    footer a { color: var(--green-primary); text-decoration: none; }
+    .section a { color: var(--green-primary); }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <button class="theme-btn" id="themeBtn" type="button" aria-label="החלפת מצב תצוגה">🌙</button>
+  </div>
+
+  <div class="container">
+    <a href="../index.html" class="back-link">חזרה לדף הראשי</a>
+
+    <div class="hero">
+      <div class="skill-icon">📱</div>
+      <h1>סקיל וואטסאפ ב-Codex על Windows</h1>
+      <p class="subtitle">בונים יחד עם הסוכן סקיל שקורא את הוואטסאפ שלכם ומציע תשובות, מתוך לשונית Codex באפליקציית ChatGPT</p>
+      <div class="difficulty">⏱️ זמן התקנה: 20-30 דקות</div>
+    </div>
+
+    <!-- מה הסקיל עושה -->
+    <div class="section">
+      <h2>מה הסקיל הזה עושה?</h2>
+      <p>בסוף המדריך יהיה לכם סקיל משלכם, שאתם בניתם עם הסוכן ב-Codex. הוא קורא הודעות בוואטסאפ, מראה מי מחכה לתשובה ומציע טיוטות. בשלב מאוחר יותר מוסיפים לו גם שליחה, תמיד אחרי אישור שלכם. אין קובץ מוכן להורדה: הלמידה היא לבנות אותו בעצמכם.</p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">👀</div>
+          <div class="feature-title">מי מחכה לתשובה</div>
+          <div class="feature-desc">סיכום הודעות אחרונות ומיון לפי דחיפות</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📖</div>
+          <div class="feature-title">קריאת שיחה</div>
+          <div class="feature-desc">היסטוריית שיחה עם איש קשר מסוים</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">✍️</div>
+          <div class="feature-title">טיוטות תשובה</div>
+          <div class="feature-desc">הצעת ניסוח, בלי לשלוח בלי אישור</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💬</div>
+          <div class="feature-title">שליחה</div>
+          <div class="feature-desc">שלב מאוחר, אחרי שהקריאה עובדת</div>
+        </div>
+      </div>
+
+      <div class="info">
+        <span class="warning-icon">ℹ️</span>
+        <p><strong>שימו לב:</strong> אין צורך להתקין שום דבר נוסף במחשב. הסקריפטים נכתבים ב-PowerShell, שכבר קיים ב-Windows.</p>
+      </div>
+    </div>
+
+    <!-- דרישות מקדימות -->
+    <div class="section">
+      <h2><span class="num">1</span> מה צריך לפני שמתחילים?</h2>
+
+      <h3>מינוי ChatGPT Plus</h3>
+      <p>צריך מינוי <span class="highlight">ChatGPT Plus</span> שנרכש ישירות באתר <a href="https://chatgpt.com" target="_blank">chatgpt.com</a>.</p>
+      <div class="warning">
+        <span class="warning-icon">⚠️</span>
+        <p><strong>היזהרו מאפליקציות צד שלישי:</strong> אל תקנו "גישה לכל המודלים" דרך אפליקציות או אתרים אחרים. הן לא קשורות ל-OpenAI, והן לא יעבדו עם Codex. קונים רק ישירות מהאתר הרשמי.</p>
+      </div>
+
+      <h3>אפליקציית ChatGPT למחשב (Windows)</h3>
+      <p>מתקינים את אפליקציית ChatGPT למחשב ונכנסים אליה עם החשבון. מיולי 2026 יש באפליקציה שלוש לשוניות: Chat, Work ו-Codex. אנחנו עובדים בלשונית <span class="highlight">Codex</span>.</p>
+
+      <h3>חשבון Green API (חינם לנסיון)</h3>
+      <p>הסקיל משתמש בשירות בשם <span class="highlight">Green API</span>. זה שירות שמחבר את הוואטסאפ שלכם לתוכנות, כדי שאפשר יהיה לקרוא ולשלוח הודעות אוטומטית.</p>
+
+      <div class="pricing-note">
+        <h3>💰 כמה זה עולה?</h3>
+        <p>המגבלה של התוכנית החינמית היא על <strong>שליחה</strong> בלבד: 3 צ'אטים חינם לחודש, כלומר 3 הצ'אטים הראשונים שתשלחו אליהם הודעה באותו חודש קלנדרי (מתאפס ב-1 לכל חודש).</p>
+        <p><strong>קריאה וקבלה של הודעות אינן מוגבלות</strong> - אפשר לקרוא היסטוריית צ'אט ולקבל הודעות נכנסות מכל הצ'אטים, גם בתוכנית החינמית. נבדק בפועל.</p>
+        <p>המינוי בתשלום עולה <strong>$12 לחודש</strong> (חשבון Business).</p>
+      </div>
+
+      <div class="warning">
+        <span class="warning-icon">📌</span>
+        <p><strong>הגבלה חשובה:</strong> מותר רק מופע (Instance) חינמי אחד בכל חשבון. אם תמחקו את המופע החינמי - לא תוכלו ליצור מופע חינמי חדש!</p>
+      </div>
+
+      <div class="warning">
+        <span class="warning-icon">⛔</span>
+        <p><strong>מופע שמופיע כמנותק? אל תמחקו אותו.</strong> כשהמופע מציג סטטוס כמו not authorized, הפתרון הוא לרענן את הדף ולסרוק QR מחדש - לא למחוק. מחיקה היא פעולה שאין ממנה דרך חזרה בתוכנית החינמית. ראו את הסעיף "מחקתי את המופע בטעות" בפתרון בעיות.</p>
+      </div>
+
+      <h3>טלפון עם וואטסאפ</h3>
+      <p>צריך טלפון נייד עם וואטסאפ מחובר לאינטרנט. הטלפון צריך להישאר מחובר כדי שההודעות יישלחו.</p>
+
+      <div class="warning">
+        <span class="warning-icon">⚠️</span>
+        <p><strong>שימו לב:</strong> השירות הזה שולח הודעות מחשבון הוואטסאפ האישי שלכם. השתמשו בו באחריות ואל תשלחו ספאם!</p>
+      </div>
+    </div>
+
+    <!-- יצירת חשבון -->
+    <div class="section">
+      <h2><span class="num">2</span> יצירת חשבון Green API</h2>
+
+      <ol class="steps-list">
+        <li>
+          <strong>היכנסו לאתר Green API</strong>
+          <p>לחצו על הכפתור למטה כדי להיכנס לאתר:</p>
+          <a href="https://green-api.com" target="_blank" class="btn btn-primary" style="margin-top: 8px; color: #fff;">
+            🌐 היכנסו ל-Green API
+          </a>
+        </li>
+        <li>
+          <strong>לחצו על "Sign Up" (הרשמה)</strong>
+          <p>בפינה העליונה יש כפתור ירוק. לחצו עליו.</p>
+        </li>
+        <li>
+          <strong>מלאו את הפרטים</strong>
+          <p>הכניסו אימייל וסיסמה. אפשר גם להירשם עם Google.</p>
+        </li>
+        <li>
+          <strong>אשרו את האימייל</strong>
+          <p>תקבלו מייל אישור. לחצו על הקישור שבו.</p>
+        </li>
+      </ol>
+    </div>
+
+    <!-- יצירת Instance -->
+    <div class="section">
+      <h2><span class="num">3</span> יצירת Instance וחיבור וואטסאפ</h2>
+
+      <p>אחרי ההרשמה תגיעו לדף הניהול (Console). עכשיו נחבר את הוואטסאפ שלכם:</p>
+
+      <ol class="steps-list">
+        <li>
+          <strong>יצירת Instance חדש</strong>
+          <p>בדף הראשי של ה-Console, לחצו על <span class="highlight">Create Instance</span> (יצירת מופע חדש).</p>
+        </li>
+        <li>
+          <strong>בחרו Developer Instance</strong>
+          <p>זהו המופע החינמי. (חשבון Business הוא בתשלום)</p>
+        </li>
+        <li>
+          <strong>סרקו QR Code</strong>
+          <p>יופיע קוד QR על המסך. עכשיו:</p>
+          <ul class="plain" style="margin-top: 8px;">
+            <li>פתחו את וואטסאפ בטלפון</li>
+            <li>היכנסו להגדרות, ואז למכשירים מקושרים</li>
+            <li>לחצו על "קשר מכשיר"</li>
+            <li>סרקו את הקוד שעל המסך</li>
+          </ul>
+        </li>
+        <li>
+          <strong>המתינו לחיבור</strong>
+          <p>אחרי כמה שניות תראו סטטוס <span class="highlight">Authorized</span> (מורשה). מעולה!</p>
+        </li>
+      </ol>
+
+      <div class="info">
+        <span class="warning-icon">💡</span>
+        <p><strong>טיפ:</strong> אם הקוד פג תוקף, פשוט רעננו את הדף ותקבלו קוד חדש.</p>
+      </div>
+    </div>
+
+    <!-- העתקת המפתחות -->
+    <div class="section">
+      <h2><span class="num">4</span> העתקת שלושת הערכים שלכם</h2>
+
+      <p>עכשיו נעתיק את המידע שהסוכן צריך כדי לעבוד עם הוואטסאפ שלכם:</p>
+
+      <ol class="steps-list">
+        <li>
+          <strong>היכנסו ל-Instance שיצרתם</strong>
+          <p>לחצו על ה-Instance ברשימה כדי לראות את הפרטים שלו.</p>
+        </li>
+        <li>
+          <strong>מצאו את שלושת הפרטים הבאים</strong>
+          <table>
+            <tr>
+              <th>שם השדה</th>
+              <th>מה זה</th>
+              <th>איפה זה</th>
+            </tr>
+            <tr>
+              <td><code>API URL</code></td>
+              <td>כתובת השרת שלכם</td>
+              <td>בראש הדף. נראית כמו https://7107.api.greenapi.com</td>
+            </tr>
+            <tr>
+              <td><code>Instance ID</code></td>
+              <td>מזהה ייחודי</td>
+              <td>מספר ארוך, למשל 7107123456</td>
+            </tr>
+            <tr>
+              <td><code>API Token</code></td>
+              <td>מפתח סודי</td>
+              <td>רצף ארוך של אותיות ומספרים</td>
+            </tr>
+          </table>
+        </li>
+        <li>
+          <strong>העתיקו כל אחד מהם</strong>
+          <p>יש כפתור העתקה ליד כל שדה. שמרו את הערכים בצד, בקובץ טקסט למשל.</p>
+        </li>
+      </ol>
+
+      <div class="warning">
+        <span class="warning-icon">🌐</span>
+        <p><strong>כתובת ה-API URL שונה מאחד לשני:</strong> המספר בכתובת (7103, 7107 ואחרים) תלוי במופע שקיבלתם. אל תעתיקו כתובת מדוגמה כלשהי, כולל זו שבטבלה. העתיקו אותה מה-Console שלכם.</p>
+      </div>
+
+      <div class="warning">
+        <span class="warning-icon">🔒</span>
+        <p><strong>חשוב מאוד:</strong> ה-API Token הוא כמו סיסמה. אל תשתפו אותו עם אף אחד ואל תעלו אותו לאינטרנט.</p>
+      </div>
+    </div>
+
+    <!-- פרטיות -->
+    <div class="section" style="border: 2px solid var(--yellow-border); background: var(--yellow-soft);">
+      <h2>⚠️ לפני שממשיכים - הגדרת פרטיות</h2>
+
+      <p>בשלב הבא תעבדו עם מפתח סודי, וההודעות שתבקשו לקרוא עוברות דרך ChatGPT. לכן כדאי לוודא שהשיחות שלכם לא משמשות לאימון המודל.</p>
+
+      <ol class="steps-list">
+        <li>באפליקציית ChatGPT פתחו את ההגדרות (Settings).</li>
+        <li>היכנסו ל-Data Controls.</li>
+        <li>כבו את האפשרות <span class="highlight">Improve the model for everyone</span>.</li>
+      </ol>
+    </div>
+
+    <!-- בניית הסקיל -->
+    <div class="section">
+      <h2><span class="num">5</span> בונים את הסקיל עם הסוכן</h2>
+
+      <p>סקיל הוא פשוט תיקייה שהסוכן יודע לקרוא. את התיקייה הזו נבקש מהסוכן לבנות. Codex מחפש סקילים אישיים בתיקייה <code>%USERPROFILE%\.agents\skills</code> (<a href="https://learn.chatgpt.com/docs/build-skills.md" target="_blank">מקור: התיעוד של OpenAI על בניית סקילים</a>).</p>
+
+      <h3>שלב א: הדביקו את ההנחיה בלשונית Codex</h3>
+      <p>פתחו את אפליקציית ChatGPT, עברו ללשונית Codex, פתחו שיחה חדשה והדביקו את ההנחיה הבאה:</p>
+      <div class="code-block" id="promptBlock">
+        <code id="promptText">תבנה לי סקיל בשם whatsapp בתיקייה &lrm;%USERPROFILE%\.agents\skills\whatsapp. הסקיל מדבר עם Green API לפי התיעוד https://green-api.com/en/docs/api/ . בשלב הזה רק קריאה: מי כתב לי לאחרונה (lastIncomingMessages) והיסטוריית שיחה עם איש קשר (getChatHistory). תכתוב את הסקריפטים ב-PowerShell בלי שום התקנה נוספת. את הכתובת, המזהה והטוקן תקרא מקובץ &lrm;.env בתוך תיקיית הסקיל, ותיצור לי את הקובץ עם מקום ריק לטוקן. ובקובץ SKILL.md תכתוב כלל: אסור לשלוח הודעה בלי שהראית לי טיוטה וקיבלתי אישור.</code>
+      </div>
+      <button class="btn btn-secondary" id="copyPrompt" type="button">📋 העתקת ההנחיה</button>
+
+      <p style="margin-top:16px;">הסוכן ייצור את התיקייה, יכתוב את הסקריפטים ואת קובץ SKILL.md, ויכין קובץ <code>.env</code>. בזמן העבודה הוא עשוי לבקש אישורים. קראו כל בקשה לפני שמאשרים.</p>
+
+      <h3>שלב ב: הדביקו את הערכים בקובץ env</h3>
+      <p>בקשו מהסוכן להראות לכם איפה נמצא קובץ <code>.env</code>, ופתחו אותו (בפנקס רשימות). הדביקו בו את שלושת הערכים שהעתקתם בשלב 4, בלי רווחים ובלי מרכאות. כך נראה הקובץ אחרי המילוי (ערכים לדוגמה בלבד):</p>
+      <div class="code-block ltr">
+        <code><span class="key">GREEN_API_URL</span>=<span class="value">https://7107.api.greenapi.com</span>
+<span class="key">GREEN_API_INSTANCE</span>=<span class="value">7107845678</span>
+<span class="key">GREEN_API_TOKEN</span>=<span class="value">a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9</span></code>
+      </div>
+      <p>בכתובת ובמזהה שלכם המספר יהיה שונה מזה שבדוגמה. השתמשו בערכים מה-Console שלכם.</p>
+
+      <div class="warning">
+        <span class="warning-icon">🔒</span>
+        <p><strong>את הטוקן מדביקים לבד, ואף אחד לא רואה אותו:</strong> לא שולחים אותו בשיחה עם הסוכן, לא במייל, לא בוואטסאפ ולא למנטור. הוא נשאר רק בקובץ <code>.env</code> על המחשב שלכם.</p>
+      </div>
+
+      <div class="info">
+        <span class="warning-icon">🛠️</span>
+        <p><strong>אם הסקריפט של הסוכן נכשל:</strong> זה קורה, וזה חלק מהתהליך. העתיקו את הודעת השגיאה כמו שהיא, הדביקו אותה לסוכן ובקשו ממנו לתקן. בדרך כלל זה נפתר בסבב אחד או שניים.</p>
+      </div>
+    </div>
+
+    <!-- בדיקה -->
+    <div class="section">
+      <h2><span class="num">6</span> בדיקה שהכל עובד</h2>
+
+      <p>פתחו שיחה חדשה בלשונית Codex. מתחילים בבדיקה שרק <strong>קוראת</strong>, כך שאין סיכון שהודעה תישלח בטעות:</p>
+
+      <div class="code-block">
+        <code>תראה לי מי שלח לי הודעות ביומיים האחרונים</code>
+      </div>
+
+      <div class="warning">
+        <span class="warning-icon">🛡️</span>
+        <p><strong>Codex יעצור וישאל אישור לגישה לרשת, וזה תקין:</strong> ברירת המחדל של Codex היא סביבה סגורה בלי גישה לאינטרנט (<a href="https://developers.openai.com/codex/security" target="_blank">מקור: התיעוד האבטחתי של OpenAI</a>). הסקריפט צריך להתקשר לשרת של Green API, ולכן תופיע בקשת אישור. קראו מה הסוכן מבקש להריץ, ואם זה הסקריפט שהוא בנה עבורכם, אשרו.</p>
+      </div>
+
+      <p>אם הכל עובד, תקבלו רשימה של מי שכתב לכם. עכשיו נסו את הבקשה שבאמת חוסכת זמן:</p>
+      <div class="code-block">
+        <code>מי מחכה לתשובה ממני? תמיין לפי דחיפות ותציע טיוטה</code>
+      </div>
+      <p>הסוכן יקרא את ההודעות האחרונות, ימיין אותן ויציע טיוטת תשובה לכל אחת. אם הגעתם עד כאן - מזל טוב! 🎉</p>
+
+      <div class="info">
+        <span class="warning-icon">🔧</span>
+        <p><strong>לא עובד?</strong> הדביקו לסוכן את השגיאה ובקשו תיקון, ועברו לסעיף פתרון בעיות בהמשך.</p>
+      </div>
+    </div>
+
+    <!-- מה בנית -->
+    <div class="section" style="border: 2px solid var(--border-glow);">
+      <h2>🧩 מה בדיוק בנית</h2>
+      <p>סקיל הוא תיקייה עם שני חלקים: קובץ <code>SKILL.md</code>, שהוא מתכון כתוב שמסביר לסוכן מתי ואיך להשתמש בסקיל, וסקריפטים שעושים את העבודה בפועל. זה הכל. אין כאן קסם.</p>
+      <p>אפשר לפתוח את התיקייה <code>%USERPROFILE%\.agents\skills\whatsapp</code> בסייר הקבצים, לקרוא את הקבצים ולערוך אותם. רוצים שהסוכן יעבוד אחרת? משנים משפט ב-SKILL.md, או מבקשים מהסוכן לשנות בשבילכם.</p>
+    </div>
+
+    <!-- שליחה -->
+    <div class="section">
+      <h2><span class="num">7</span> שלב מאוחר: הוספת שליחה</h2>
+      <p>רק אחרי שהקריאה עובדת יציבה, מוסיפים שליחה. מבקשים מהסוכן להרחיב את הסקיל שבניתם:</p>
+      <div class="code-block">
+        <code>תוסיף לסקיל whatsapp יכולת לשלוח הודעת טקסט (sendMessage). הכלל נשאר: לא שולחים בלי שהראית לי טיוטה וקיבלתי אישור מפורש.</code>
+      </div>
+      <div class="info">
+        <span class="warning-icon">✋</span>
+        <p><strong>שליחה דורשת אישור כפול:</strong> הסוכן יראה לכם טיוטה ויחכה ל"כן" שלכם, וייתכן ש-Codex יבקש גם אישור להרצת הפעולה. זה הזמן לוודא שההודעה נשלחת לאדם הנכון.</p>
+      </div>
+      <div class="warning">
+        <span class="warning-icon">📌</span>
+        <p><strong>מגבלת התוכנית החינמית:</strong> אפשר לשלוח הודעות ל-3 צ'אטים בחודש. קריאה אינה מוגבלת.</p>
+      </div>
+    </div>
+
+<!-- זיכרון -->
+    <div class="section" style="border: 2px solid var(--border-glow);">
+      <h2>🧠 כלל הברזל: אף הודעה לא יוצאת בלי אישור שלכם</h2>
+
+      <p>כדאי מאוד לקבע כלל קבוע לסוכן. ב-Codex קיים קובץ הוראות כללי בשם <code>AGENTS.md</code>, שהסוכן קורא בתחילת כל שיחה. צרו אותו בנתיב:</p>
+      <div class="code-block ltr">
+        <code>%USERPROFILE%\.codex\AGENTS.md</code>
+      </div>
+      <p>אפשר לבקש מהסוכן ליצור אותו, ולכתוב בו את השורה הבאה:</p>
+      <div class="code-block">
+        <code>לעולם אל תשלח הודעה בוואטסאפ בלי שהראית לי טיוטה וקיבלת אישור</code>
+      </div>
+
+      <div class="warning">
+        <span class="warning-icon">⚠️</span>
+        <p><strong>למה זה חשוב דווקא כאן:</strong> אחרי שאישרתם לסוכן גישה לרשת, סקריפט השליחה (כשתוסיפו אותו) יכול לרוץ בלי לשאול שוב. כלומר Codex עצמו לא ימנע הודעה שנשלחה בטעות ללקוח. הכלל בקובץ הזה הוא הרצועה היחידה שמחייבת את הסוכן להראות לכם טיוטה קודם.</p>
+      </div>
+    </div>
+
+    <!-- דוגמאות שימוש -->
+    <div class="section">
+      <h2>דוגמאות לשימוש בעסק</h2>
+      <p>הנה כמה דברים שתוכלו לבקש מהסוכן. הקריאה עובדת מיד. בקשות שליחה עובדות רק אחרי שהוספתם שליחה (שלב 7), ותמיד ידרשו אישור.</p>
+      <div class="code-block">
+        <code><span class="comment"># מי מחכה לתשובה</span>
+מי מחכה לתשובה ממני? תמיין לפי דחיפות ותציע טיוטה
+
+<span class="comment"># קריאת שיחה עם לקוח</span>
+תקרא את השיחה שלי עם הלקוח במספר 0521234567 ותסכם לי מה הוא ביקש ומה עוד פתוח
+
+<span class="comment"># ניסוח תשובה</span>
+תנסח לו תשובה קצרה ומנומסת שאני מגיע אליו מחר בין 10 ל-12, ותראה לי לפני שליחה
+
+<span class="comment"># שליחה, אחרי הוספת שליחה לסקיל ואחרי שראיתם טיוטה</span>
+מצוין, תשלח</code>
+      </div>
+      <div class="info">
+        <span class="warning-icon">✋</span>
+        <p><strong>שליחה דורשת אישור:</strong> תראו את הטיוטה ותצטרכו לאשר. Codex עשוי לבקש אישור נוסף להרצת הפקודה.</p>
+      </div>
+    </div>
+
+    <!-- פתרון בעיות -->
+    <div class="section">
+      <h2>🔧 פתרון בעיות נפוצות</h2>
+
+      <h3>הסוכן לא מוצא את הסקיל</h3>
+      <ul class="plain">
+        <li>בדקו שהתיקייה היא בדיוק <code>%USERPROFILE%\.agents\skills\whatsapp</code></li>
+        <li>בדקו שהקובץ SKILL.md נמצא ישירות בתוכה, ולא בתיקייה נוספת מתחתיה</li>
+        <li>פתחו שיחה חדשה בלשונית Codex (או הפעילו מחדש את האפליקציה)</li>
+      </ul>
+
+      <h3>הסקריפט של הסוכן נכשל</h3>
+      <ul class="plain">
+        <li>העתיקו את הודעת השגיאה המלאה, הדביקו אותה לסוכן ובקשו ממנו לתקן</li>
+        <li>אם זה חוזר, בקשו ממנו להסביר מה הוא מנסה להריץ ולמה הוא נכשל</li>
+      </ul>
+
+      <h3>הודעות לא נשלחות או לא נקראות</h3>
+      <ul class="plain">
+        <li>וודאו שהטלפון מחובר לאינטרנט</li>
+        <li>בדקו שה-Instance עדיין מחובר ב-Console של Green API</li>
+        <li>אם הסטטוס אינו Authorized, סרקו מחדש את ה-QR Code על אותו מופע (בלי למחוק אותו)</li>
+        <li>אם הסוכן מדווח על חסימת רשת, אשרו את בקשת הגישה לרשת כשהיא מופיעה</li>
+      </ul>
+
+      <h3>שגיאת "Missing credentials"</h3>
+      <ul class="plain">
+        <li>וודאו שקובץ <code>.env</code> נמצא בתיקיית הסקיל (ושהסוכן אכן יצר אותו שם)</li>
+        <li>וודאו שהקובץ נקרא בדיוק <code>.env</code>, ולא <code>.env.txt</code> (ב-Windows הסיומת לפעמים מוסתרת)</li>
+        <li>בדקו שאין רווחים מיותרים או מרכאות סביב הערכים</li>
+        <li>וודאו ששמות המשתנים כתובים נכון, עם קו תחתון</li>
+        <li>וודאו שה-API URL הוא זה שמופיע ב-Console שלכם, ולא כתובת מדוגמה</li>
+      </ul>
+
+      <h3>ההודעה הגיעה אבל לא במבנה הנכון</h3>
+      <ul class="plain">
+        <li>היו יותר ספציפיים בבקשה</li>
+        <li>ציינו בדיוק מה רוצים שיהיה כתוב בהודעה</li>
+      </ul>
+
+      <h3>🗑️ מחקתי את המופע (Instance) בטעות</h3>
+      <p>זו התקלה הכי כואבת במדריך הזה. אחרי מחיקה של המופע החינמי, מסך יצירת מופע חדש עלול כבר לא להציע את התוכנית החינמית אלא רק תוכניות בתשלום, כי החשבון נחשב כמי שכבר ניצל את המופע החינמי שלו.</p>
+      <p><strong>מתי זה קורה:</strong> בדרך כלל כשהמופע מציג סטטוס של לא מאושר או מנותק, ומנסים לתקן את זה על ידי מחיקה ויצירה מחדש. זה הרפלקס הטבעי, וזו בדיוק הטעות.</p>
+      <p><strong>מה עושים עכשיו:</strong></p>
+      <ul class="plain">
+        <li>פותחים חשבון חדש ב-Green API עם כתובת מייל אחרת. החשבון החדש מקבל מופע חינמי משלו.</li>
+        <li>מחברים אליו את אותו מספר וואטסאפ בסריקת QR רגילה.</li>
+        <li>מעתיקים את שלושת הערכים החדשים (API URL, מזהה המופע והטוקן) ומעדכנים אותם בקובץ <code>.env</code>. הערכים הישנים כבר לא תקפים, וגם ה-API URL עשוי להיות שונה.</li>
+      </ul>
+      <p><strong>איך נמנעים בפעם הבאה:</strong> מופע מנותק כמעט תמיד מתוקן בסריקת QR מחדש על אותו מופע. רעננו את הדף, בדקו את הסטטוס, וסרקו שוב. מוחקים מופע רק אם החלטתם באמת לוותר על החשבון הזה.</p>
+    </div>
+
+    <div class="cta-buttons" style="justify-content: center; margin-top: 48px;">
+      <a href="../index.html" class="btn btn-secondary">חזרה לדף הראשי</a>
+      <a href="https://console.green-api.com" target="_blank" class="btn btn-primary" style="color:#fff;">🔧 פתחו את Green API Console</a>
+    </div>
+
+    <footer>
+      <p style="opacity: 0.8;">
+        הסקיל המקורי נכתב על ידי <strong>אביץ - אברהם יצחק מאיר</strong>, והמדריך הזה מבוסס עליו.
+        לתקלות בסקיל עצמו, פתחו Issue בריפו שלו:
+        <a href="https://github.com/aviz85/claude-skills-library" target="_blank">claude-skills-library</a>
+      </p>
+      <p style="margin-top: 10px; opacity: 0.6; font-size: 0.85rem;">
+        המדריך מותאם ומתוחזק על ידי <strong>בונים בינה</strong>, ומשופץ מעת לעת לפי הצרכים שלנו
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    (function () {
+      var btn = document.getElementById('themeBtn');
+      function paint() {
+        var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+        btn.textContent = dark ? '☀️' : '🌙';
+      }
+      btn.addEventListener('click', function () {
+        var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        try { localStorage.setItem('guideTheme', next); } catch (e) {}
+        paint();
+      });
+      paint();
+      var cb = document.getElementById('copyPrompt');
+      if (cb) cb.addEventListener('click', function () {
+        var txt = document.getElementById('promptText').textContent;
+        function ok() { cb.textContent = '✅ הועתק'; setTimeout(function () { cb.textContent = '📋 העתקת ההנחיה'; }, 2000); }
+        try { navigator.clipboard.writeText(txt).then(ok); } catch (e) {
+          var r = document.createRange(); r.selectNodeContents(document.getElementById('promptText'));
+          var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
