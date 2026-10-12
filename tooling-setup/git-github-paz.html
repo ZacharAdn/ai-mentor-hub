@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>גיטהאב לסוכן שלך - התקנה וגיבוי יומי | פז</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-primary:#0f172a; --bg-card:#1e293b; --bg-deep:#0b1120; --border:#334155;
+  --text-primary:#e2e8f0; --text-secondary:#cbd5e1; --text-muted:#94a3b8;
+  --accent-purple:#818cf8; --accent-violet:#c084fc; --accent-pink:#f472b6;
+  --accent-indigo:#6366f1;
+  --success:#22c55e; --error:#ef4444; --info:#3b82f6; --warn:#fbbf24;
+  --glass:rgba(30,41,59,.9);
+  --shadow-card:0 4px 24px rgba(0,0,0,.3);
+  --code-bg:#0b1120; --code-text:#a5f3fc;
+  --copy-bg:rgba(165,243,252,.12); --copy-border:rgba(165,243,252,.35);
+}
+html[data-theme="light"]{
+  --bg-primary:#f4f6fa; --bg-card:#ffffff; --bg-deep:#eaeef7; --border:#d9e0ea;
+  --text-primary:#16233c; --text-secondary:#33415e; --text-muted:#5d6b85;
+  --accent-purple:#4f46e5; --accent-violet:#7c3aed; --accent-pink:#db2777;
+  --accent-indigo:#4f46e5;
+  --success:#16a34a; --error:#dc2626; --info:#2563eb; --warn:#b45309;
+  --glass:rgba(255,255,255,.92);
+  --shadow-card:0 4px 24px rgba(23,37,84,.08);
+  --code-bg:#111827; --code-text:#7dd3fc;
+  --copy-bg:rgba(125,211,252,.14); --copy-border:rgba(125,211,252,.4);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  background:var(--bg-primary); color:var(--text-primary);
+  font-family:'Heebo',system-ui,-apple-system,Arial,sans-serif; line-height:1.75;
+  padding-bottom:60px;
+}
+a{color:var(--accent-purple);}
+code{
+  direction:ltr; unicode-bidi:embed; display:inline-block;
+  background:var(--code-bg); color:var(--code-text);
+  padding:2px 8px; border-radius:5px; font-size:.92em;
+  font-family:'SF Mono',Menlo,Consolas,monospace;
+}
+
+/* ---------- theme toggle ---------- */
+.lang-toggle{
+  position:fixed; top:14px; left:14px; z-index:100;
+  display:flex; gap:6px; background:var(--glass);
+  border:1px solid var(--border); border-radius:10px; padding:5px;
+  backdrop-filter:blur(8px);
+}
+.lang-toggle button{
+  background:none; border:none; cursor:pointer; font-size:1.05rem;
+  padding:4px 10px; border-radius:7px; color:var(--text-secondary);
+}
+.lang-toggle button:hover{background:var(--bg-deep);}
+
+/* ---------- hero ---------- */
+.hero{
+  background:linear-gradient(135deg,#6366f1 0%,#c084fc 55%,#f472b6 100%);
+  color:#fff; padding:52px 20px 44px; text-align:center;
+}
+.hero h1{font-size:2.1rem; font-weight:700; margin-bottom:10px;}
+.hero p{font-size:1.05rem; max-width:640px; margin:0 auto; opacity:.95;}
+.badge{
+  display:inline-block; margin-top:18px; background:rgba(255,255,255,.2);
+  border:1px solid rgba(255,255,255,.4); padding:6px 18px; border-radius:20px;
+  font-weight:500; font-size:.95rem;
+}
+.container{max-width:840px; margin:0 auto; padding:34px 20px;}
+
+/* ---------- steps ---------- */
+.step{
+  background:var(--bg-card); border:1px solid var(--border);
+  border-radius:14px; margin-bottom:22px; overflow:hidden; box-shadow:var(--shadow-card);
+}
+.step-header{
+  display:flex; align-items:center; gap:14px;
+  padding:18px 22px; background:var(--bg-deep); border-bottom:1px solid var(--border);
+}
+.step-number{
+  width:38px; height:38px; flex:0 0 38px; border-radius:50%;
+  background:linear-gradient(135deg,#6366f1,#c084fc); color:#fff;
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem;
+}
+.step-header h2{font-size:1.2rem; color:var(--text-primary); margin:0;}
+.duration{font-size:.85rem; color:var(--text-muted);}
+.step-content{padding:22px;}
+.step-desc{color:var(--text-secondary); margin-bottom:16px;}
+ol.steps-list{margin:0 20px 0 0; padding:0;}
+ol.steps-list li{margin-bottom:12px; color:var(--text-secondary);}
+ol.steps-list li strong{color:var(--text-primary);}
+
+/* ---------- command / prompt blocks with copy button ---------- */
+.cmd{
+  position:relative; background:var(--code-bg); border:1px solid var(--border);
+  border-radius:9px; padding:40px 15px 13px; margin:10px 0 0;
+  direction:ltr; text-align:left;
+}
+.cmd code{background:none; padding:0; font-size:1.02rem; white-space:pre-wrap; display:block;}
+.prompt{
+  position:relative; background:var(--bg-deep); border:1px dashed var(--accent-indigo);
+  border-radius:9px; padding:44px 16px 15px; margin:12px 0 0;
+  color:var(--text-primary); font-size:1.02rem; white-space:pre-line;
+}
+.copy-btn{
+  position:absolute; top:8px; left:10px;
+  background:var(--copy-bg); color:var(--code-text);
+  border:1px solid var(--copy-border); border-radius:6px;
+  padding:3px 12px; font-size:.8rem; font-weight:600; cursor:pointer;
+  font-family:'Heebo',sans-serif; line-height:1.5;
+}
+.prompt .copy-btn{color:var(--accent-purple); border-color:var(--accent-indigo); background:none;}
+.copy-btn.copied{background:var(--success); border-color:var(--success); color:#fff;}
+
+/* ---------- callouts ---------- */
+.tip,.warning,.skip,.note,.danger{border-radius:11px; padding:15px 18px; margin:16px 0; font-size:.97rem;}
+.tip{background:rgba(59,130,246,.11); border-right:4px solid var(--info); color:var(--text-secondary);}
+.warning{background:rgba(251,191,36,.12); border-right:4px solid var(--warn); color:var(--text-secondary);}
+.danger{background:rgba(239,68,68,.11); border-right:4px solid var(--error); color:var(--text-secondary);}
+.skip{background:rgba(34,197,94,.12); border-right:4px solid var(--success); color:var(--text-secondary);}
+.note{background:var(--bg-deep); border-right:4px solid var(--text-muted); color:var(--text-muted); font-size:.9rem;}
+.tip-title,.warning-title,.skip-title,.danger-title{font-weight:700; margin-bottom:5px; color:var(--text-primary);}
+
+/* ---------- screenshot ---------- */
+figure{margin:18px 0;}
+figure img{
+  width:100%; border-radius:11px; border:1px solid var(--border);
+  box-shadow:var(--shadow-card); display:block;
+}
+figcaption{font-size:.87rem; color:var(--text-muted); margin-top:8px; text-align:center;}
+
+/* ---------- mock illustrations ---------- */
+.mock{
+  background:var(--bg-deep); border:1px solid var(--border); border-radius:11px;
+  padding:18px; margin:16px 0;
+}
+.mock-label{font-size:.78rem; color:var(--text-muted); letter-spacing:.4px; margin-bottom:12px;}
+.radio{
+  display:flex; align-items:flex-start; gap:10px; padding:11px 13px;
+  border:1px solid var(--border); border-radius:8px; margin-bottom:8px;
+  color:var(--text-muted); font-size:.92rem; background:var(--bg-card);
+  direction:ltr; text-align:left;
+}
+.radio .dot{
+  width:15px; height:15px; flex:0 0 15px; border-radius:50%;
+  border:2px solid var(--text-muted); margin-top:4px;
+}
+.radio.picked{border-color:var(--success); background:rgba(34,197,94,.1); color:var(--text-primary);}
+.radio.picked .dot{border-color:var(--success); background:var(--success); box-shadow:inset 0 0 0 3px var(--bg-card);}
+.radio .pick-tag{margin-left:auto; font-size:.78rem; font-weight:700; color:var(--success); white-space:nowrap; direction:rtl;}
+
+/* ---------- finish ---------- */
+.finish{
+  background:linear-gradient(135deg,#16a34a22,#22c55e22);
+  border:1px solid var(--success); border-radius:14px; padding:26px; text-align:center;
+}
+.finish h2{color:var(--success); margin-bottom:14px;}
+.check{
+  display:flex; align-items:center; gap:11px; justify-content:flex-start;
+  background:var(--bg-card); border:1px solid var(--border); border-radius:9px;
+  padding:11px 15px; margin-bottom:9px; text-align:right; color:var(--text-secondary);
+}
+.check span:first-child{font-size:1.15rem;}
+footer{text-align:center; color:var(--text-muted); font-size:.87rem; padding:26px 20px 0;}
+@media(max-width:600px){
+  .hero h1{font-size:1.7rem;}
+  .step-header{padding:16px;}
+  .step-content{padding:18px 16px;}
+}
+</style>
+</head>
+<body>
+
+<div class="lang-toggle">
+  <button id="btn-theme" onclick="toggleTheme()" title="מצב תצוגה">🌙</button>
+</div>
+
+<div class="hero">
+  <h1>גיטהאב לסוכן שלך</h1>
+  <p>פותחים חשבון, מתקינים גיט, ונותנים לסוכן לגבות כל יום את הסקילים והזיכרון העסקי שבנית, כדי ששום דבר לא ילך לאיבוד.</p>
+  <div class="badge">⏱️ כרבע שעה · ווינדוס · מתוך אפליקציית ChatGPT</div>
+</div>
+
+<div class="container">
+
+  <!-- ============ STEP 1 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div>
+        <h2>לפתוח חשבון גיטהאב</h2>
+        <div class="duration">כשלוש דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="danger">
+        <div class="danger-title">🛑 נרשמים רק באתר הרשמי</div>
+        הכתובת היחידה היא <code>github.com</code>. בדוק אותה בשורת הכתובת למעלה. אל תיכנס דרך פרסומת בגוגל, ואל תוריד שום אפליקציה. גיטהאב חינמי לגמרי: אם מבקשים ממך כרטיס אשראי, אתה במקום הלא נכון.
+      </div>
+
+      <ol class="steps-list">
+        <li>גש ל־<strong><a href="https://github.com/signup" target="_blank">github.com/signup</a></strong> (לחיצה על הקישור הזה מביאה אותך לאתר הנכון).</li>
+        <li>הזן <strong>מייל</strong> שאתה באמת בודק, כי יגיע לשם קוד אימות.</li>
+        <li>בחר <strong>סיסמה</strong> ושמור אותה.</li>
+        <li>בחר <strong>שם משתמש</strong> באנגלית, פשוט, עם השם שלך.</li>
+        <li>הזן את הקוד שהגיע למייל, ובחר את התכנית <strong>החינמית (Free)</strong>.</li>
+      </ol>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ קיבלת מסך "הגישה מוגבלת זמנית"</div>
+        זו חסימה אוטומטית של גיטהאב, לא משהו שעשית. מה שהכי עובד: לכבות את הוויי-פיי, לחבר את המחשב לשיתוף אינטרנט מהנייד, ולנסות שוב. אפשר גם לנסות בעוד רבע שעה.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 2 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div>
+        <h2>לפתוח טרמינל בתוך אפליקציית ChatGPT, ולבדוק אם גיט מותקן</h2>
+        <div class="duration">שתי דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">טרמינל הוא חלון שבו מקלידים פקודות. לא צריך תוכנה נוספת, יש אחד בתוך אפליקציית ChatGPT שאתה כבר עובד בה.</div>
+
+      <ol class="steps-list">
+        <li>פתח את אפליקציית <strong>ChatGPT</strong> במחשב, בלשונית <strong>Codex</strong> שבה אתה עובד עם הסוכן.</li>
+        <li>בפינה הימנית העליונה, לחץ על הכפתור <strong>New tab</strong> (ריבוע עם פלוס).
+          <figure>
+            <img src="../gifs/git-paz/chatgpt-new-tab.png" alt="הכפתור New tab בפינה הימנית העליונה של אפליקציית ChatGPT, מסומן בחץ אדום" loading="lazy">
+            <figcaption>הכפתור New tab, בפינה הימנית העליונה</figcaption>
+          </figure>
+        </li>
+        <li>בחלון שנפתח בצד, תחת <strong>Tools</strong>, לחץ על <strong>Terminal</strong>.
+          <figure>
+            <img src="../gifs/git-paz/chatgpt-terminal.png" alt="החלון שנפתח בצד, עם האפשרות Terminal מסומנת בחץ אדום" loading="lazy">
+            <figcaption>בוחרים Terminal מתוך הרשימה</figcaption>
+          </figure>
+        </li>
+        <li>בטרמינל שנפתח, הקלד (או העתק עם הכפתור והדבק עם <strong>Ctrl+V</strong>) ולחץ <strong>Enter</strong>:
+          <div class="cmd"><code>git --version</code></div>
+        </li>
+      </ol>
+
+      <div class="skip">
+        <div class="skip-title">✅ קיבלת שורה שמתחילה ב־<code>git version</code></div>
+        גיט כבר מותקן. <strong>דלג ישר לשלב 4.</strong> מספר הגרסה עצמו לא משנה.
+      </div>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ קיבלת הודעה אדומה עם המילים <code>is not recognized</code></div>
+        גיט לא מותקן. המשך לשלב 3.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 3 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div>
+        <h2>להתקין את גיט (רק אם שלב 2 לא עבד)</h2>
+        <div class="duration">כחמש דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">את זה עושים ידנית, הסוכן לא יכול ללחוץ בשבילך. גם כאן מורידים רק מהאתר הרשמי.</div>
+
+      <ol class="steps-list">
+        <li>גש ל־<strong><a href="https://git-scm.com/download/win" target="_blank">git-scm.com/download/win</a></strong></li>
+        <li>לחץ על <strong>Click here to download</strong>.</li>
+        <li>פתח את הקובץ שירד והרץ אותו. אם ווינדוס שואל "לאפשר לאפליקציה לבצע שינויים", לחץ <strong>כן</strong>.</li>
+        <li>לחץ <strong>Next</strong> על כל המסכים, ובסוף <strong>Install</strong>. ברירות המחדל טובות.</li>
+      </ol>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ מסך אחד לבדוק בדרך: Adjusting your PATH environment</div>
+        יש בו שלוש אפשרויות. ודא שמסומנת <strong>האמצעית</strong> (בדרך כלל היא כבר מסומנת). רק איתה הטרמינל יזהה את גיט.
+      </div>
+
+      <div class="mock">
+        <div class="mock-label">איור להמחשה של המסך הזה</div>
+        <div class="radio"><span class="dot"></span><span>Use Git from Git Bash only</span></div>
+        <div class="radio picked">
+          <span class="dot"></span>
+          <span>Git from the command line and also from 3rd-party software</span>
+          <span class="pick-tag">זו האפשרות</span>
+        </div>
+        <div class="radio"><span class="dot"></span><span>Use Git and optional Unix tools from the Command Prompt</span></div>
+      </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 אחרי שההתקנה נגמרה</div>
+        סגור את אפליקציית ChatGPT לגמרי ופתח אותה מחדש. אפליקציה שהייתה פתוחה בזמן ההתקנה עוד לא מכירה את גיט. אחר כך פתח שוב טרמינל (כמו בשלב 2) והרץ שוב <code>git --version</code>. אם גם עכשיו זה לא עובד, עשה ריסטארט למחשב.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 4 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">4</div>
+      <div>
+        <h2>להגיד לגיט מי אתה</h2>
+        <div class="duration">שתי דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">שלוש פקודות באותו טרמינל. הראשונות שתיים מגדירות, השלישית בודקת.</div>
+
+      <ol class="steps-list">
+        <li>העתק, הדבק בטרמינל ולחץ Enter:
+          <div class="cmd"><code>git config --global user.name "Paz Ben Dakon"</code></div>
+        </li>
+        <li>העתק והדבק, אבל <strong>לפני Enter</strong> תחליף את המייל לדוגמה במייל שאיתו נרשמת לגיטהאב בשלב 1:
+          <div class="cmd"><code>git config --global user.email "your-email@gmail.com"</code></div>
+        </li>
+        <li>לבדיקה, העתק, הדבק ולחץ Enter:
+          <div class="cmd"><code>git config --global --list</code></div>
+        </li>
+      </ol>
+
+      <div class="skip">
+        <div class="skip-title">✅ איך יודעים שזה עבד</div>
+        בפלט של הפקודה השלישית מופיעות שתי שורות: <code>user.name=Paz Ben Dakon</code> ו־<code>user.email=…</code> עם המייל שלך.
+      </div>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ שתי נקודות שמפילות את זה</div>
+        המרכאות חייבות להישאר, והשם רק באנגלית. אם המקלדת עברה לעברית באמצע, מחק ותקליד שוב.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 5 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">5</div>
+      <div>
+        <h2>ליצור ריפו פרטי בגיטהאב</h2>
+        <div class="duration">שתי דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">ריפו הוא תיקייה בענן של גיטהאב. לשם הסוכן יגבה את העבודה שלך.</div>
+
+      <ol class="steps-list">
+        <li>גש ל־<strong><a href="https://github.com/new" target="_blank">github.com/new</a></strong> (מחובר עם החשבון משלב 1).</li>
+        <li>בשדה <strong>Repository name</strong> כתוב: <code>paz-agent</code></li>
+        <li>בחר <strong>Private</strong>. זה הכי חשוב בשלב הזה.</li>
+        <li>אל תסמן שום דבר אחר (לא README ולא שום תוספת), ולחץ על הכפתור הירוק <strong>Create repository</strong>.</li>
+        <li>תגיע לעמוד של הריפו. <strong>העתק את הכתובת</strong> משורת הכתובת של הדפדפן. היא נראית ככה: <code style="word-break:break-all; white-space:normal">https://github.com/your-username/paz-agent</code> (במקום <code>your-username</code> יופיע שם המשתמש שלך)</li>
+      </ol>
+
+      <div class="danger">
+        <div class="danger-title">🛑 למה דווקא Private</div>
+        בריפו יהיו הסקילים, הזיכרון העסקי ושמות של לקוחות. ריפו Public פתוח לכל העולם. Private רק אתה רואה.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STEP 6 ============ -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">6</div>
+      <div>
+        <h2>לבקש מהסוכן לגבות הכול, כל יום</h2>
+        <div class="duration">כחמש דקות</div>
+      </div>
+    </div>
+    <div class="step-content">
+      <div class="step-desc">מכאן הסוכן עושה את העבודה. ההנחיה הולכת לשיחה עם הסוכן בלשונית Codex, לא לטרמינל.</div>
+
+      <ol class="steps-list">
+        <li>פתח <strong>שיחה חדשה</strong> עם הסוכן.</li>
+        <li>לחץ על <strong>העתק</strong> בהנחיה למטה, והדבק אותה בשיחה.</li>
+        <li>בסוף ההנחיה, אחרי המילים "הלינק לריפו", <strong>הדבק את הכתובת שהעתקת בשלב 5</strong>, ושלח.</li>
+      </ol>
+
+      <div class="prompt">יצרתי ריפו פרטי בגיטהאב, ואני רוצה שתגבה אליו כל יום את כל מה שבנינו: הסקילים, הזיכרון העסקי, ההגדרות וההוראות שלך.
+כלל ראשון לפני הכול: אסור שיעלו לגיטהאב סיסמאות, טוקנים או מפתחות. קובץ החיבורים, קבצי env, הטוקן של Green API והמפתח והסוד של מורנינג נשארים רק אצלי במחשב. תוסיף אותם ל־gitignore.
+לפני הגיבוי הראשון תראה לי את רשימת הקבצים שעומדים לעלות, ותחכה לאישור שלי.
+אחרי שהגיבוי הראשון הצליח, תגדיר אוטומציה שמגבה הכול לגיטהאב פעם ביום, ותעדכן אותי אם גיבוי נכשל.
+הלינק לריפו: </div>
+
+      <div class="tip">
+        <div class="tip-title">💡 מה יקרה עכשיו</div>
+        הסוכן יעצור כמה פעמים ויבקש אישור להריץ פקודות, וזה תקין. קרא כל בקשה ואשר. בפעם הראשונה שהוא מעלה לגיטהאב, ייתכן שייפתח חלון התחברות לגיטהאב: התחבר עם החשבון משלב 1 ואשר.
+      </div>
+
+      <div class="warning">
+        <div class="warning-title">⚠️ כשהוא מראה לך את רשימת הקבצים</div>
+        עבור עליה לפני שאתה מאשר. אם אתה רואה שם קובץ חיבורים, קובץ שמסתיים ב־<code>.env</code>, או משהו עם המילים token, key או secret, אל תאשר. כתוב לו "תוציא את זה" ותשלח לי צילום מסך.
+      </div>
+
+      <div class="note">
+        האוטומציה רצה רק כשהמחשב דלוק, כמו שאר האוטומציות שלך. אם המחשב היה כבוי, הגיבוי פשוט ירוץ בפעם הבאה.
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DONE ============ -->
+  <div class="finish">
+    <h2>🎉 זהו, סיימת</h2>
+    <div style="max-width:540px; margin:0 auto">
+      <div class="check"><span>✅</span><span>יש לי חשבון גיטהאב ואני יודע מה שם המשתמש שלי</span></div>
+      <div class="check"><span>✅</span><span>הפקודה <code>git --version</code> מחזירה מספר גרסה</span></div>
+      <div class="check"><span>✅</span><span>השם והמייל שלי מוגדרים בגיט</span></div>
+      <div class="check"><span>✅</span><span>יש לי ריפו פרטי, והסוכן עשה גיבוי ראשון בלי סיסמאות ומפתחות</span></div>
+      <div class="check"><span>✅</span><span>הסוכן הגדיר גיבוי אוטומטי פעם ביום</span></div>
+      <p style="margin-top:18px; color:var(--text-secondary)">
+        את מה שנשאר נעשה ביחד במפגש.
+      </p>
+    </div>
+  </div>
+
+  <div class="note">
+    נתקעת באיזשהו שלב? אל תילחם בזה יותר מחמש דקות. צלם את המסך, שלח לי בוואטסאפ, ונפתור את זה בתחילת המפגש.
+  </div>
+
+  <footer>נכתב במיוחד לפז · בונים בינה · אוקטובר 2026</footer>
+</div>
+
+<script>
+function applyTheme(t){
+  document.documentElement.dataset.theme = t;
+  try{ localStorage.setItem('guideTheme', t); }catch(e){}
+  const b = document.getElementById('btn-theme');
+  if(b) b.textContent = (t === 'light') ? '🌙' : '☀️';
+}
+function toggleTheme(){
+  applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+}
+(function(){
+  let saved = null;
+  try{ saved = localStorage.getItem('guideTheme'); }catch(e){}
+  const param = new URLSearchParams(location.search).get('theme');
+  applyTheme(param || saved || 'light');
+})();
+
+function copyText(text, btn){
+  const done = () => {
+    btn.textContent = '✓ הועתק';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 העתק'; btn.classList.remove('copied'); }, 1500);
+  };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text).then(done);
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){}
+    document.body.removeChild(ta);
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.cmd, .prompt').forEach(block => {
+    const text = block.classList.contains('cmd')
+      ? block.querySelector('code').textContent
+      : block.textContent.replace(/^\s+/, '');
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn'; btn.type = 'button'; btn.textContent = '📋 העתק';
+    btn.addEventListener('click', () => copyText(text, btn));
+    block.appendChild(btn);
+  });
+});
+</script>
+</body>
+</html>

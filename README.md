@@ -50,6 +50,7 @@ The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-men
 | [ai-workspace-setup-gil.html](tooling-setup/ai-workspace-setup-gil.html) | Non-technical beginner setup (Gil) — Stage 1: Claude Desktop + Obsidian; Stage 2 (bonus, later): dev stack via the main guide |
 | [git-github-setup.html](tooling-setup/git-github-setup.html) | From zero to first push — GitHub signup, Git install, config, commit/push via the VS Code UI |
 | [git-github-uri.html](tooling-setup/git-github-uri.html) | Minimal Windows-only prerequisite for Uri — GitHub signup + Git install/config only, verification steps delegated to Claude instead of a terminal |
+| [git-github-paz.html](tooling-setup/git-github-paz.html) | Windows guide for Paz — GitHub signup, Git install/config via the ChatGPT app's built-in terminal (no VS Code), private repo, and a paste-ready prompt for the agent to back everything up daily (secrets excluded) |
 | [technion-lbs-setup.html](tooling-setup/technion-lbs-setup.html) | Technion LBS course dev environment setup |
 | [geoai-rg-setup.html](tooling-setup/geoai-rg-setup.html) | GeoAI / RG Innovation dev environment setup (Geo-AI-Course org) |
 | [whatsapp-setup.html](tooling-setup/whatsapp-setup.html) | WhatsApp Skill installation |
