@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הקמת סביבת העבודה · וייב קודינג עם קלוד · אריאל</title>
+    <title>הקמת סביבת העבודה · וייב קודינג עם קלוד</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         (function () {
@@ -279,6 +279,23 @@
         .checklist label.done { background: var(--check-done); border-color: var(--tip-border); }
         .check-count { margin-top: 12px; font-weight: 600; color: var(--muted); }
 
+        .send-box {
+            margin-top: 18px; padding: 16px; background: var(--card-soft);
+            border: 1px solid var(--border); border-radius: 12px;
+        }
+        .send-box label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--heading); }
+        .send-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .send-row input {
+            flex: 1 1 200px; min-width: 0; padding: 10px 12px; font-family: inherit; font-size: 1rem;
+            color: var(--text); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+        }
+        .send-btn {
+            padding: 10px 20px; font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+            color: #ffffff; border: none; border-radius: 10px;
+            background: linear-gradient(135deg, var(--major-sum-a), var(--major-sum-b));
+        }
+        .send-btn:disabled { opacity: 0.6; cursor: default; }
+        .send-status { margin-top: 10px; font-weight: 500; color: var(--muted); min-height: 1.4em; }
         .goal-list { list-style: none; }
         .goal-list li {
             display: flex; gap: 14px; padding: 14px; margin-bottom: 12px;
@@ -307,14 +324,14 @@
 </head>
 <body>
     <nav class="top-nav">
-        <div class="nav-logo"><span>אריאל</span> · וייב קודינג עם קלוד</div>
+        <div class="nav-logo"><span>וייב קודינג</span> עם קלוד</div>
         <button class="theme-btn" id="themeBtn" type="button" aria-label="החלפת מצב תצוגה">🌙 מצב כהה</button>
     </nav>
 
     <div class="hero">
         <h1>הקמת סביבת העבודה</h1>
-        <p>מה מכינים לפני הבוטקמפ ב-4.11: חשבון GitHub, ‏VS Code, ‏Git, והתוסף של Claude Code. כך במפגש עצמו בונים, ולא מתקינים.</p>
-        <div class="badge">כ-20 דקות · עדיף לסיים לפני המפגש</div>
+        <p>מה מכינים לפני המפגש: חשבון GitHub, ‏VS Code, ‏Git, והתוסף של Claude Code. כך במפגש עצמו בונים, ולא מתקינים.</p>
+        <div class="badge">כ-20 דקות · מומלץ לפני המפגש</div>
     </div>
 
     <div class="container">
@@ -324,7 +341,7 @@
             <ul class="icon-list">
                 <li><div class="icon">💻</div><span>מחשב נייד אישי, לא מחשב של עבודה שחוסם התקנות</span></li>
                 <li><div class="icon">💾</div><span>כ-1GB פנויים בדיסק</span></li>
-                <li><div class="icon">📨</div><span>גישה לתיבת הדואר שלכם באריאל: ההזמנה לקלוד תגיע אליה במפגש</span></li>
+                <li><div class="icon">📨</div><span>גישה לתיבת הדואר האוניברסיטאית שלכם: ההזמנה לקלוד תגיע אליה</span></li>
                 <li><div class="icon">🌐</div><span>חיבור אינטרנט יציב</span></li>
             </ul>
         </div>
@@ -506,7 +523,7 @@
                         </div>
                         <details class="info">
                             <summary>ℹ️ מתי מתחברים?</summary>
-                            <div class="callout-body">ההזמנה למנוי של הקורס נשלחת במהלך המפגש, לכתובת שלכם באריאל, לכל מי שנמצא במפגש. נתחבר ביחד. מי שיש לו מנוי פרטי בתשלום (Pro או Max) יכול להתחבר כבר עכשיו. חשבון חינמי (Free) לא כולל את Claude Code.</div>
+                            <div class="callout-body">ההזמנה למנוי של הקורס נשלחת לכתובת האוניברסיטאית שלכם, ונתחבר ביחד במפגש. מי שיש לו מנוי פרטי בתשלום (Pro או Max) יכול להתחבר כבר עכשיו. חשבון חינמי (Free) לא כולל את Claude Code.</div>
                         </details>
                     </div>
                 </details>
@@ -520,44 +537,29 @@
                 <span class="section-icon">✅</span>
                 <div class="section-title-container">
                     <h2>חלק 2 · בדיקה אחרונה</h2>
-                    <div class="section-subtitle">4 סימונים · כ-2 דקות</div>
+                    <div class="section-subtitle">4 סימונים ושליחה לזכר · כ-2 דקות</div>
                 </div>
             </summary>
             <div class="major-body">
                 <p style="margin-bottom: 14px;">סמנו כל שורה שעובדת אצלכם. הסימונים נשמרים בדפדפן הזה בלבד.</p>
                 <ul class="checklist" id="checklist">
-                    <li><label><input type="checkbox" data-key="github"><span>אני נכנס לחשבון GitHub שלי ויודע את הסיסמה</span></label></li>
+                    <li><label><input type="checkbox" data-key="github"><span>נכנסתי לחשבון GitHub שלי, והסיסמה שמורה אצלי</span></label></li>
                     <li><label><input type="checkbox" data-key="git"><span><code>git --version</code> מחזיר מספר גרסה</span></label></li>
                     <li><label><input type="checkbox" data-key="claude"><span>האייקון של Claude מופיע ב-VS Code</span></label></li>
-                    <li><label><input type="checkbox" data-key="mail"><span>נכנסתי לתיבת הדואר שלי באריאל מהמחשב הנייד או מהטלפון</span></label></li>
+                    <li><label><input type="checkbox" data-key="mail"><span>נכנסתי לתיבת הדואר האוניברסיטאית שלי מהמחשב הנייד או מהטלפון</span></label></li>
                 </ul>
                 <div class="check-count" id="checkCount">0 מתוך 4</div>
+                <div class="send-box" id="sendBox" hidden>
+                    <label for="studentName">השם המלא שלכם</label>
+                    <div class="send-row">
+                        <input id="studentName" type="text" autocomplete="name" maxlength="80">
+                        <button id="sendBtn" type="button" class="send-btn">שליחה לזכר</button>
+                    </div>
+                    <div id="sendStatus" class="send-status" role="status"></div>
+                </div>
                 <details class="tip">
                     <summary>💡 משהו לא עובד?</summary>
                     <div class="callout-body">מגיעים למפגש כמו שאתם, ואומרים בתחילתו מה נתקע. מה שלא נפתר לבד נפתר שם.</div>
-                </details>
-            </div>
-        </details>
-
-        <!-- ================= PART 3 ================= -->
-        <details class="major-section">
-            <summary>
-                <span class="section-icon">🎯</span>
-                <div class="section-title-container">
-                    <h2>חלק 3 · מה עושים במפגש</h2>
-                    <div class="section-subtitle">יום רביעי 4.11 · 14:00 עד 17:00</div>
-                </div>
-            </summary>
-            <div class="major-body">
-                <ul class="goal-list">
-                    <li><div class="goal-icon">📨</div><div>ההזמנה לקלוד: נשלחת במפגש לכתובת שלכם באריאל, ומתחברים איתה ב-VS Code.</div></li>
-                    <li><div class="goal-icon">📁</div><div>ריפו לצוות: אחד מהצוות פותח אותו ב-GitHub ומוסיף את השאר.</div></li>
-                    <li><div class="goal-icon">▶️</div><div>גרסה ראשונה של האפליקציה של הפרויקט, שבונים עם קלוד.</div></li>
-                    <li><div class="goal-icon">📄</div><div>קובץ README וקובץ CLAUDE.md, מכרטיס הרעיון ומהתקציר של מפגש 2.</div></li>
-                </ul>
-                <details class="info" open>
-                    <summary>ℹ️ מה להביא</summary>
-                    <div class="callout-body">את המחשב הנייד עם ההתקנות, מטען, ואת כרטיס הרעיון שמילאתם במפגש הראשון.</div>
                 </details>
             </div>
         </details>
@@ -571,13 +573,13 @@
             <h2>נתקעתם? כאן עוזרים:</h2>
             <ul class="icon-list">
                 <li><div class="icon">🙋</div><span>במפגש: מי שתקוע חמש דקות מרים יד</span></li>
-                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachar.adn@gmail.com" target="_blank" rel="noopener">zachar.adn@gmail.com</a></span></li>
+                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachara@ariel.ac.il" target="_blank" rel="noopener">zachara@ariel.ac.il</a></span></li>
             </ul>
         </div>
     </div>
 
     <footer>
-        <p>וייב קודינג עם קלוד · אוניברסיטת אריאל · סמסטר א' תשפ״ז</p>
+        <p>וייב קודינג עם קלוד</p>
     </footer>
 
     <script>
@@ -637,6 +639,34 @@
             });
         });
         refresh();
+
+        /* send result to Zac (Google Apps Script web app owned by Zac) */
+        var ENDPOINT = '';
+        var sendBox = document.getElementById('sendBox');
+        if (ENDPOINT) { sendBox.hidden = false; }
+        var sendBtn = document.getElementById('sendBtn');
+        var nameIn = document.getElementById('studentName');
+        var status = document.getElementById('sendStatus');
+        sendBtn.addEventListener('click', function () {
+            var name = nameIn.value.trim();
+            if (!name) { status.textContent = 'כתבו את השם המלא, ואז שליחה.'; nameIn.focus(); return; }
+            var steps = [];
+            boxes.forEach(function (cb) {
+                steps.push({ label: cb.closest('label').textContent.replace(/\s+/g, ' ').trim(), done: cb.checked });
+            });
+            sendBtn.disabled = true;
+            status.textContent = 'שולח...';
+            fetch(ENDPOINT, {
+                method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ name: name, steps: steps, page: location.href })
+            }).then(function () {
+                status.textContent = 'נשלח. תודה, ' + name + '.';
+            }).catch(function () {
+                sendBtn.disabled = false;
+                status.textContent = 'השליחה נכשלה. צלמו את המסך ושלחו לזכר במייל.';
+            });
+        });
     });
     </script>
 </body>

@@ -53,7 +53,7 @@ The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-men
 | [git-github-paz.html](tooling-setup/git-github-paz.html) | Windows guide for Paz — GitHub signup, Git install/config via the ChatGPT app's built-in terminal (no VS Code), private repo, and a paste-ready prompt for the agent to back everything up daily (secrets excluded) |
 | [technion-lbs-setup.html](tooling-setup/technion-lbs-setup.html) | Technion LBS course dev environment setup |
 | [geoai-rg-setup.html](tooling-setup/geoai-rg-setup.html) | GeoAI / RG Innovation dev environment setup (Geo-AI-Course org) |
-| [ariel-vibe-coding-setup.html](tooling-setup/ariel-vibe-coding-setup.html) | Ariel "vibe coding with Claude" (autumn 2026) pre-session setup: GitHub account, VS Code, Git, Claude Code extension; acceptance checklist |
+| [vibe-coding-setup.html](tooling-setup/vibe-coding-setup.html) | "Vibe coding with Claude" pre-session setup (Ariel autumn 2026, reusable for Technion): GitHub account, VS Code, Git, Claude Code extension; acceptance checklist |
 | [whatsapp-setup.html](tooling-setup/whatsapp-setup.html) | WhatsApp Skill installation |
 | [hebrew-terminal-fix.html](tooling-setup/hebrew-terminal-fix.html) | Fixing Hebrew display in the Windows terminal |
 | [self-improving-skills-hooks.html](tooling-setup/self-improving-skills-hooks.html) | Claude Code Skills and Hooks system |
