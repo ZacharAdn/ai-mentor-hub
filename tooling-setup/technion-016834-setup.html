@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הקמת סביבת העבודה · מרעיון למוצר חי 016834</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            var t = 'light';
+            try {
+                var p = new URLSearchParams(location.search).get('theme');
+                var s = localStorage.getItem('guideTheme');
+                if (p === 'light' || p === 'dark') { t = p; } else if (s === 'light' || s === 'dark') { t = s; }
+            } catch (e) {}
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <style>
+        /* ---------- palette: dark on :root, light override (default) ---------- */
+        :root {
+            --page-bg: #0f172a;
+            --page-grad-a: #0f172a;
+            --page-grad-b: #1e1b4b;
+            --card: #1e293b;
+            --card-soft: #273449;
+            --border: #334155;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --heading: #f1f5f9;
+            --accent: #818cf8;
+            --accent-2: #c084fc;
+            --accent-3: #f472b6;
+            --nav-bg: rgba(15, 23, 42, 0.95);
+            --hero-bg-a: #111827;
+            --hero-bg-b: #1e1b4b;
+            --step-sum-a: #111827;
+            --step-sum-b: #1e293b;
+            --major-sum-a: #4f46e5;
+            --major-sum-b: #7c3aed;
+            --on-accent: #ffffff;
+            --code-bg: #0b1020;
+            --code-text: #7ee787;
+            --tip-bg: rgba(76, 175, 80, 0.14);
+            --tip-border: #4caf50;
+            --tip-title: #86efac;
+            --warn-bg: rgba(255, 152, 0, 0.14);
+            --warn-border: #ff9800;
+            --warn-title: #fdba74;
+            --info-bg: rgba(33, 150, 243, 0.14);
+            --info-border: #2196f3;
+            --info-title: #93c5fd;
+            --success-a: #15803d;
+            --success-b: #16a34a;
+            --check-done: rgba(76, 175, 80, 0.18);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+            --link: #a5b4fc;
+        }
+        html[data-theme="light"] {
+            --page-bg: #f4f6fa;
+            --page-grad-a: #eef1fb;
+            --page-grad-b: #f4f6fa;
+            --card: #ffffff;
+            --card-soft: #f8f9ff;
+            --border: #d9e0ea;
+            --text: #1f2937;
+            --muted: #5b6475;
+            --heading: #111827;
+            --accent: #4f46e5;
+            --accent-2: #7c3aed;
+            --accent-3: #db2777;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --hero-bg-a: #1a1a2e;
+            --hero-bg-b: #16213e;
+            --step-sum-a: #1a1a2e;
+            --step-sum-b: #16213e;
+            --major-sum-a: #667eea;
+            --major-sum-b: #764ba2;
+            --on-accent: #ffffff;
+            --code-bg: #1a1a2e;
+            --code-text: #7ee787;
+            --tip-bg: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            --tip-border: #4caf50;
+            --tip-title: #2e7d32;
+            --warn-bg: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            --warn-border: #ff9800;
+            --warn-title: #b45309;
+            --info-bg: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            --info-border: #2196f3;
+            --info-title: #1565c0;
+            --success-a: #4caf50;
+            --success-b: #43a047;
+            --check-done: #e8f5e9;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --link: #4338ca;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, var(--page-grad-a) 0%, var(--page-grad-b) 100%);
+            background-color: var(--page-bg);
+            min-height: 100vh; color: var(--text); line-height: 1.8;
+        }
+        a { color: var(--link); }
+
+        .top-nav {
+            background: var(--nav-bg); backdrop-filter: blur(10px);
+            padding: 12px 24px; display: flex; justify-content: space-between;
+            align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo { color: var(--heading); font-weight: 700; font-size: 1.05rem; }
+        .nav-logo span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .theme-btn {
+            background: var(--card-soft); color: var(--heading); border: 1px solid var(--border);
+            border-radius: 20px; padding: 6px 14px; font-family: inherit; font-size: 0.9rem;
+            cursor: pointer; white-space: nowrap;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--hero-bg-a) 0%, var(--hero-bg-b) 100%);
+            color: #ffffff; padding: 56px 20px; text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.6rem; font-weight: 700; margin-bottom: 12px;
+            background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero p { font-size: 1.15rem; color: #c7cbe0; max-width: 720px; margin: 0 auto; }
+        .hero .badge {
+            display: inline-block; background: rgba(129, 140, 248, 0.18); color: #c7d2fe;
+            padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; margin-top: 20px;
+            border: 1px solid rgba(129, 140, 248, 0.35);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 36px 16px; }
+
+        .card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+            padding: 26px; margin-bottom: 28px; box-shadow: var(--shadow);
+        }
+        .card h2 { font-size: 1.4rem; margin-bottom: 16px; color: var(--heading); }
+        .icon-list {
+            list-style: none; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;
+        }
+        .icon-list li {
+            display: flex; align-items: center; gap: 12px; padding: 14px;
+            background: var(--card-soft); border: 1px solid var(--border);
+            border-radius: 12px; font-weight: 500;
+        }
+        .icon-list li .icon {
+            width: 40px; height: 40px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--major-sum-a), var(--major-sum-b));
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            color: var(--on-accent); font-size: 1.2rem;
+        }
+
+        /* ---------- collapsibles ---------- */
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details > summary::after {
+            content: "▼"; margin-inline-start: auto; font-size: 0.8rem;
+            transition: transform 0.2s ease; opacity: 0.85;
+        }
+        details[open] > summary::after { transform: rotate(180deg); }
+
+        details.major-section {
+            background: var(--card); border: 3px solid var(--border); border-radius: 22px;
+            margin-bottom: 28px; overflow: hidden; box-shadow: var(--shadow);
+        }
+        details.major-section > summary {
+            background: linear-gradient(135deg, var(--major-sum-a) 0%, var(--major-sum-b) 100%);
+            color: var(--on-accent); padding: 22px 26px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .section-icon { font-size: 2.2rem; line-height: 1; }
+        .section-title-container h2 { font-size: 1.45rem; font-weight: 700; }
+        .section-subtitle { font-size: 0.95rem; opacity: 0.9; }
+        .major-body { padding: 22px; }
+
+        details.step {
+            background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            margin-bottom: 18px; overflow: hidden;
+        }
+        details.step > summary {
+            background: linear-gradient(135deg, var(--step-sum-a) 0%, var(--step-sum-b) 100%);
+            color: #ffffff; padding: 18px 22px; display: flex; align-items: center; gap: 16px;
+        }
+        .step-number {
+            width: 46px; height: 46px; flex-shrink: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem; font-weight: 700; color: #ffffff;
+        }
+        .step-title-container h3 { font-size: 1.2rem; font-weight: 600; }
+        .duration { font-size: 0.88rem; color: #b6bad0; }
+        .step-content { padding: 22px; }
+        .step-description {
+            font-size: 1.05rem; color: var(--muted); margin-bottom: 20px; padding: 16px 18px;
+            background: var(--card-soft); border-radius: 12px; border-right: 4px solid var(--accent);
+        }
+
+        .instructions h4 { font-size: 1.05rem; font-weight: 600; margin: 18px 0 12px; color: var(--heading); }
+        .instruction-list { list-style: none; counter-reset: instruction; }
+        .instruction-list li {
+            counter-increment: instruction; padding: 13px 56px 13px 14px; margin-bottom: 10px;
+            background: var(--card-soft); border: 1px solid var(--border); border-radius: 12px;
+            position: relative;
+        }
+        .instruction-list li::before {
+            content: counter(instruction); position: absolute; right: 14px; top: 14px;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2); color: #ffffff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.85rem;
+        }
+
+        details.platform {
+            border: 1px solid var(--border); border-radius: 12px; margin: 14px 0; overflow: hidden;
+        }
+        details.platform > summary {
+            background: var(--card-soft); padding: 10px 16px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; color: var(--heading);
+        }
+        .platform-body { padding: 14px; }
+
+        details.tip, details.warning, details.info {
+            border-radius: 12px; margin: 16px 0; overflow: hidden;
+        }
+        details.tip { background: var(--tip-bg); border-right: 4px solid var(--tip-border); }
+        details.warning { background: var(--warn-bg); border-right: 4px solid var(--warn-border); }
+        details.info { background: var(--info-bg); border-right: 4px solid var(--info-border); }
+        details.tip > summary, details.warning > summary, details.info > summary {
+            padding: 12px 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        details.tip > summary { color: var(--tip-title); }
+        details.warning > summary { color: var(--warn-title); }
+        details.info > summary { color: var(--info-title); }
+        .callout-body { padding: 0 16px 14px; color: var(--text); }
+
+        code {
+            font-family: 'Courier New', monospace; background: var(--card-soft);
+            border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px;
+            direction: ltr; unicode-bidi: isolate;
+        }
+        .code-block {
+            background: var(--code-bg); color: var(--code-text);
+            padding: 36px 20px 15px 20px; border-radius: 8px;
+            font-family: 'Courier New', monospace; margin: 12px 0; overflow-x: auto;
+            position: relative; direction: ltr; text-align: left;
+        }
+        .code-block code {
+            display: block; white-space: pre; background: none; border: none; padding: 0;
+            color: inherit;
+        }
+        .code-copy-btn {
+            position: absolute; top: 8px; right: 10px;
+            background: rgba(126, 231, 135, 0.15); color: #7ee787;
+            border: 1px solid rgba(126, 231, 135, 0.35); border-radius: 6px;
+            padding: 3px 10px; font-size: 0.7rem; font-weight: 600; cursor: pointer;
+            font-family: 'Heebo', sans-serif; line-height: 1.4; z-index: 2;
+        }
+        .code-copy-btn.copied { background: rgba(76, 175, 80, 0.35); color: #ffffff; }
+
+        /* ---------- acceptance checklist ---------- */
+        .checklist { list-style: none; }
+        .checklist li { margin-bottom: 10px; }
+        .checklist label {
+            display: flex; gap: 12px; align-items: flex-start; padding: 13px 14px;
+            background: var(--card-soft); border: 1px solid var(--border); border-radius: 12px;
+            cursor: pointer;
+        }
+        .checklist input { width: 20px; height: 20px; margin-top: 4px; flex-shrink: 0; accent-color: #4caf50; }
+        .checklist label.done { background: var(--check-done); border-color: var(--tip-border); }
+        .check-count { margin-top: 12px; font-weight: 600; color: var(--muted); }
+
+        .send-box {
+            margin-top: 18px; padding: 16px; background: var(--card-soft);
+            border: 1px solid var(--border); border-radius: 12px;
+        }
+        .send-box label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--heading); }
+        .send-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .send-row input {
+            flex: 1 1 200px; min-width: 0; padding: 10px 12px; font-family: inherit; font-size: 1rem;
+            color: var(--text); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+        }
+        .send-btn {
+            padding: 10px 20px; font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+            color: #ffffff; border: none; border-radius: 10px;
+            background: linear-gradient(135deg, var(--major-sum-a), var(--major-sum-b));
+        }
+        .send-btn:disabled { opacity: 0.6; cursor: default; }
+        .send-status { margin-top: 10px; font-weight: 500; color: var(--muted); min-height: 1.4em; }
+        .goal-list { list-style: none; }
+        .goal-list li {
+            display: flex; gap: 14px; padding: 14px; margin-bottom: 12px;
+            background: var(--card-soft); border: 1px solid var(--border); border-radius: 12px;
+        }
+        .goal-icon { font-size: 1.6rem; line-height: 1.2; }
+
+        .success-banner {
+            background: linear-gradient(135deg, var(--success-a), var(--success-b));
+            color: #ffffff; padding: 28px; border-radius: 20px; text-align: center; margin: 28px 0;
+        }
+        .success-banner h3 { font-size: 1.45rem; margin-bottom: 8px; }
+        .success-banner a { color: #ffffff; }
+
+        footer { text-align: center; padding: 36px 16px; color: var(--muted); font-size: 0.95rem; }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .top-nav { padding: 10px 16px; }
+            .nav-logo { font-size: 0.95rem; }
+            details.major-section > summary, details.step > summary { padding: 16px; gap: 12px; }
+            .major-body, .step-content { padding: 14px; }
+            .instruction-list li { padding-right: 50px; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-logo"><span>016834</span> מרעיון למוצר חי</div>
+        <button class="theme-btn" id="themeBtn" type="button" aria-label="החלפת מצב תצוגה">🌙 מצב כהה</button>
+    </nav>
+
+    <div class="hero">
+        <h1>הקמת סביבת העבודה</h1>
+        <p>מה מכינים לפני המפגש ב-10.11: חשבון GitHub, ‏VS Code, ‏Git, התוסף של Claude Code, ואישור ההזמנות של הקורס. כך במפגש עצמו בונים, ולא מתקינים.</p>
+        <div class="badge">כ-25 דקות · מומלץ לפני המפגש</div>
+    </div>
+
+    <div class="container">
+
+        <div class="card">
+            <h2>לפני שמתחילים</h2>
+            <ul class="icon-list">
+                <li><div class="icon">💻</div><span>מחשב נייד אישי, לא מחשב של עבודה שחוסם התקנות</span></li>
+                <li><div class="icon">💾</div><span>כ-1GB פנויים בדיסק</span></li>
+                <li><div class="icon">📨</div><span>גישה לתיבת הדואר של הטכניון שלכם (campus.technion.ac.il): ההזמנה לקלוד תגיע אליה</span></li>
+                <li><div class="icon">🌐</div><span>חיבור אינטרנט יציב</span></li>
+            </ul>
+        </div>
+
+        <!-- ================= PART 1 ================= -->
+        <details class="major-section">
+            <summary>
+                <span class="section-icon">📦</span>
+                <div class="section-title-container">
+                    <h2>חלק 1 · התקנות</h2>
+                    <div class="section-subtitle">5 שלבים · כ-20 דקות · לפי הסדר</div>
+                </div>
+            </summary>
+            <div class="major-body">
+
+                <!-- STEP 1: GitHub -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">1</div>
+                        <div class="step-title-container">
+                            <h3>חשבון GitHub</h3>
+                            <div class="duration">כ-5 דקות · מי שכבר יש לו חשבון מדלג</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            ב-GitHub יחיה הקוד של הצוות. במפגש כל צוות פותח ריפו (תיקיית פרויקט בענן) משלו, וכל חברי הצוות עובדים עליו.
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>היכנסו ל-<a href="https://github.com/signup" target="_blank" rel="noopener">github.com/signup</a>.</li>
+                                <li>הירשמו עם מייל שאתם נכנסים אליו בקלות. מייל פרטי מתאים.</li>
+                                <li>בחרו שם משתמש מקצועי. הוא נשאר איתכם שנים, ואחרים יראו אותו בפרויקט. תצטרכו לשלוח אותו לזכר בחלק 2.</li>
+                                <li>אשרו את המייל ש-GitHub שולח.</li>
+                            </ol>
+                        </div>
+                        <details class="warning">
+                            <summary>⚠️ לא פותחים ריפו עכשיו</summary>
+                            <div class="callout-body">את הריפו פותחים ביחד במפגש, אחד לכל צוות. חשבון בלבד מספיק.</div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- STEP 2: VS Code -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">2</div>
+                        <div class="step-title-container">
+                            <h3>התקנת VS Code</h3>
+                            <div class="duration">כ-5 דקות · מי שכבר התקין מדלג</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            ‏VS Code היא סביבת העבודה שבה נכתוב קוד ונעבוד עם קלוד. היא חינמית, ל-Windows ול-Mac.
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>היכנסו ל-<a href="https://code.visualstudio.com/download" target="_blank" rel="noopener">code.visualstudio.com/download</a> והורידו את הגרסה למערכת שלכם.</li>
+                                <li>ב-Windows: מריצים את קובץ ההתקנה ולוחצים Next עד הסוף. ב-Mac: גוררים את האייקון לתיקיית Applications.</li>
+                                <li>פתחו את VS Code. את מסך ה-Welcome אפשר לסגור.</li>
+                            </ol>
+                        </div>
+                        <details class="tip">
+                            <summary>💡 איפה הטרמינל?</summary>
+                            <div class="callout-body">בכל הפקודות במדריך משתמשים בטרמינל של VS Code: בתפריט Terminal בוחרים New Terminal, או לוחצים <code>Ctrl+`</code> (התו שמעל Tab).</div>
+                        </details>
+                        <details class="warning">
+                            <summary>⚠️ ‏VS Code, לא Visual Studio</summary>
+                            <div class="callout-body">אלה שתי תוכנות שונות. ‏Visual Studio היא תוכנה כבדה של כ-10GB, ולא צריך אותה בקורס.</div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- STEP 3: Git -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">3</div>
+                        <div class="step-title-container">
+                            <h3>התקנת Git</h3>
+                            <div class="duration">כ-5 דקות</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            ‏Git שומר גרסאות של הקוד על המחשב שלכם, ו-GitHub שומר אותן בענן. צריך את שניהם.
+                        </div>
+
+                        <details class="platform" open>
+                            <summary>🪟 Windows</summary>
+                            <div class="platform-body">
+                                <ol class="instruction-list">
+                                    <li>היכנסו ל-<a href="https://git-scm.com/download/win" target="_blank" rel="noopener">git-scm.com/download/win</a>. ההורדה מתחילה לבד.</li>
+                                    <li>מריצים את קובץ ההתקנה ולוחצים Next. ברירות המחדל בסדר.</li>
+                                    <li>במסך <strong>Adjusting your PATH</strong> בוחרים באפשרות <em>Git from the command line and also from 3rd-party software</em> (זו ברירת המחדל).</li>
+                                </ol>
+                            </div>
+                        </details>
+
+                        <details class="platform">
+                            <summary>🍎 Mac</summary>
+                            <div class="platform-body">
+                                <ol class="instruction-list">
+                                    <li>פתחו את הטרמינל של VS Code והקלידו:
+                                        <div class="code-block"><code>xcode-select --install</code></div>
+                                    </li>
+                                    <li>בחלון של Apple לוחצים Install ומחכים לסיום, כמה דקות.</li>
+                                    <li>אם מופיעה הודעה שהכלים כבר מותקנים, הכול בסדר וממשיכים.</li>
+                                </ol>
+                            </div>
+                        </details>
+
+                        <details class="platform">
+                            <summary>🐧 Linux</summary>
+                            <div class="platform-body">
+                                <ol class="instruction-list">
+                                    <li>באובונטו או דביאן, בטרמינל:
+                                        <div class="code-block"><code>sudo apt install git</code></div>
+                                    </li>
+                                    <li>בפדורה:
+                                        <div class="code-block"><code>sudo dnf install git</code></div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- STEP 4: Git verify + config -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">4</div>
+                        <div class="step-title-container">
+                            <h3>בדיקת Git, ושם ומייל</h3>
+                            <div class="duration">כ-3 דקות · לא לדלג</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            כל שמירה של קוד (commit) נושאת שם ומייל. בלי ההגדרה הזו Git לא יודע מי אתם.
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>סגרו את VS Code ופתחו אותו מחדש, כדי שיכיר את ההתקנה.</li>
+                                <li>בטרמינל של VS Code:
+                                    <div class="code-block"><code>git --version</code></div>
+                                    צריך לקבל שורה כמו <code>git version 2.51.0</code>. המספר יכול להיות אחר.
+                                </li>
+                                <li>הגדירו שם (החליפו בשם שלכם):
+                                    <div class="code-block"><code>git config --global user.name "Your Name"</code></div>
+                                </li>
+                                <li>הגדירו מייל, אותו מייל שאיתו נרשמתם ל-GitHub:
+                                    <div class="code-block"><code>git config --global user.email "you@example.com"</code></div>
+                                </li>
+                            </ol>
+                        </div>
+                        <details class="warning">
+                            <summary>⚠️ קיבלתם command not found או "not recognized"?</summary>
+                            <div class="callout-body">‏Git לא מותקן או שהמחשב עוד לא מכיר אותו. סגרו את VS Code לגמרי ופתחו מחדש. ב-Windows, אם זה עדיין לא עובד, הפעילו מחדש את המחשב. ב-Mac, חזרו לשלב 3 וודאו שההתקנה הסתיימה.</div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- STEP 5: Claude Code extension -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">5</div>
+                        <div class="step-title-container">
+                            <h3>התוסף של Claude Code ב-VS Code</h3>
+                            <div class="duration">כ-3 דקות · רק התקנה, ההתחברות בחלק 3</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            ‏Claude Code הוא הסוכן שיעבוד איתכם בתוך VS Code: קורא את הקבצים בפרויקט, כותב קוד ומריץ פקודות, ומבקש אישור לפני כל פעולה.
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>ב-VS Code לחצו על אייקון התוספים בסרגל הצד, זה עם ארבעה ריבועים. קיצור מקלדת: <code>Ctrl+Shift+X</code>, וב-Mac <code>Cmd+Shift+X</code>.</li>
+                                <li>חפשו <strong>Claude Code</strong>, בחרו את התוסף של Anthropic, ולחצו Install.</li>
+                                <li>אחרי ההתקנה מופיע אייקון הניצוץ של Claude בסרגל הצד, ובפינה התחתונה של החלון מופיע <strong>✻ Claude Code</strong>.</li>
+                            </ol>
+                        </div>
+                        <details class="info">
+                            <summary>ℹ️ מתי מתחברים?</summary>
+                            <div class="callout-body">ההזמנה למנוי של הקורס נשלחת לכתובת הטכניון שלכם, ומתחברים אחריה, בחלק 3. חשבון חינמי (Free) לא כולל את Claude Code.</div>
+                        </details>
+                    </div>
+                </details>
+
+            </div>
+        </details>
+
+        <!-- ================= PART 2 ================= -->
+        <details class="major-section">
+            <summary>
+                <span class="section-icon">✅</span>
+                <div class="section-title-container">
+                    <h2>חלק 2 · בדיקה ושליחה לזכר</h2>
+                    <div class="section-subtitle">4 סימונים ושם משתמש · כ-2 דקות</div>
+                </div>
+            </summary>
+            <div class="major-body">
+                <p style="margin-bottom: 14px;">סמנו כל שורה שעובדת אצלכם, כתבו את השם ואת שם המשתמש ב-GitHub, ולחצו על שליחה. כך זכר יודע מה מוכן אצלכם, ולפי שם המשתמש נשלחת ההזמנה לארגון של הקורס.</p>
+                <ul class="checklist" id="checklist">
+                    <li><label><input type="checkbox" data-key="github"><span>נכנסתי לחשבון GitHub שלי, והסיסמה שמורה אצלי</span></label></li>
+                    <li><label><input type="checkbox" data-key="git"><span><code>git --version</code> מחזיר מספר גרסה</span></label></li>
+                    <li><label><input type="checkbox" data-key="claude"><span>האייקון של Claude מופיע ב-VS Code</span></label></li>
+                    <li><label><input type="checkbox" data-key="mail"><span>נכנסתי לתיבת הדואר של הטכניון שלי מהמחשב הנייד או מהטלפון</span></label></li>
+                </ul>
+                <div class="check-count" id="checkCount">0 מתוך 4</div>
+                <div class="send-box" id="sendBox" hidden>
+                    <label for="studentName">השם המלא שלכם</label>
+                    <div class="send-row">
+                        <input id="studentName" type="text" autocomplete="name" maxlength="80">
+                    </div>
+                    <label for="githubUser">שם המשתמש שלכם ב-GitHub</label>
+                    <div class="send-row">
+                        <input id="githubUser" type="text" autocomplete="username" maxlength="39" dir="ltr">
+                        <button id="sendBtn" type="button" class="send-btn">שליחה לזכר</button>
+                    </div>
+                    <div id="sendStatus" class="send-status" role="status"></div>
+                </div>
+                <details class="tip">
+                    <summary>💡 משהו לא עובד?</summary>
+                    <div class="callout-body">מגיעים למפגש כמו שאתם, ואומרים בתחילתו מה נתקע. מה שלא נפתר לבד נפתר שם.</div>
+                </details>
+            </div>
+        </details>
+
+        <!-- ================= PART 3 ================= -->
+        <details class="major-section">
+            <summary>
+                <span class="section-icon">📨</span>
+                <div class="section-title-container">
+                    <h2>חלק 3 · אישור ההזמנות של הקורס</h2>
+                    <div class="section-subtitle">2 שלבים · כ-5 דקות · כשההזמנות מגיעות</div>
+                </div>
+            </summary>
+            <div class="major-body">
+                <p style="margin-bottom: 14px;">ההזמנות נשלחות אחרי השליחה בחלק 2, ולכן הן לא מגיעות מיד. מי שעוד לא קיבל הזמנה עד המפגש, בודק את זה איתנו בתחילתו.</p>
+
+                <!-- STEP 6: GitHub org -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">6</div>
+                        <div class="step-title-container">
+                            <h3>מאשרים את ההזמנה לארגון ב-GitHub</h3>
+                            <div class="duration">כ-2 דקות</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            לקורס יש ארגון ב-GitHub. הריפו של הצוות שלכם יהיה בתוכו, ואלי וזכר יראו אותו בלי שתצטרכו לשתף.
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>במייל שאיתו נרשמתם ל-GitHub, חפשו הודעה מ-GitHub בשם <em>ZacharAdn has invited you to join</em>. בדקו גם בזבל ובקידומי מכירות.</li>
+                                <li>לחצו Join, התחברו לחשבון GitHub שלכם, ואשרו.</li>
+                                <li>היכנסו ל-<a href="https://github.com/settings/organizations" target="_blank" rel="noopener">github.com/settings/organizations</a>. אם הארגון של הקורס מופיע ברשימה, אתם בפנים.</li>
+                            </ol>
+                        </div>
+                        <details class="warning">
+                            <summary>⚠️ ההזמנה בתוקף 7 ימים</summary>
+                            <div class="callout-body">‏GitHub מבטל הזמנה שלא אושרה תוך 7 ימים. אם פג התוקף, כתבו לזכר ותישלח הזמנה חדשה.</div>
+                        </details>
+                        <details class="tip">
+                            <summary>💡 הקישור מגיע לדף 404?</summary>
+                            <div class="callout-body">בדרך כלל אתם מחוברים לחשבון GitHub אחר. התנתקו, התחברו לחשבון ששלחתם לזכר, ולחצו שוב על הקישור.</div>
+                        </details>
+                        <details class="info">
+                            <summary>ℹ️ את הריפו פותחים במפגש</summary>
+                            <div class="callout-body">עכשיו רק מצטרפים לארגון. את הריפו של הצוות פותחים ביחד במפגש.</div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- STEP 7: Anthropic invite and login -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">7</div>
+                        <div class="step-title-container">
+                            <h3>מאשרים את ההזמנה לקלוד ומתחברים</h3>
+                            <div class="duration">כ-3 דקות</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            המנוי של הקורס נשלח לכתובת הטכניון שלכם. בלי לאשר אותו, Claude Code לא יעבוד.
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>השתמשתם פעם בקלוד בחשבון אחר? היכנסו קודם ל-<a href="https://claude.ai" target="_blank" rel="noopener">claude.ai</a>, לחצו על השם שלכם ובחרו Log out. סגירת החלון איננה התנתקות.</li>
+                                <li>בתיבת הטכניון חפשו מייל מ-Anthropic עם ההזמנה, ובדקו גם בזבל. קיבלתם כמה הזמנות? לוחצים רק על האחרונה.</li>
+                                <li>הירשמו עם כתובת הטכניון. קישור או קוד כניסה יגיעו לאותה תיבה.</li>
+                                <li>ב-VS Code לחצו על אייקון הניצוץ של Claude. בהתחברות בחרו <strong>Claude account with subscription</strong>, ולא Anthropic Console.</li>
+                                <li>אשרו בדפדפן שנפתח, וחזרו ל-VS Code. למי שיש גם חשבון פרטי: בחרו את הארגון של הקורס.</li>
+                                <li>כתבו לקלוד <code>שלום</code>. קיבלתם תשובה? הכול עובד.</li>
+                            </ol>
+                        </div>
+                        <details class="warning">
+                            <summary>⚠️ הצ'אט שנפתח מעצמו ב-VS Code הוא לא קלוד</summary>
+                            <div class="callout-body">זה Copilot של Microsoft. עובדים רק דרך אייקון הניצוץ של Claude, התוסף של Anthropic.</div>
+                        </details>
+                        <details class="tip">
+                            <summary>💡 מופיע invalid או expired?</summary>
+                            <div class="callout-body">הקישור ישן. בקשו קישור חדש ולחצו עליו פעם אחת בלבד.</div>
+                        </details>
+                        <details class="warning">
+                            <summary>⚠️ המייל מ-Anthropic לא הגיע?</summary>
+                            <div class="callout-body">הטכניון עלול לחסום מיילים מ-Anthropic. בדקו בזבל וכתבו לזכר. לא נרשמים לבד עם מייל אחר, כי המנוי משויך לכתובת הטכניון.</div>
+                        </details>
+                    </div>
+                </details>
+
+            </div>
+        </details>
+
+        <div class="success-banner">
+            <h3>🎉 סיימתם, ואתם מוכנים למפגש</h3>
+            <p>יש לכם חשבון GitHub, ו-VS Code, ‏Git והתוסף של Claude Code מותקנים, וההזמנות של הקורס מאושרות. במפגש מתחילים לבנות.</p>
+        </div>
+
+        <div class="card">
+            <h2>נתקעתם? כאן עוזרים:</h2>
+            <ul class="icon-list">
+                <li><div class="icon">🙋</div><span>במפגש: מי שתקוע חמש דקות מרים יד</span></li>
+                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachar.adn@gmail.com" target="_blank" rel="noopener">zachar.adn@gmail.com</a></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>מרעיון למוצר חי · 016834 · הטכניון</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        /* theme toggle */
+        var btn = document.getElementById('themeBtn');
+        function paint() {
+            var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+            btn.textContent = dark ? '☀️ מצב בהיר' : '🌙 מצב כהה';
+        }
+        btn.addEventListener('click', function () {
+            var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('guideTheme', next); } catch (e) {}
+            paint();
+        });
+        paint();
+
+        /* copy buttons */
+        document.querySelectorAll('.code-block').forEach(function (block) {
+            var b = document.createElement('button');
+            b.className = 'code-copy-btn';
+            b.type = 'button';
+            b.textContent = '📋 העתק';
+            b.addEventListener('click', function () {
+                var code = block.querySelector('code');
+                if (!code || !navigator.clipboard) return;
+                navigator.clipboard.writeText(code.textContent).then(function () {
+                    b.textContent = '✓ הועתק';
+                    b.classList.add('copied');
+                    setTimeout(function () { b.textContent = '📋 העתק'; b.classList.remove('copied'); }, 1500);
+                });
+            });
+            block.appendChild(b);
+        });
+
+        /* acceptance checklist (per-viewer, best effort) */
+        var KEY = 'technion016834SetupChecks';
+        var state = {};
+        try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { state = {}; }
+        var boxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+        var count = document.getElementById('checkCount');
+        function refresh() {
+            var n = 0;
+            boxes.forEach(function (cb) {
+                cb.closest('label').classList.toggle('done', cb.checked);
+                if (cb.checked) n++;
+            });
+            count.textContent = n + ' מתוך ' + boxes.length + (n === boxes.length ? ' · מוכנים למפגש' : '');
+        }
+        boxes.forEach(function (cb) {
+            cb.checked = !!state[cb.dataset.key];
+            cb.addEventListener('change', function () {
+                state[cb.dataset.key] = cb.checked;
+                try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+                refresh();
+            });
+        });
+        refresh();
+
+        /* send result to Zac (Google Apps Script web app owned by Zac) */
+        var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyobEAsFhw8t80uH-wAWR0XMtbvLRDo0t9SNlCQpG0oIgyY5dDRJWfka3rAHmGkaifT/exec';
+        var sendBox = document.getElementById('sendBox');
+        if (ENDPOINT) { sendBox.hidden = false; }
+        var sendBtn = document.getElementById('sendBtn');
+        var nameIn = document.getElementById('studentName');
+        var ghIn = document.getElementById('githubUser');
+        var status = document.getElementById('sendStatus');
+        sendBtn.addEventListener('click', function () {
+            var name = nameIn.value.trim();
+            if (!name) { status.textContent = 'כתבו את השם המלא, ואז שליחה.'; nameIn.focus(); return; }
+            var gh = ghIn.value.trim().replace(/^@/, '');
+            if (!gh) { status.textContent = 'כתבו את שם המשתמש ב-GitHub, ואז שליחה.'; ghIn.focus(); return; }
+            var steps = [];
+            boxes.forEach(function (cb) {
+                steps.push({ label: cb.closest('label').textContent.replace(/\s+/g, ' ').trim(), done: cb.checked });
+            });
+            sendBtn.disabled = true;
+            status.textContent = 'שולח...';
+            fetch(ENDPOINT, {
+                method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ name: name + ' · GitHub: ' + gh, steps: steps, page: location.href })
+            }).then(function () {
+                status.textContent = 'נשלח. תודה, ' + name + '.';
+            }).catch(function () {
+                sendBtn.disabled = false;
+                status.textContent = 'השליחה נכשלה. צלמו את המסך ושלחו לזכר במייל, עם שם המשתמש ב-GitHub.';
+            });
+        });
+    });
+    </script>
+</body>
+</html>
