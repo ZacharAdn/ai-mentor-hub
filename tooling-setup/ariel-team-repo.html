@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הארגון והריפו של הצוות · Agentic AI עם קלוד</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            var t = 'light';
+            try {
+                var p = new URLSearchParams(location.search).get('theme');
+                var s = localStorage.getItem('guideTheme');
+                if (p === 'light' || p === 'dark') { t = p; } else if (s === 'light' || s === 'dark') { t = s; }
+            } catch (e) {}
+            document.documentElement.setAttribute('data-theme', t);
+        })();
+    </script>
+    <style>
+        /* ---------- palette: dark on :root, light override (default) ---------- */
+        :root {
+            --page-bg: #0f172a;
+            --page-grad-a: #0f172a;
+            --page-grad-b: #1e1b4b;
+            --card: #1e293b;
+            --card-soft: #273449;
+            --border: #334155;
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --heading: #f1f5f9;
+            --accent: #818cf8;
+            --accent-2: #c084fc;
+            --accent-3: #f472b6;
+            --nav-bg: rgba(15, 23, 42, 0.95);
+            --hero-bg-a: #111827;
+            --hero-bg-b: #1e1b4b;
+            --step-sum-a: #111827;
+            --step-sum-b: #1e293b;
+            --major-sum-a: #4f46e5;
+            --major-sum-b: #7c3aed;
+            --on-accent: #ffffff;
+            --code-bg: #0b1020;
+            --code-text: #7ee787;
+            --tip-bg: rgba(76, 175, 80, 0.14);
+            --tip-border: #4caf50;
+            --tip-title: #86efac;
+            --warn-bg: rgba(255, 152, 0, 0.14);
+            --warn-border: #ff9800;
+            --warn-title: #fdba74;
+            --info-bg: rgba(33, 150, 243, 0.14);
+            --info-border: #2196f3;
+            --info-title: #93c5fd;
+            --success-a: #15803d;
+            --success-b: #16a34a;
+            --check-done: rgba(76, 175, 80, 0.18);
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+            --link: #a5b4fc;
+        }
+        html[data-theme="light"] {
+            --page-bg: #f4f6fa;
+            --page-grad-a: #eef1fb;
+            --page-grad-b: #f4f6fa;
+            --card: #ffffff;
+            --card-soft: #f8f9ff;
+            --border: #d9e0ea;
+            --text: #1f2937;
+            --muted: #5b6475;
+            --heading: #111827;
+            --accent: #4f46e5;
+            --accent-2: #7c3aed;
+            --accent-3: #db2777;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --hero-bg-a: #1a1a2e;
+            --hero-bg-b: #16213e;
+            --step-sum-a: #1a1a2e;
+            --step-sum-b: #16213e;
+            --major-sum-a: #667eea;
+            --major-sum-b: #764ba2;
+            --on-accent: #ffffff;
+            --code-bg: #1a1a2e;
+            --code-text: #7ee787;
+            --tip-bg: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            --tip-border: #4caf50;
+            --tip-title: #2e7d32;
+            --warn-bg: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            --warn-border: #ff9800;
+            --warn-title: #b45309;
+            --info-bg: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            --info-border: #2196f3;
+            --info-title: #1565c0;
+            --success-a: #4caf50;
+            --success-b: #43a047;
+            --check-done: #e8f5e9;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            --link: #4338ca;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(160deg, var(--page-grad-a) 0%, var(--page-grad-b) 100%);
+            background-color: var(--page-bg);
+            min-height: 100vh; color: var(--text); line-height: 1.8;
+        }
+        a { color: var(--link); }
+
+        .top-nav {
+            background: var(--nav-bg); backdrop-filter: blur(10px);
+            padding: 12px 24px; display: flex; justify-content: space-between;
+            align-items: center; gap: 12px; position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-logo { color: var(--heading); font-weight: 700; font-size: 1.05rem; }
+        .nav-logo span {
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .theme-btn {
+            background: var(--card-soft); color: var(--heading); border: 1px solid var(--border);
+            border-radius: 20px; padding: 6px 14px; font-family: inherit; font-size: 0.9rem;
+            cursor: pointer; white-space: nowrap;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--hero-bg-a) 0%, var(--hero-bg-b) 100%);
+            color: #ffffff; padding: 56px 20px; text-align: center;
+        }
+        .hero h1 {
+            font-size: 2.6rem; font-weight: 700; margin-bottom: 12px;
+            background: linear-gradient(135deg, #818cf8, #c084fc, #f472b6);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero p { font-size: 1.15rem; color: #c7cbe0; max-width: 720px; margin: 0 auto; }
+        .hero .badge {
+            display: inline-block; background: rgba(129, 140, 248, 0.18); color: #c7d2fe;
+            padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; margin-top: 20px;
+            border: 1px solid rgba(129, 140, 248, 0.35);
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 36px 16px; }
+
+        .card {
+            background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+            padding: 26px; margin-bottom: 28px; box-shadow: var(--shadow);
+        }
+        .card h2 { font-size: 1.4rem; margin-bottom: 16px; color: var(--heading); }
+        .icon-list {
+            list-style: none; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px;
+        }
+        .icon-list li {
+            display: flex; align-items: center; gap: 12px; padding: 14px;
+            background: var(--card-soft); border: 1px solid var(--border);
+            border-radius: 12px; font-weight: 500;
+        }
+        .icon-list li .icon {
+            width: 40px; height: 40px; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--major-sum-a), var(--major-sum-b));
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            color: var(--on-accent); font-size: 1.2rem;
+        }
+
+        /* ---------- collapsibles ---------- */
+        details > summary { list-style: none; cursor: pointer; }
+        details > summary::-webkit-details-marker { display: none; }
+        details > summary::after {
+            content: "▼"; margin-inline-start: auto; font-size: 0.8rem;
+            transition: transform 0.2s ease; opacity: 0.85;
+        }
+        details[open] > summary::after { transform: rotate(180deg); }
+
+        details.major-section {
+            background: var(--card); border: 3px solid var(--border); border-radius: 22px;
+            margin-bottom: 28px; overflow: hidden; box-shadow: var(--shadow);
+        }
+        details.major-section > summary {
+            background: linear-gradient(135deg, var(--major-sum-a) 0%, var(--major-sum-b) 100%);
+            color: var(--on-accent); padding: 22px 26px;
+            display: flex; align-items: center; gap: 16px;
+        }
+        .section-icon { font-size: 2.2rem; line-height: 1; }
+        .section-title-container h2 { font-size: 1.45rem; font-weight: 700; }
+        .section-subtitle { font-size: 0.95rem; opacity: 0.9; }
+        .major-body { padding: 22px; }
+
+        details.step {
+            background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+            margin-bottom: 18px; overflow: hidden;
+        }
+        details.step > summary {
+            background: linear-gradient(135deg, var(--step-sum-a) 0%, var(--step-sum-b) 100%);
+            color: #ffffff; padding: 18px 22px; display: flex; align-items: center; gap: 16px;
+        }
+        .step-number {
+            width: 46px; height: 46px; flex-shrink: 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem; font-weight: 700; color: #ffffff;
+        }
+        .step-title-container h3 { font-size: 1.2rem; font-weight: 600; }
+        .duration { font-size: 0.88rem; color: #b6bad0; }
+        .step-content { padding: 22px; }
+        .step-description {
+            font-size: 1.05rem; color: var(--muted); margin-bottom: 20px; padding: 16px 18px;
+            background: var(--card-soft); border-radius: 12px; border-right: 4px solid var(--accent);
+        }
+
+        .instructions h4 { font-size: 1.05rem; font-weight: 600; margin: 18px 0 12px; color: var(--heading); }
+        .instruction-list { list-style: none; counter-reset: instruction; }
+        .instruction-list li {
+            counter-increment: instruction; padding: 13px 56px 13px 14px; margin-bottom: 10px;
+            background: var(--card-soft); border: 1px solid var(--border); border-radius: 12px;
+            position: relative;
+        }
+        .instruction-list li::before {
+            content: counter(instruction); position: absolute; right: 14px; top: 14px;
+            width: 28px; height: 28px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2); color: #ffffff;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 0.85rem;
+        }
+
+        details.platform {
+            border: 1px solid var(--border); border-radius: 12px; margin: 14px 0; overflow: hidden;
+        }
+        details.platform > summary {
+            background: var(--card-soft); padding: 10px 16px; font-weight: 600;
+            display: flex; align-items: center; gap: 8px; color: var(--heading);
+        }
+        .platform-body { padding: 14px; }
+
+        details.tip, details.warning, details.info {
+            border-radius: 12px; margin: 16px 0; overflow: hidden;
+        }
+        details.tip { background: var(--tip-bg); border-right: 4px solid var(--tip-border); }
+        details.warning { background: var(--warn-bg); border-right: 4px solid var(--warn-border); }
+        details.info { background: var(--info-bg); border-right: 4px solid var(--info-border); }
+        details.tip > summary, details.warning > summary, details.info > summary {
+            padding: 12px 16px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+        }
+        details.tip > summary { color: var(--tip-title); }
+        details.warning > summary { color: var(--warn-title); }
+        details.info > summary { color: var(--info-title); }
+        .callout-body { padding: 0 16px 14px; color: var(--text); }
+
+        code {
+            font-family: 'Courier New', monospace; background: var(--card-soft);
+            border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px;
+            direction: ltr; unicode-bidi: isolate;
+        }
+        .code-block {
+            background: var(--code-bg); color: var(--code-text);
+            padding: 36px 20px 15px 20px; border-radius: 8px;
+            font-family: 'Courier New', monospace; margin: 12px 0; overflow-x: auto;
+            position: relative; direction: ltr; text-align: left;
+        }
+        .code-block code {
+            display: block; white-space: pre; background: none; border: none; padding: 0;
+            color: inherit;
+        }
+        .code-copy-btn {
+            position: absolute; top: 8px; right: 10px;
+            background: rgba(126, 231, 135, 0.15); color: #7ee787;
+            border: 1px solid rgba(126, 231, 135, 0.35); border-radius: 6px;
+            padding: 3px 10px; font-size: 0.7rem; font-weight: 600; cursor: pointer;
+            font-family: 'Heebo', sans-serif; line-height: 1.4; z-index: 2;
+        }
+        .code-copy-btn.copied { background: rgba(76, 175, 80, 0.35); color: #ffffff; }
+
+        /* ---------- acceptance checklist ---------- */
+        .checklist { list-style: none; }
+        .checklist li { margin-bottom: 10px; }
+        .checklist label {
+            display: flex; gap: 12px; align-items: flex-start; padding: 13px 14px;
+            background: var(--card-soft); border: 1px solid var(--border); border-radius: 12px;
+            cursor: pointer;
+        }
+        .checklist input { width: 20px; height: 20px; margin-top: 4px; flex-shrink: 0; accent-color: #4caf50; }
+        .checklist label.done { background: var(--check-done); border-color: var(--tip-border); }
+        .check-count { margin-top: 12px; font-weight: 600; color: var(--muted); }
+
+        .send-box {
+            margin-top: 18px; padding: 16px; background: var(--card-soft);
+            border: 1px solid var(--border); border-radius: 12px;
+        }
+        .send-box label { display: block; font-weight: 600; margin-bottom: 8px; color: var(--heading); }
+        .send-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .send-row input {
+            flex: 1 1 200px; min-width: 0; padding: 10px 12px; font-family: inherit; font-size: 1rem;
+            color: var(--text); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+        }
+        .send-btn {
+            padding: 10px 20px; font-family: inherit; font-size: 1rem; font-weight: 600; cursor: pointer;
+            color: #ffffff; border: none; border-radius: 10px;
+            background: linear-gradient(135deg, var(--major-sum-a), var(--major-sum-b));
+        }
+        .send-btn:disabled { opacity: 0.6; cursor: default; }
+        .send-status { margin-top: 10px; font-weight: 500; color: var(--muted); min-height: 1.4em; }
+        .goal-list { list-style: none; }
+        .goal-list li {
+            display: flex; gap: 14px; padding: 14px; margin-bottom: 12px;
+            background: var(--card-soft); border: 1px solid var(--border); border-radius: 12px;
+        }
+        .goal-icon { font-size: 1.6rem; line-height: 1.2; }
+
+        .success-banner {
+            background: linear-gradient(135deg, var(--success-a), var(--success-b));
+            color: #ffffff; padding: 28px; border-radius: 20px; text-align: center; margin: 28px 0;
+        }
+        .success-banner h3 { font-size: 1.45rem; margin-bottom: 8px; }
+        .success-banner a { color: #ffffff; }
+
+        footer { text-align: center; padding: 36px 16px; color: var(--muted); font-size: 0.95rem; }
+
+        @media (max-width: 600px) {
+            .hero h1 { font-size: 2rem; }
+            .top-nav { padding: 10px 16px; }
+            .nav-logo { font-size: 0.95rem; }
+            details.major-section > summary, details.step > summary { padding: 16px; gap: 12px; }
+            .major-body, .step-content { padding: 14px; }
+            .instruction-list li { padding-right: 50px; }
+        }
+
+        /* ---------- additions for this guide ---------- */
+        .request-card { border: 3px solid var(--accent); }
+        .request-card h2 { display: flex; align-items: center; gap: 10px; }
+        .request-lead { color: var(--muted); margin-bottom: 14px; }
+        .field { margin-bottom: 14px; }
+        .field label { display: block; font-weight: 600; margin-bottom: 6px; color: var(--heading); }
+        .field input {
+            width: 100%; padding: 10px 12px; font-family: inherit; font-size: 1rem;
+            color: var(--text); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+        }
+        .field input.ltr { direction: ltr; text-align: left; }
+        .field-hint { font-size: 0.9rem; color: var(--muted); margin-top: 4px; }
+        .field-error { font-size: 0.9rem; color: var(--warn-title); margin-top: 4px; min-height: 1.2em; }
+        .choice-note { color: var(--muted); margin: 6px 0 10px; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-logo"><span>Agentic AI</span> עם קלוד</div>
+        <button class="theme-btn" id="themeBtn" type="button" aria-label="החלפת מצב תצוגה">🌙 מצב כהה</button>
+    </nav>
+
+    <div class="hero">
+        <h1>הארגון והריפו של הצוות</h1>
+        <p>שולחים לזכר את שם המשתמש ב-GitHub, מצטרפים לארגון של הקורס, פותחים ריפו אחד לצוות, וכל חבר צוות מוריד אותו למחשב ודוחף אליו שינוי ראשון.</p>
+        <div class="badge">שלב 0 עוד היום, כ-2 דקות · השאר כ-20 דקות</div>
+    </div>
+
+    <div class="container">
+
+        <!-- ================= STEP 0: REQUEST ================= -->
+        <div class="card request-card" id="request">
+            <h2>✋ שלב 0 · קודם כול, שם המשתמש שלכם ב-GitHub</h2>
+            <p class="request-lead">בלי שם משתמש מדויק אי אפשר להזמין אתכם לארגון. ההזמנות הקודמות, שנשלחו למייל של אריאל, פגו. מכאן שולחים הזמנה לפי שם משתמש בלבד, ולכן כל אחד ממלא את זה, גם מי שכבר שלח פעם.</p>
+
+            <details class="info">
+                <summary>ℹ️ איך מוצאים את שם המשתמש?</summary>
+                <div class="callout-body">
+                    <ol class="instruction-list">
+                        <li>היכנסו ל-<a href="https://github.com" target="_blank" rel="noopener">github.com</a>, מחוברים לחשבון שלכם.</li>
+                        <li>לחצו על התמונה העגולה בפינה הימנית העליונה. שם המשתמש כתוב בשורה המודגשת הראשונה בתפריט.</li>
+                        <li>בדיקה: הכתובת <code>github.com/&lt;username&gt;</code> צריכה לפתוח את הדף שלכם.</li>
+                    </ol>
+                    שם המשתמש הוא מילה אחת באנגלית, בלי רווחים ובלי <code>@</code>. הוא לא השם המלא שלכם, ולא המייל.
+                </div>
+            </details>
+
+            <div class="field">
+                <label for="fullName">השם המלא שלכם</label>
+                <input id="fullName" type="text" autocomplete="name" maxlength="80">
+            </div>
+            <div class="field">
+                <label for="ghUser">שם המשתמש ב-GitHub</label>
+                <input id="ghUser" class="ltr" type="text" autocomplete="username" maxlength="39" placeholder="e.g. dana-cohen">
+                <div class="field-error" id="userError" role="status"></div>
+            </div>
+            <div class="field">
+                <label for="ghEmail">המייל שאיתו נרשמתם ל-GitHub</label>
+                <input id="ghEmail" class="ltr" type="email" autocomplete="email" maxlength="120">
+                <div class="field-hint">לגיבוי בלבד, אם שם המשתמש לא נמצא.</div>
+            </div>
+            <button id="reqBtn" type="button" class="send-btn">שליחה לזכר</button>
+            <div id="reqStatus" class="send-status" role="status"></div>
+
+            <details class="tip">
+                <summary>💡 ומה עכשיו?</summary>
+                <div class="callout-body">זכר שולח הזמנה לארגון לפי שם המשתמש, בדרך כלל עוד באותו יום. ממשיכים לחלק 1 כשההזמנה מחכה, ואת המייל לא צריך לחפש: ההזמנה מופיעה בקישור שבשלב 1.</div>
+            </details>
+        </div>
+
+        <div class="card">
+            <h2>לפני שמתחילים</h2>
+            <ul class="icon-list">
+                <li><div class="icon">🐙</div><span>חשבון GitHub, ו-VS Code ו-Git מותקנים. מי שעוד לא: <a href="vibe-coding-setup.html" target="_blank" rel="noopener">מדריך הקמת הסביבה</a>, חלק 1</span></li>
+                <li><div class="icon">👥</div><span>אתם יודעים מי בצוות שלכם, ומי בתפקיד המתכנת</span></li>
+                <li><div class="icon">📁</div><span>תיקייה רגילה במחשב לפרויקטים, שלא מסתנכרנת לענן (הסבר בשלב 4)</span></li>
+            </ul>
+        </div>
+
+        <!-- ================= PART 1 ================= -->
+        <details class="major-section">
+            <summary>
+                <span class="section-icon">🏛️</span>
+                <div class="section-title-container">
+                    <h2>חלק 1 · הצטרפות לארגון</h2>
+                    <div class="section-subtitle">שלב אחד · כ-2 דקות · כל אחד בעצמו, אחרי שזכר שלח הזמנה</div>
+                </div>
+            </summary>
+            <div class="major-body">
+
+                <details class="step">
+                    <summary>
+                        <div class="step-number">1</div>
+                        <div class="step-title-container">
+                            <h3>מאשרים את ההזמנה לארגון</h3>
+                            <div class="duration">כ-2 דקות</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            הארגון של הקורס נקרא Ariel-Vibe-Algorithm. כל הריפואים של הצוותים יושבים בו, ואלי וזכר רואים אותם בלי שתצטרכו לשתף.
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>היכנסו, מחוברים ל-GitHub, לקישור: <a href="https://github.com/orgs/Ariel-Vibe-Algorithm/invitation" target="_blank" rel="noopener">github.com/orgs/Ariel-Vibe-Algorithm/invitation</a></li>
+                                <li>לחצו <strong>Join Ariel-Vibe-Algorithm</strong>.</li>
+                                <li>היכנסו ל-<a href="https://github.com/Ariel-Vibe-Algorithm" target="_blank" rel="noopener">github.com/Ariel-Vibe-Algorithm</a>. אם אתם רואים את הריפו session-notes, אתם בפנים. יש בו סיכום והקלטה של כל מפגש.</li>
+                            </ol>
+                        </div>
+                        <details class="warning">
+                            <summary>⚠️ הקישור מגיע לדף 404, או שאין הזמנה?</summary>
+                            <div class="callout-body">404 אומר כמעט תמיד שאתם מחוברים לחשבון GitHub אחר. התנתקו והתחברו לחשבון ששמו שלחתם בשלב 0. אם אין הזמנה, ייתכן שזכר עוד לא שלח, או ששם המשתמש נכתב לא מדויק: בדקו מה שלחתם, וכתבו בקבוצה.</div>
+                        </details>
+                        <details class="info">
+                            <summary>ℹ️ שתי הזמנות שונות</summary>
+                            <div class="callout-body">ההזמנה לארגון ב-GitHub וההזמנה לקלוד הן שני דברים נפרדים. אישור של אחת לא מאשר את השנייה.</div>
+                        </details>
+                        <details class="info">
+                            <summary>ℹ️ ההזמנה בתוקף 7 ימים</summary>
+                            <div class="callout-body">‏GitHub מבטל הזמנה שלא אושרה תוך שבוע. אם עבר שבוע, כתבו לזכר, והוא ישלח שוב.</div>
+                        </details>
+                    </div>
+                </details>
+
+            </div>
+        </details>
+
+        <!-- ================= PART 2 ================= -->
+        <details class="major-section">
+            <summary>
+                <span class="section-icon">🚀</span>
+                <div class="section-title-container">
+                    <h2>חלק 2 · הריפו של הצוות</h2>
+                    <div class="section-subtitle">3 שלבים · כ-15 דקות · ביחד עם הצוות</div>
+                </div>
+            </summary>
+            <div class="major-body">
+
+                <!-- STEP 2 -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">2</div>
+                        <div class="step-title-container">
+                            <h3>המתכנת מכין ריפו אחד לצוות, בתוך הארגון</h3>
+                            <div class="duration">כ-5 דקות · פעם אחת לצוות · השאר מחכים לשלב 3</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            ריפו אחד לכל צוות, בתוך הארגון ולא בחשבון הפרטי. אם כבר יש לכם ריפו בחשבון הפרטי של מישהו, מעבירים אותו לארגון ולא פותחים חדש: כך ההיסטוריה והקבצים נשמרים.
+                        </div>
+
+                        <details class="platform" open>
+                            <summary>🆕 עוד אין לנו ריפו</summary>
+                            <div class="platform-body">
+                                <ol class="instruction-list">
+                                    <li>היכנסו ל-<a href="https://github.com/organizations/Ariel-Vibe-Algorithm/repositories/new" target="_blank" rel="noopener">github.com/organizations/Ariel-Vibe-Algorithm/repositories/new</a></li>
+                                    <li>בשדה <strong>Owner</strong> בדקו שכתוב Ariel-Vibe-Algorithm, ולא שם המשתמש שלכם.</li>
+                                    <li>תנו לפרויקט שם קצר באנגלית, למשל <code>caffeine-sleep</code>.</li>
+                                    <li>סמנו <strong>Add README</strong> ולחצו <strong>Create repository</strong>.</li>
+                                </ol>
+                            </div>
+                        </details>
+
+                        <details class="platform">
+                            <summary>📦 כבר יש לנו ריפו בחשבון פרטי</summary>
+                            <div class="platform-body">
+                                <p class="choice-note">רק מי שהריפו בחשבון שלו עושה את זה, ורק אחרי שאישר את ההזמנה לארגון בשלב 1.</p>
+                                <ol class="instruction-list">
+                                    <li>בדף הריפו: <strong>Settings</strong>, וגוללים עד הסוף, לאזור האדום <strong>Danger Zone</strong>.</li>
+                                    <li>לוחצים <strong>Transfer ownership</strong>, ובוחרים או מקלידים את הארגון: <code>Ariel-Vibe-Algorithm</code>.</li>
+                                    <li>מקלידים את שם הריפו לאישור, ולוחצים על הכפתור לאישור ההעברה.</li>
+                                    <li>הריפו עובר לכתובת חדשה, <code>github.com/Ariel-Vibe-Algorithm/&lt;repo-name&gt;</code>. הקישור הישן מפנה אליה לבד, אבל ב-README כדאי לעדכן.</li>
+                                </ol>
+                                <details class="warning">
+                                    <summary>⚠️ כבר שיבטתם את הריפו הישן למחשב?</summary>
+                                    <div class="callout-body">ממשיכים לעבוד באותה תיקייה, ‏GitHub מפנה את הדחיפות לכתובת החדשה. אם משהו נכשל, משבטים מחדש לפי שלב 3.</div>
+                                </details>
+                            </div>
+                        </details>
+
+                        <h4 style="margin-top: 18px;">בשני המקרים: מוסיפים את חברי הצוות</h4>
+                        <ol class="instruction-list">
+                            <li>בדף הריפו: <strong>Settings</strong>, ואז <strong>Collaborators and teams</strong>.</li>
+                            <li>לחצו <strong>Add people</strong>, והקלידו את שם המשתמש של כל חבר צוות. בחרו הרשאת <strong>Write</strong>.</li>
+                            <li>שלחו לחברי הצוות את כתובת הריפו בקבוצה של הצוות.</li>
+                        </ol>
+                        <details class="warning">
+                            <summary>⚠️ לא מוצאים חבר צוות לפי השם?</summary>
+                            <div class="callout-body">צריך שם משתמש מדויק, לא שם מלא ולא מייל. אם הוא עוד לא אישר את ההזמנה לארגון, כתבו לזכר, והוא יוסיף אותו.</div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- STEP 3 -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">3</div>
+                        <div class="step-title-container">
+                            <h3>כל אחד מוריד את הריפו למחשב (Clone)</h3>
+                            <div class="duration">כ-5 דקות · כל חבר צוות, כולל המתכנת</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            שיבוט, Clone, מוריד עותק של הריפו למחשב ומשאיר אותו מחובר ל-GitHub. כך מה שאתם שומרים מגיע לצוות, ומה שהצוות שומר מגיע אליכם.
+                        </div>
+
+                        <details class="warning" open>
+                            <summary>⚠️ לא מוצאים את Clone? זה תקין, וכך עוקפים</summary>
+                            <div class="callout-body">
+                                כשתיקייה כבר פתוחה ב-VS Code, חלונית Source Control לא מציעה Clone בכלל, לא בכפתור ולא בשלוש הנקודות. היא מציעה רק <strong>Initialize Repository</strong>, ואותו לא לוחצים. ‏Clone מופיע שם רק כשאין שום תיקייה פתוחה.<br>
+                                הדרך שעובדת תמיד, עם תיקייה פתוחה או בלי: חלון הפקודות, <code>Git: Clone</code>. זו הדרך בהמשך השלב.
+                            </div>
+                        </details>
+
+                        <div class="instructions">
+                            <h4>לפני הכול: איפה הריפו יישב</h4>
+                            <ol class="instruction-list">
+                                <li>צרו במחשב תיקייה לפרויקטים, מחוץ לענן. ב-Windows למשל <code>C:\projects</code>, ובמק תיקייה בשם <code>projects</code> בתיקיית הבית.
+                                    <details class="warning">
+                                        <summary>⚠️ למה לא במסמכים או על שולחן העבודה?</summary>
+                                        <div class="callout-body">ב-Windows התיקיות האלה מסתנכרנות לרוב ל-OneDrive, ובמק לפעמים ל-iCloud. הסנכרון שובר את הריפו. זו הייתה התקלה של כמה סטודנטים בטכניון.</div>
+                                    </details>
+                                </li>
+                                <li>בדף הריפו ב-GitHub לחצו על הכפתור הירוק <strong>Code</strong>, ובלשונית HTTPS העתיקו את הכתובת.</li>
+                            </ol>
+                        </div>
+
+                        <details class="platform" open>
+                            <summary>✅ הדרך הרגילה: Git: Clone</summary>
+                            <div class="platform-body">
+                                <ol class="instruction-list">
+                                    <li>ב-VS Code לחצו <code>Ctrl+Shift+P</code>, ובמק <code>Cmd+Shift+P</code>. נפתח חלון פקודות בראש המסך.</li>
+                                    <li>הקלידו <code>Git: Clone</code>, בחרו אותו ולחצו Enter.</li>
+                                    <li>הדביקו את הכתובת מ-GitHub ולחצו Enter.</li>
+                                    <li>נפתח חלון לבחירת תיקייה. בחרו את תיקיית הפרויקטים ולחצו <strong>Select as Repository Destination</strong>. אם VS Code מבקש להתחבר ל-GitHub, אשרו בדפדפן.</li>
+                                    <li>‏VS Code יוצר בתוך תיקיית הפרויקטים תיקייה חדשה בשם הריפו, ומוריד אליה את הקבצים. כך זה אמור להיות.</li>
+                                    <li>בסוף נשאלת שאלה אם לפתוח את הריפו. לחצו <strong>Open</strong>: החלון עובר לתיקייה של הריפו, ומעכשיו עובדים רק בה.</li>
+                                </ol>
+                                <details class="warning">
+                                    <summary>⚠️ לא לבחור Add to Workspace</summary>
+                                    <div class="callout-body">אם תיקייה אחרת הייתה פתוחה, השאלה מציעה גם <strong>Add to Workspace</strong>. זה פותח שתי תיקיות זו לצד זו, וקל לעבוד, ולתת לקלוד לעבוד, בתיקייה הלא נכונה. בוחרים <strong>Open</strong>, או <strong>Open in New Window</strong> אם רוצים לשמור גם את החלון הקודם.</div>
+                                </details>
+                            </div>
+                        </details>
+
+                        <details class="platform">
+                            <summary>📂 כבר פתחתי תיקייה ריקה לפרויקט, ואני רוצה את הריפו בדיוק בה</summary>
+                            <div class="platform-body">
+                                <p class="choice-note">ככה לא נוצרת תיקייה נוספת, והחלון נשאר על התיקייה שפתוחה. עובד רק אם התיקייה ריקה לגמרי.</p>
+                                <ol class="instruction-list">
+                                    <li>פתחו את הטרמינל של VS Code: בתפריט Terminal בוחרים New Terminal. הטרמינל נפתח בתיקייה שפתוחה.</li>
+                                    <li>הקלידו <code>git clone</code>, רווח, הדביקו את הכתובת, רווח, ונקודה בסוף. למשל:
+                                        <div class="code-block"><code>git clone https://github.com/Ariel-Vibe-Algorithm/caffeine-sleep.git .</code></div>
+                                        הנקודה בסוף אומרת לגיט: לתוך התיקייה הזאת, בלי ליצור תיקייה חדשה.
+                                    </li>
+                                    <li>הקבצים של הריפו מופיעים בסרגל הקבצים, וחלונית Source Control מזהה את הריפו. אם היא לא מתעדכנת, סגרו ופתחו את VS Code.</li>
+                                </ol>
+                                <details class="warning">
+                                    <summary>⚠️ הודעת already exists and is not an empty directory?</summary>
+                                    <div class="callout-body">התיקייה לא ריקה, וגיט לא משבט לתוך תיקייה שיש בה קבצים. חוזרים לדרך הרגילה, Git: Clone.</div>
+                                </details>
+                            </div>
+                        </details>
+
+                        <details class="warning">
+                            <summary>⚠️ לא לוחצים Initialize ולא Publish</summary>
+                            <div class="callout-body">‏<strong>Initialize Repository</strong> ו-<strong>Publish to GitHub</strong> יוצרים ריפו נפרד, בחשבון הפרטי, שלא מחובר לריפו של הצוות. אם הם מוצעים לכם, אתם בתיקייה הלא נכונה: משבטים לפי השלב הזה, ופותחים את התיקייה ששובטה. זו התקלה הכי נפוצה בטכניון.</div>
+                        </details>
+                        <details class="tip">
+                            <summary>💡 הודעת Repository not found?</summary>
+                            <div class="callout-body">המתכנת עוד לא הוסיף אתכם ב-Collaborators, או שלא אישרתם את ההזמנה לארגון, או ש-VS Code מחובר לחשבון GitHub אחר. בדקו את שלושתם, בסדר הזה.</div>
+                        </details>
+                    </div>
+                </details>
+
+                <!-- STEP 4 -->
+                <details class="step">
+                    <summary>
+                        <div class="step-number">4</div>
+                        <div class="step-title-container">
+                            <h3>השינוי הראשון: קובץ עם השם שלכם</h3>
+                            <div class="duration">כ-5 דקות · כל חבר צוות</div>
+                        </div>
+                    </summary>
+                    <div class="step-content">
+                        <div class="step-description">
+                            כל אחד יוצר קובץ משלו, כדי ששני אנשים לא יערכו את אותה שורה באותו זמן. שמירה עם הסבר נקראת קומיט (Commit), והשליחה שלה ל-GitHub נקראת דחיפה (Push).
+                        </div>
+                        <div class="instructions">
+                            <ol class="instruction-list">
+                                <li>ב-VS Code צרו קובץ חדש בשם שלכם באנגלית, למשל <code>dana.md</code>, וכתבו בו שורה אחת: התפקיד שלכם בצוות. שמרו.</li>
+                                <li>פתחו את <strong>Source Control</strong>, האייקון של הענף בסרגל הצד. הקובץ מופיע תחת Changes.</li>
+                                <li>כתבו הודעה קצרה בשדה שמעל הכפתור, למשל <code>add dana</code>, ולחצו <strong>Commit</strong>.</li>
+                                <li>לחצו <strong>Sync Changes</strong>. אם נפתח חלון התחברות בדפדפן, אשרו אותו.</li>
+                                <li>רעננו את דף הריפו ב-GitHub. הקובץ שלכם שם.</li>
+                            </ol>
+                        </div>
+                        <details class="tip">
+                            <summary>💡 הדחיפה נדחתה?</summary>
+                            <div class="callout-body">חבר צוות דחף לפניכם. זה תקין, ושום דבר לא אבד: לוחצים שוב <strong>Sync Changes</strong>, ו-VS Code מושך קודם את השינוי שלו ואז דוחף את שלכם. אם זה נדחה שוב, כתבו בקבוצה.</div>
+                        </details>
+                        <details class="warning">
+                            <summary>⚠️ הודעה על divergent branches?</summary>
+                            <div class="callout-body">חסרה הגדרה, בדרך כלל במק. בטרמינל של VS Code:
+                                <div class="code-block"><code>git config --global pull.rebase false</code></div>
+                                ואז שוב Sync Changes.
+                            </div>
+                        </details>
+                        <details class="warning">
+                            <summary>⚠️ שגיאת GH007, על מייל פרטי?</summary>
+                            <div class="callout-body">ב-<a href="https://github.com/settings/emails" target="_blank" rel="noopener">github.com/settings/emails</a> מורידים את הסימון מ-<strong>Block command line pushes that expose my email</strong>, ולוחצים שוב Sync Changes.</div>
+                        </details>
+                        <details class="tip">
+                            <summary>💡 ‏Sync Changes נתקע בלי הודעה?</summary>
+                            <div class="callout-body">כנראה מחכה לכם חלון התחברות בדפדפן. חפשו אותו, ואשרו.</div>
+                        </details>
+                        <details class="info">
+                            <summary>ℹ️ אותו דבר בטרמינל</summary>
+                            <div class="callout-body">
+                                <div class="code-block"><code>git add .
+git commit -m "add dana"
+git pull
+git push</code></div>
+                            </div>
+                        </details>
+                    </div>
+                </details>
+
+            </div>
+        </details>
+
+        <!-- ================= PART 3 ================= -->
+        <details class="major-section">
+            <summary>
+                <span class="section-icon">✅</span>
+                <div class="section-title-container">
+                    <h2>חלק 3 · בדיקה ושליחה לזכר</h2>
+                    <div class="section-subtitle">4 סימונים · כ-2 דקות</div>
+                </div>
+            </summary>
+            <div class="major-body">
+                <p style="margin-bottom: 14px;">סמנו כל שורה שעובדת אצלכם, כתבו את השם ולחצו על שליחה. כך זכר יודע מי מוכן לעבוד על הריפו במפגש.</p>
+                <ul class="checklist" id="checklist">
+                    <li><label><input type="checkbox" data-key="org"><span>אני רואה את session-notes בארגון Ariel-Vibe-Algorithm</span></label></li>
+                    <li><label><input type="checkbox" data-key="repo"><span>אני רואה את הריפו של הצוות שלי בארגון</span></label></li>
+                    <li><label><input type="checkbox" data-key="push"><span>הקובץ עם השם שלי מופיע בריפו ב-GitHub</span></label></li>
+                    <li><label><input type="checkbox" data-key="python"><span>בטרמינל של VS Code, <code>python --version</code> (במק <code>python3 --version</code>) מחזיר מספר גרסה</span></label></li>
+                </ul>
+                <div class="check-count" id="checkCount">0 מתוך 4</div>
+                <details class="info">
+                    <summary>ℹ️ למה בודקים את Python?</summary>
+                    <div class="callout-body">במפגש מריצים את האפליקציה של הצוות בסטרימליט, וזה צריך Python. אם הבדיקה לא עובדת, לא מתקינים עכשיו. משאירים את הסימון ריק, וזכר יודע להושיב אתכם ליד מי שזה עובד אצלו.</div>
+                </details>
+                <div class="send-box" id="sendBox" hidden>
+                    <label for="studentName">השם המלא שלכם</label>
+                    <div class="send-row">
+                        <input id="studentName" type="text" autocomplete="name" maxlength="80">
+                        <button id="sendBtn" type="button" class="send-btn">שליחה לזכר</button>
+                    </div>
+                    <div id="sendStatus" class="send-status" role="status"></div>
+                </div>
+                <details class="tip">
+                    <summary>💡 משהו לא עובד?</summary>
+                    <div class="callout-body">שלחו את מה שיש, ותגידו בתחילת המפגש מה נתקע.</div>
+                </details>
+            </div>
+        </details>
+
+        <div class="success-banner">
+            <h3>🎉 סיימתם, והצוות עובד על ריפו משותף</h3>
+            <p>מכאן כל שינוי בפרויקט נכנס לריפו של הצוות, ואלי וזכר רואים איפה כל צוות עומד.</p>
+        </div>
+
+        <div class="card">
+            <h2>נתקעתם? כאן עוזרים:</h2>
+            <ul class="icon-list">
+                <li><div class="icon">💬</div><span>בקבוצת הווטסאפ של הקורס</span></li>
+                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachara@ariel.ac.il" target="_blank" rel="noopener">zachara@ariel.ac.il</a></span></li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Agentic AI עם קלוד</p>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        /* theme toggle */
+        var btn = document.getElementById('themeBtn');
+        function paint() {
+            var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+            btn.textContent = dark ? '☀️ מצב בהיר' : '🌙 מצב כהה';
+        }
+        btn.addEventListener('click', function () {
+            var next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            try { localStorage.setItem('guideTheme', next); } catch (e) {}
+            paint();
+        });
+        paint();
+
+        /* copy buttons */
+        document.querySelectorAll('.code-block').forEach(function (block) {
+            var b = document.createElement('button');
+            b.className = 'code-copy-btn';
+            b.type = 'button';
+            b.textContent = '📋 העתק';
+            b.addEventListener('click', function () {
+                var code = block.querySelector('code');
+                if (!code || !navigator.clipboard) return;
+                navigator.clipboard.writeText(code.textContent).then(function () {
+                    b.textContent = '✓ הועתק';
+                    b.classList.add('copied');
+                    setTimeout(function () { b.textContent = '📋 העתק'; b.classList.remove('copied'); }, 1500);
+                });
+            });
+            block.appendChild(b);
+        });
+
+        /* Google Apps Script web app owned by Zac: emails each submission to him */
+        var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyobEAsFhw8t80uH-wAWR0XMtbvLRDo0t9SNlCQpG0oIgyY5dDRJWfka3rAHmGkaifT/exec';
+        function post(payload) {
+            return fetch(ENDPOINT, {
+                method: 'POST', mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            });
+        }
+
+        /* step 0: GitHub username request */
+        var fullName = document.getElementById('fullName');
+        var ghUser = document.getElementById('ghUser');
+        var ghEmail = document.getElementById('ghEmail');
+        var userError = document.getElementById('userError');
+        var reqBtn = document.getElementById('reqBtn');
+        var reqStatus = document.getElementById('reqStatus');
+        function checkUser(v) {
+            if (!v) return 'כתבו את שם המשתמש.';
+            if (v.indexOf('@') !== -1) return 'זה נראה כמו מייל. צריך את שם המשתמש, ראו "איך מוצאים את שם המשתמש".';
+            if (/\s/.test(v)) return 'בשם משתמש אין רווחים. זה נראה כמו שם מלא, ראו "איך מוצאים את שם המשתמש".';
+            if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(v)) return 'שם משתמש ב-GitHub מכיל רק אותיות באנגלית, מספרים ומקפים.';
+            return '';
+        }
+        ghUser.addEventListener('input', function () { userError.textContent = ''; });
+        reqBtn.addEventListener('click', function () {
+            var name = fullName.value.trim();
+            var user = ghUser.value.trim().replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/\/+$/, '');
+            var email = ghEmail.value.trim();
+            if (!name) { reqStatus.textContent = 'כתבו את השם המלא.'; fullName.focus(); return; }
+            var err = checkUser(user);
+            if (err) { userError.textContent = err; ghUser.focus(); return; }
+            ghUser.value = user;
+            reqBtn.disabled = true;
+            reqStatus.textContent = 'שולח...';
+            post({
+                name: 'שם משתמש לארגון - ' + name,
+                steps: [
+                    { label: 'GitHub username: ' + user, done: true },
+                    { label: 'GitHub email: ' + (email || '(not given)'), done: !!email }
+                ],
+                page: location.href + ' | https://github.com/' + user
+            }).then(function () {
+                reqStatus.textContent = 'נשלח. תודה, ' + name + '. ההזמנה תחכה לכם בקישור שבשלב 1.';
+            }).catch(function () {
+                reqBtn.disabled = false;
+                reqStatus.textContent = 'השליחה נכשלה. כתבו את שם המשתמש בקבוצת הווטסאפ של הקורס.';
+            });
+        });
+
+        /* acceptance checklist (per-viewer, best effort) */
+        var KEY = 'arielTeamRepoChecks';
+        var state = {};
+        try { state = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { state = {}; }
+        var boxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+        var count = document.getElementById('checkCount');
+        function refresh() {
+            var n = 0;
+            boxes.forEach(function (cb) {
+                cb.closest('label').classList.toggle('done', cb.checked);
+                if (cb.checked) n++;
+            });
+            count.textContent = n + ' מתוך ' + boxes.length + (n === boxes.length ? ' · מוכנים למפגש' : '');
+        }
+        boxes.forEach(function (cb) {
+            cb.checked = !!state[cb.dataset.key];
+            cb.addEventListener('change', function () {
+                state[cb.dataset.key] = cb.checked;
+                try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+                refresh();
+            });
+        });
+        refresh();
+
+        var sendBox = document.getElementById('sendBox');
+        if (ENDPOINT) { sendBox.hidden = false; }
+        var sendBtn = document.getElementById('sendBtn');
+        var nameIn = document.getElementById('studentName');
+        var status = document.getElementById('sendStatus');
+        nameIn.addEventListener('focus', function () { if (!nameIn.value && fullName.value) nameIn.value = fullName.value.trim(); });
+        sendBtn.addEventListener('click', function () {
+            var name = nameIn.value.trim();
+            if (!name) { status.textContent = 'כתבו את השם המלא, ואז שליחה.'; nameIn.focus(); return; }
+            var steps = [];
+            boxes.forEach(function (cb) {
+                steps.push({ label: cb.closest('label').textContent.replace(/\s+/g, ' ').trim(), done: cb.checked });
+            });
+            sendBtn.disabled = true;
+            status.textContent = 'שולח...';
+            post({ name: 'ריפו הצוות - ' + name, steps: steps, page: location.href }).then(function () {
+                status.textContent = 'נשלח. תודה, ' + name + '.';
+            }).catch(function () {
+                sendBtn.disabled = false;
+                status.textContent = 'השליחה נכשלה. צלמו את המסך ושלחו לזכר במייל.';
+            });
+        });
+    });
+    </script>
+</body>
+</html>
