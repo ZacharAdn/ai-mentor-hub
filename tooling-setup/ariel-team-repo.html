@@ -345,7 +345,7 @@
 
     <div class="hero">
         <h1>הארגון והריפו של הצוות</h1>
-        <p>שולחים לזכר את שם המשתמש ב-GitHub, מצטרפים לארגון של הקורס, פותחים ריפו אחד לצוות, וכל חבר צוות מוריד אותו למחשב ודוחף אליו שינוי ראשון.</p>
+        <p>שולחים את שם המשתמש ב-GitHub, מצטרפים לארגון של הקורס, פותחים ריפו אחד לצוות, וכל חבר צוות מוריד אותו למחשב ודוחף אליו שינוי ראשון.</p>
         <div class="badge">שלב 0 עוד היום, כ-2 דקות · השאר כ-20 דקות</div>
     </div>
 
@@ -353,8 +353,8 @@
 
         <!-- ================= STEP 0: REQUEST ================= -->
         <div class="card request-card" id="request">
-            <h2>✋ שלב 0 · קודם כול, שם המשתמש שלכם ב-GitHub</h2>
-            <p class="request-lead">בלי שם משתמש מדויק אי אפשר להזמין אתכם לארגון. ההזמנות הקודמות, שנשלחו למייל של אריאל, פגו. מכאן שולחים הזמנה לפי שם משתמש בלבד, ולכן כל אחד ממלא את זה, גם מי שכבר שלח פעם.</p>
+            <h2>✋ שלב 0 · שם המשתמש או המייל שלכם ב-GitHub</h2>
+            <p class="request-lead">כדי להזמין אתכם לארגון של הקורס צריך אחד משניים: שם המשתמש ב-GitHub, או המייל שאיתו פתחתם את החשבון. ההזמנות הקודמות נשלחו למייל של אריאל ופגו, ולכן כל אחד שולח, גם מי שכבר שלח פעם.</p>
 
             <details class="info">
                 <summary>ℹ️ איך מוצאים את שם המשתמש?</summary>
@@ -362,10 +362,13 @@
                     <ol class="instruction-list">
                         <li>היכנסו ל-<a href="https://github.com" target="_blank" rel="noopener">github.com</a>, מחוברים לחשבון שלכם.</li>
                         <li>לחצו על התמונה העגולה בפינה הימנית העליונה. שם המשתמש כתוב בשורה המודגשת הראשונה בתפריט.</li>
-                        <li>בדיקה: הכתובת <code>github.com/&lt;username&gt;</code> צריכה לפתוח את הדף שלכם.</li>
                     </ol>
-                    שם המשתמש הוא מילה אחת באנגלית, בלי רווחים ובלי <code>@</code>. הוא לא השם המלא שלכם, ולא המייל.
+                    שם המשתמש הוא מילה אחת באנגלית, בלי רווחים. הוא לא השם המלא שלכם.
                 </div>
+            </details>
+            <details class="warning">
+                <summary>⚠️ שולחים מייל? רק את זה של החשבון</summary>
+                <div class="callout-body">רק המייל שאיתו נרשמתם ל-GitHub. מייל אחר, למשל של אריאל אם לא נרשמתם איתו, הוא בדיוק מה שהפיל את ההזמנות הקודמות. לא בטוחים? שלחו שם משתמש.</div>
             </details>
 
             <div class="field">
@@ -373,21 +376,16 @@
                 <input id="fullName" type="text" autocomplete="name" maxlength="80">
             </div>
             <div class="field">
-                <label for="ghUser">שם המשתמש ב-GitHub</label>
-                <input id="ghUser" class="ltr" type="text" autocomplete="username" maxlength="39" placeholder="e.g. dana-cohen">
+                <label for="ghUser">שם משתמש או מייל ב-GitHub</label>
+                <input id="ghUser" class="ltr" type="text" autocomplete="username" maxlength="120" placeholder="dana-cohen  /  dana@gmail.com">
                 <div class="field-error" id="userError" role="status"></div>
             </div>
-            <div class="field">
-                <label for="ghEmail">המייל שאיתו נרשמתם ל-GitHub</label>
-                <input id="ghEmail" class="ltr" type="email" autocomplete="email" maxlength="120">
-                <div class="field-hint">לגיבוי בלבד, אם שם המשתמש לא נמצא.</div>
-            </div>
-            <button id="reqBtn" type="button" class="send-btn">שליחה לזכר</button>
+            <button id="reqBtn" type="button" class="send-btn">שליחה</button>
             <div id="reqStatus" class="send-status" role="status"></div>
 
             <details class="tip">
                 <summary>💡 ומה עכשיו?</summary>
-                <div class="callout-body">זכר שולח הזמנה לארגון לפי שם המשתמש, בדרך כלל עוד באותו יום. ממשיכים לחלק 1 כשההזמנה מחכה, ואת המייל לא צריך לחפש: ההזמנה מופיעה בקישור שבשלב 1.</div>
+                <div class="callout-body">ההזמנה לארגון נשלחת בדרך כלל עוד באותו יום. כשהיא מחכה, ממשיכים לחלק 1.</div>
             </details>
         </div>
 
@@ -406,7 +404,7 @@
                 <span class="section-icon">🏛️</span>
                 <div class="section-title-container">
                     <h2>חלק 1 · הצטרפות לארגון</h2>
-                    <div class="section-subtitle">שלב אחד · כ-2 דקות · כל אחד בעצמו, אחרי שזכר שלח הזמנה</div>
+                    <div class="section-subtitle">שלב אחד · כ-2 דקות · כל אחד בעצמו, אחרי שההזמנה נשלחה</div>
                 </div>
             </summary>
             <div class="major-body">
@@ -421,7 +419,7 @@
                     </summary>
                     <div class="step-content">
                         <div class="step-description">
-                            הארגון של הקורס נקרא Ariel-Vibe-Algorithm. כל הריפואים של הצוותים יושבים בו, ואלי וזכר רואים אותם בלי שתצטרכו לשתף.
+                            הארגון של הקורס נקרא Ariel-Vibe-Algorithm. כל הריפואים של הצוותים יושבים בו, והמרצים רואים אותם בלי שתצטרכו לשתף.
                         </div>
                         <div class="instructions">
                             <ol class="instruction-list">
@@ -432,7 +430,7 @@
                         </div>
                         <details class="warning">
                             <summary>⚠️ הקישור מגיע לדף 404, או שאין הזמנה?</summary>
-                            <div class="callout-body">404 אומר כמעט תמיד שאתם מחוברים לחשבון GitHub אחר. התנתקו והתחברו לחשבון ששמו שלחתם בשלב 0. אם אין הזמנה, ייתכן שזכר עוד לא שלח, או ששם המשתמש נכתב לא מדויק: בדקו מה שלחתם, וכתבו בקבוצה.</div>
+                            <div class="callout-body">404 אומר כמעט תמיד שאתם מחוברים לחשבון GitHub אחר. התנתקו והתחברו לחשבון שאת פרטיו שלחתם בשלב 0. אם שלחתם מייל, ההזמנה מגיעה גם אליו, ואפשר לאשר משם. אם אין הזמנה בכלל, כתבו בקבוצה.</div>
                         </details>
                         <details class="info">
                             <summary>ℹ️ שתי הזמנות שונות</summary>
@@ -440,7 +438,7 @@
                         </details>
                         <details class="info">
                             <summary>ℹ️ ההזמנה בתוקף 7 ימים</summary>
-                            <div class="callout-body">‏GitHub מבטל הזמנה שלא אושרה תוך שבוע. אם עבר שבוע, כתבו לזכר, והוא ישלח שוב.</div>
+                            <div class="callout-body">‏GitHub מבטל הזמנה שלא אושרה תוך שבוע. אם עבר שבוע, כתבו בקבוצה, ותישלח הזמנה חדשה.</div>
                         </details>
                     </div>
                 </details>
@@ -510,7 +508,7 @@
                         </ol>
                         <details class="warning">
                             <summary>⚠️ לא מוצאים חבר צוות לפי השם?</summary>
-                            <div class="callout-body">צריך שם משתמש מדויק, לא שם מלא ולא מייל. אם הוא עוד לא אישר את ההזמנה לארגון, כתבו לזכר, והוא יוסיף אותו.</div>
+                            <div class="callout-body">חפשו לפי שם המשתמש שלו או לפי המייל של החשבון שלו. אם עדיין לא נמצא, כתבו בקבוצה.</div>
                         </details>
                     </div>
                 </details>
@@ -659,12 +657,12 @@ git push</code></div>
             <summary>
                 <span class="section-icon">✅</span>
                 <div class="section-title-container">
-                    <h2>חלק 3 · בדיקה ושליחה לזכר</h2>
+                    <h2>חלק 3 · בדיקה ושליחה</h2>
                     <div class="section-subtitle">4 סימונים · כ-2 דקות</div>
                 </div>
             </summary>
             <div class="major-body">
-                <p style="margin-bottom: 14px;">סמנו כל שורה שעובדת אצלכם, כתבו את השם ולחצו על שליחה. כך זכר יודע מי מוכן לעבוד על הריפו במפגש.</p>
+                <p style="margin-bottom: 14px;">סמנו כל שורה שעובדת אצלכם, כתבו את השם ולחצו על שליחה. כך יודעים מי מוכן לעבוד על הריפו במפגש.</p>
                 <ul class="checklist" id="checklist">
                     <li><label><input type="checkbox" data-key="org"><span>אני רואה את session-notes בארגון Ariel-Vibe-Algorithm</span></label></li>
                     <li><label><input type="checkbox" data-key="repo"><span>אני רואה את הריפו של הצוות שלי בארגון</span></label></li>
@@ -674,13 +672,13 @@ git push</code></div>
                 <div class="check-count" id="checkCount">0 מתוך 4</div>
                 <details class="info">
                     <summary>ℹ️ למה בודקים את Python?</summary>
-                    <div class="callout-body">במפגש מריצים את האפליקציה של הצוות בסטרימליט, וזה צריך Python. אם הבדיקה לא עובדת, לא מתקינים עכשיו. משאירים את הסימון ריק, וזכר יודע להושיב אתכם ליד מי שזה עובד אצלו.</div>
+                    <div class="callout-body">במפגש מריצים את האפליקציה של הצוות בסטרימליט, וזה צריך Python. אם הבדיקה לא עובדת, לא מתקינים עכשיו. משאירים את הסימון ריק, ובמפגש תשבו ליד מי שזה עובד אצלו.</div>
                 </details>
                 <div class="send-box" id="sendBox" hidden>
                     <label for="studentName">השם המלא שלכם</label>
                     <div class="send-row">
                         <input id="studentName" type="text" autocomplete="name" maxlength="80">
-                        <button id="sendBtn" type="button" class="send-btn">שליחה לזכר</button>
+                        <button id="sendBtn" type="button" class="send-btn">שליחה</button>
                     </div>
                     <div id="sendStatus" class="send-status" role="status"></div>
                 </div>
@@ -693,14 +691,14 @@ git push</code></div>
 
         <div class="success-banner">
             <h3>🎉 סיימתם, והצוות עובד על ריפו משותף</h3>
-            <p>מכאן כל שינוי בפרויקט נכנס לריפו של הצוות, ואלי וזכר רואים איפה כל צוות עומד.</p>
+            <p>מכאן כל שינוי בפרויקט נכנס לריפו של הצוות, והמרצים רואים איפה כל צוות עומד.</p>
         </div>
 
         <div class="card">
             <h2>נתקעתם? כאן עוזרים:</h2>
             <ul class="icon-list">
                 <li><div class="icon">💬</div><span>בקבוצת הווטסאפ של הקורס</span></li>
-                <li><div class="icon">📧</div><span>מייל לזכר: <a href="mailto:zachara@ariel.ac.il" target="_blank" rel="noopener">zachara@ariel.ac.il</a></span></li>
+                <li><div class="icon">📧</div><span>במייל: <a href="mailto:zachara@ariel.ac.il" target="_blank" rel="noopener">zachara@ariel.ac.il</a></span></li>
             </ul>
         </div>
     </div>
@@ -743,7 +741,7 @@ git push</code></div>
             block.appendChild(b);
         });
 
-        /* Google Apps Script web app owned by Zac: emails each submission to him */
+        /* Google Apps Script web app: emails each submission to the course staff */
         var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyobEAsFhw8t80uH-wAWR0XMtbvLRDo0t9SNlCQpG0oIgyY5dDRJWfka3rAHmGkaifT/exec';
         function post(payload) {
             return fetch(ENDPOINT, {
@@ -753,43 +751,40 @@ git push</code></div>
             });
         }
 
-        /* step 0: GitHub username request */
+        /* step 0: GitHub username OR account email */
         var fullName = document.getElementById('fullName');
         var ghUser = document.getElementById('ghUser');
-        var ghEmail = document.getElementById('ghEmail');
         var userError = document.getElementById('userError');
         var reqBtn = document.getElementById('reqBtn');
         var reqStatus = document.getElementById('reqStatus');
-        function checkUser(v) {
-            if (!v) return 'כתבו את שם המשתמש.';
-            if (v.indexOf('@') !== -1) return 'זה נראה כמו מייל. צריך את שם המשתמש, ראו "איך מוצאים את שם המשתמש".';
-            if (/\s/.test(v)) return 'בשם משתמש אין רווחים. זה נראה כמו שם מלא, ראו "איך מוצאים את שם המשתמש".';
-            if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(v)) return 'שם משתמש ב-GitHub מכיל רק אותיות באנגלית, מספרים ומקפים.';
-            return '';
+        function classify(v) {
+            if (!v) return { err: 'כתבו שם משתמש או מייל.' };
+            if (v.indexOf('@') !== -1) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? { kind: 'email' } : { err: 'המייל לא נראה תקין.' };
+            }
+            if (/\s/.test(v)) return { err: 'בשם משתמש אין רווחים. זה נראה כמו שם מלא, ראו "איך מוצאים את שם המשתמש".' };
+            if (!/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(v)) return { err: 'שם משתמש ב-GitHub מכיל רק אותיות באנגלית, מספרים ומקפים.' };
+            return { kind: 'username' };
         }
         ghUser.addEventListener('input', function () { userError.textContent = ''; });
         reqBtn.addEventListener('click', function () {
             var name = fullName.value.trim();
-            var user = ghUser.value.trim().replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/\/+$/, '');
-            var email = ghEmail.value.trim();
+            var v = ghUser.value.trim().replace(/^https?:\/\/(www\.)?github\.com\//i, '').replace(/\/+$/, '');
             if (!name) { reqStatus.textContent = 'כתבו את השם המלא.'; fullName.focus(); return; }
-            var err = checkUser(user);
-            if (err) { userError.textContent = err; ghUser.focus(); return; }
-            ghUser.value = user;
+            var c = classify(v);
+            if (c.err) { userError.textContent = c.err; ghUser.focus(); return; }
+            ghUser.value = v;
             reqBtn.disabled = true;
             reqStatus.textContent = 'שולח...';
             post({
-                name: 'שם משתמש לארגון - ' + name,
-                steps: [
-                    { label: 'GitHub username: ' + user, done: true },
-                    { label: 'GitHub email: ' + (email || '(not given)'), done: !!email }
-                ],
-                page: location.href + ' | https://github.com/' + user
+                name: 'הזמנה לארגון - ' + name,
+                steps: [{ label: (c.kind === 'email' ? 'GitHub email: ' : 'GitHub username: ') + v, done: true }],
+                page: location.href + (c.kind === 'username' ? ' | https://github.com/' + v : '')
             }).then(function () {
-                reqStatus.textContent = 'נשלח. תודה, ' + name + '. ההזמנה תחכה לכם בקישור שבשלב 1.';
+                reqStatus.textContent = 'נשלח. תודה, ' + name + '.';
             }).catch(function () {
                 reqBtn.disabled = false;
-                reqStatus.textContent = 'השליחה נכשלה. כתבו את שם המשתמש בקבוצת הווטסאפ של הקורס.';
+                reqStatus.textContent = 'השליחה נכשלה. כתבו את הפרטים בקבוצת הווטסאפ של הקורס.';
             });
         });
 
@@ -836,7 +831,7 @@ git push</code></div>
                 status.textContent = 'נשלח. תודה, ' + name + '.';
             }).catch(function () {
                 sendBtn.disabled = false;
-                status.textContent = 'השליחה נכשלה. צלמו את המסך ושלחו לזכר במייל.';
+                status.textContent = 'השליחה נכשלה. צלמו את המסך ושלחו בקבוצת הווטסאפ.';
             });
         });
     });
