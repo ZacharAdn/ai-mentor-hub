@@ -132,7 +132,7 @@
       <div class="step-body">
         <div class="pick">
           <div><b>מצב א</b><br>אין עדיין קוד. מתחילים ישר בתוך הארגון. המשיכו לחלק 2, שלב 3.</div>
-          <div><b>מצב ב</b><br>יש כבר תיקייה עם קוד במחשב, או ריפו פרטי בחשבון שלכם. המשיכו לחלק 2, שלב 4.</div>
+          <div><b>מצב ב</b><br>יש כבר תיקייה עם קוד במחשב, או ריפו בחשבון הגיטהאב שלכם. המשיכו לחלק 2, שלב 4. לריפו שכבר קיים בחשבון שלכם יש שם דרך קצרה: מעבירים אותו לארגון.</div>
         </div>
       </div>
     </details>
@@ -160,13 +160,7 @@
         <details class="warning">
           <summary>⚠️ הריפו נוצר בחשבון הפרטי במקום בארגון?</summary>
           <div class="callout-body">
-            ברירת המחדל של גיטהאב היא החשבון הפרטי שלכם, וזו טעות נפוצה. <b>לא מוחקים</b> את הריפו, כי מחיקה לא ניתנת לשחזור. במקום זה:
-            <ol class="instruction-list">
-              <li>פתחו ריפו חדש בארגון, בדיוק כמו בשלב הזה, עם README.</li>
-              <li>ב-README של ריפו הארגון הדביקו קישור לריפו הפרטי שלכם.</li>
-              <li>בריפו הפרטי: <b>Settings</b>, אחר כך <b>Collaborators</b>, <b>Add people</b>, והוסיפו את המשתמש <code>ZacharAdn</code>. לחלופין הפכו אותו ל-<b>Public</b> (<b>Settings</b>, גללו לתחתית, <b>Change visibility</b>).</li>
-            </ol>
-            כשתרצו להעביר את הקוד עצמו לארגון, השתמשו בשלב 4.
+            ברירת המחדל של גיטהאב היא החשבון הפרטי שלכם, וזו טעות נפוצה. <b>לא מוחקים</b> את הריפו, כי מחיקה לא ניתנת לשחזור. מעבירים אותו לארגון כמו שהוא, עם כל ההיסטוריה: ההוראות בשלב 4, בתיבה "יש לכם כבר ריפו בחשבון שלכם?".
           </div>
         </details>
       </div>
@@ -175,6 +169,23 @@
     <details class="step">
       <summary><div class="step-number">4</div><div class="step-title-container"><h2>מצב ב: לדחוף קוד קיים לריפו בארגון</h2><div class="duration">כ-5 דקות</div></div></summary>
       <div class="step-body">
+        <details class="tip">
+          <summary>💡 יש לכם כבר ריפו בחשבון שלכם? מעבירים אותו לארגון</summary>
+          <div class="callout-body">
+            הקוד, ההיסטוריה וה-README עוברים כמו שהם, וקישורים לכתובת הישנה ממשיכים לעבוד. רק מי שהריפו בחשבון שלו יכול להעביר.
+            <ol class="instruction-list">
+              <li>בריפו בחשבון שלכם לחצו <b>Settings</b>.</li>
+              <li>גללו לתחתית, לאזור <b>Danger Zone</b>, ולחצו <b>Transfer</b>.</li>
+              <li>תחת <b>New owner</b> בחרו <b>Select one of my organizations</b>, ובחרו <code>Technion-016834</code>.</li>
+              <li>הקלידו את שם הריפו כדי לאשר, ולחצו <b>I understand, transfer this repository</b>.</li>
+              <li>במחשב, בתוך תיקיית הפרויקט, עדכנו את הכתובת (או בקשו מקלוד קוד לעשות את זה):
+                <div class="code-block"><code>git remote set-url origin https://github.com/Technion-016834/REPO-NAME.git</code></div>
+              </li>
+            </ol>
+            אחרי ההעברה, המשיכו לחלק 3: חברי הצוות, ובדיקה שאתם עדיין יכולים לדחוף. אם הדחיפה נכשלת, כתבו בקבוצה.
+          </div>
+        </details>
+        <p>אין ריפו, רק תיקייה עם קוד במחשב:</p>
         <ol class="instruction-list">
           <li>צרו ריפו <b>ריק</b> בארגון כמו בשלב 3, אבל <b>בלי</b> לסמן README.</li>
           <li>פתחו את התיקייה של הפרויקט ב-VS Code, הפעילו קלוד קוד, והדביקו לו את הפרומפט הבא (החליפו את <code>REPO-NAME</code> בשם הריפו):
