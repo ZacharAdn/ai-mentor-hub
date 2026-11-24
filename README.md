@@ -55,6 +55,7 @@ The repo is also published via GitHub Pages: <https://zacharadn.github.io/ai-men
 | [geoai-rg-setup.html](tooling-setup/geoai-rg-setup.html) | GeoAI / RG Innovation dev environment setup (Geo-AI-Course org) |
 | [vibe-coding-setup.html](tooling-setup/vibe-coding-setup.html) | "Vibe coding with Claude" pre-session setup (Ariel autumn 2026, reusable for Technion): GitHub account, VS Code, Git, Claude Code extension; acceptance checklist |
 | [ariel-github-org.html](tooling-setup/ariel-github-org.html) | Ariel autumn 2026: verify the msmail address on GitHub, accept the Ariel-Vibe-Algorithm org invite, one team repo inside the org, clone in VS Code, first push; acceptance checklist |
+| [technion-016834-github-org.html](tooling-setup/technion-016834-github-org.html) | Technion 016834 autumn 2026: GitHub inside the Technion-016834 org - join, create a repo in the org or push existing code, add teammates, verify; includes an invite-request form |
 | [whatsapp-setup.html](tooling-setup/whatsapp-setup.html) | WhatsApp Skill installation |
 | [hebrew-terminal-fix.html](tooling-setup/hebrew-terminal-fix.html) | Fixing Hebrew display in the Windows terminal |
 | [self-improving-skills-hooks.html](tooling-setup/self-improving-skills-hooks.html) | Claude Code Skills and Hooks system |

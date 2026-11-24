@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדריך גיטהאב בארגון הקורס - הטכניון 016834</title>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --page-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --card: #ffffff; --text: #1a1a2e; --muted: #5b5f75; --soft: #f8f9ff;
+    --accent: #667eea; --code-bg: #1a1a2e; --code-fg: #7ee787;
+    --tip-bg: linear-gradient(135deg,#e8f5e9,#f1f8e9); --tip-b: #4caf50;
+    --warn-bg: linear-gradient(135deg,#fff3e0,#ffe0b2); --warn-b: #ff9800;
+    --info-bg: linear-gradient(135deg,#e3f2fd,#bbdefb); --info-b: #2196f3;
+    --ok-bg: linear-gradient(135deg,#43a047,#2e7d32);
+  }
+  :root[data-theme="dark"] {
+    --page-bg: linear-gradient(135deg, #1b1f3b 0%, #2a1b3d 100%);
+    --card: #1e2236; --text: #eceef8; --muted: #a3a8c3; --soft: #272b44;
+    --accent: #8b95ff; --code-bg: #0f1120; --code-fg: #7ee787;
+    --tip-bg: linear-gradient(135deg,#183222,#1d3a28); --tip-b: #4caf50;
+    --warn-bg: linear-gradient(135deg,#3b2c14,#44321a); --warn-b: #ff9800;
+    --info-bg: linear-gradient(135deg,#142a44,#18314f); --info-b: #2196f3;
+    --ok-bg: linear-gradient(135deg,#2e7d32,#1b5e20);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Heebo',-apple-system,BlinkMacSystemFont,sans-serif; background:var(--page-bg); background-attachment:fixed; min-height:100vh; color:var(--text); line-height:1.8; }
+  .topbar { display:flex; justify-content:flex-end; padding:12px 20px; }
+  #themeBtn { cursor:pointer; border:1px solid rgba(255,255,255,.5); background:rgba(0,0,0,.25); color:#fff; border-radius:20px; padding:6px 14px; font-family:inherit; font-size:.85rem; }
+  .hero { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); color:#fff; padding:50px 20px; text-align:center; }
+  .hero h1 { font-size:2.3rem; font-weight:700; margin-bottom:12px; background:linear-gradient(135deg,#667eea,#c4a6ff); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { color:#b4b6cc; max-width:680px; margin:0 auto; font-size:1.08rem; }
+  .badge { display:inline-block; margin-top:18px; background:rgba(102,126,234,.2); color:#aab3ff; padding:7px 16px; border-radius:20px; font-size:.9rem; border:1px solid rgba(102,126,234,.35); }
+  .container { max-width:880px; margin:0 auto; padding:34px 16px 20px; }
+  details { margin-bottom:18px; }
+  details > summary { list-style:none; cursor:pointer; display:flex; align-items:center; gap:16px; }
+  details > summary::-webkit-details-marker { display:none; }
+  details > summary::after { content:"▼"; margin-inline-start:auto; font-size:.8rem; transition:transform .2s ease; }
+  details[open] > summary::after { transform:rotate(180deg); }
+  details.major-section { background:var(--card); border:3px solid #fff; border-radius:20px; overflow:hidden; box-shadow:0 15px 50px rgba(0,0,0,.25); }
+  details.major-section > summary { background:linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; padding:22px 26px; }
+  .section-icon { font-size:2.2rem; }
+  .section-title-container h2 { font-size:1.4rem; }
+  .section-subtitle { font-size:.9rem; opacity:.85; }
+  .major-body { padding:18px; }
+  details.step { background:var(--soft); border-radius:14px; overflow:hidden; }
+  details.step > summary { background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%); color:#fff; padding:16px 22px; }
+  .step-number { width:50px; height:50px; border-radius:50%; background:linear-gradient(135deg,#667eea,#764ba2); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.2rem; flex-shrink:0; }
+  .step-title-container h2 { font-size:1.15rem; }
+  .duration { font-size:.82rem; color:#aab; }
+  .step-body { padding:18px 24px 22px; }
+  .step-body p { margin-bottom:10px; }
+  ol.instruction-list { padding-inline-start:22px; }
+  ol.instruction-list li { margin-bottom:10px; }
+  a { color:var(--accent); }
+  code { direction:ltr; unicode-bidi:embed; background:var(--soft); padding:1px 7px; border-radius:5px; font-size:.92em; border:1px solid rgba(128,128,160,.25); }
+  .code-block { background:var(--code-bg); color:var(--code-fg); padding:36px 20px 15px; border-radius:8px; font-family:'Courier New',monospace; margin:15px 0; overflow-x:auto; position:relative; direction:ltr; text-align:left; font-size:.9rem; line-height:1.6; }
+  .code-block code { background:none; border:none; padding:0; white-space:pre; }
+  .code-copy-btn { position:absolute; top:8px; right:10px; background:rgba(126,231,135,.15); color:#7ee787; border:1px solid rgba(126,231,135,.35); border-radius:6px; padding:3px 10px; font-size:.7rem; font-weight:600; cursor:pointer; font-family:'Heebo',sans-serif; line-height:1.4; z-index:2; }
+  .code-copy-btn.copied { background:rgba(76,175,80,.35); color:#fff; }
+  details.tip, details.warning, details.info { border-radius:10px; overflow:hidden; margin:12px 0; }
+  details.tip { background:var(--tip-bg); border-right:4px solid var(--tip-b); }
+  details.warning { background:var(--warn-bg); border-right:4px solid var(--warn-b); }
+  details.info { background:var(--info-bg); border-right:4px solid var(--info-b); }
+  details.tip > summary, details.warning > summary, details.info > summary { padding:11px 16px; font-weight:600; font-size:.95rem; }
+  .callout-body { padding:2px 18px 14px; font-size:.95rem; }
+  .callout-body li { margin-inline-start:18px; }
+  .send-box { margin-top:12px; background:var(--card); border-radius:10px; padding:12px 14px; }
+  .send-box label { display:block; font-weight:600; margin:6px 0 4px; }
+  .send-box input { width:100%; padding:8px 10px; border-radius:8px; border:1px solid rgba(128,128,160,.5); background:var(--soft); color:var(--text); font-family:inherit; font-size:1rem; }
+  .send-btn { margin-top:10px; cursor:pointer; border:none; border-radius:8px; padding:8px 20px; background:linear-gradient(135deg,#667eea,#764ba2); color:#fff; font-family:inherit; font-weight:600; font-size:1rem; }
+  .send-btn:disabled { opacity:.6; cursor:default; }
+  .send-status { margin-top:8px; font-size:.9rem; }
+  .pick { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:8px 0; }
+  .pick div { background:var(--card); border:1px solid rgba(128,128,160,.3); border-radius:12px; padding:12px 16px; }
+  .success-banner { background:var(--ok-bg); color:#fff; border-radius:20px; padding:26px; text-align:center; margin:26px 0 18px; box-shadow:0 10px 30px rgba(0,0,0,.2); }
+  .success-banner h2 { font-size:1.4rem; margin-bottom:6px; }
+  .prerequisites { background:var(--card); border-radius:20px; padding:22px 26px; margin-bottom:24px; box-shadow:0 10px 40px rgba(0,0,0,.12); }
+  .prerequisites h2 { font-size:1.2rem; margin-bottom:10px; }
+  .prerequisites li { list-style:none; display:flex; gap:12px; padding:8px 0; }
+  footer { text-align:center; color:rgba(255,255,255,.75); font-size:.85rem; padding:10px 0 34px; }
+  @media (max-width:640px){ .pick{grid-template-columns:1fr;} .hero h1{font-size:1.7rem;} }
+</style>
+</head>
+<body>
+<div class="topbar"><button id="themeBtn" type="button">☀️ / 🌙 מצב תצוגה</button></div>
+
+<div class="hero">
+  <h1>לחבר את הפרויקט לארגון הקורס בגיטהאב</h1>
+  <p>הגשות ובדיקות נעשות על ריפו שיושב בתוך הארגון של הקורס, ולא בחשבון הפרטי שלכם. המדריך מראה איך להגיע לשם בשני מצבים: מתחילים מאפס, או שיש כבר קוד.</p>
+  <span class="badge">⏱ כ-15 דקות</span>
+</div>
+
+<div class="container">
+
+<!-- ================= PART 1 ================= -->
+<details class="major-section">
+  <summary>
+    <span class="section-icon">🏢</span>
+    <div class="section-title-container"><h2>חלק 1 · להיכנס לארגון</h2><div class="section-subtitle">2 שלבים · ~5 דקות</div></div>
+  </summary>
+  <div class="major-body">
+
+    <details class="step">
+      <summary><div class="step-number">1</div><div class="step-title-container"><h2>לוודא שאתם חברים בארגון</h2><div class="duration">כ-3 דקות</div></div></summary>
+      <div class="step-body">
+        <ol class="instruction-list">
+          <li>התחברו לגיטהאב ופתחו את <a href="https://github.com/Technion-016834" target="_blank" rel="noopener">github.com/Technion-016834</a>.</li>
+          <li>אם אתם רואים את רשימת הריפואים של הקורס, אתם חברים. עברו לשלב 2.</li>
+          <li>אם לא: חפשו במייל שאתם משתמשים בו בגיטהאב הודעה מ-GitHub, ולחצו <b>Join</b>. אפשר גם לפתוח את <a href="https://github.com/orgs/Technion-016834/invitation" target="_blank" rel="noopener">דף ההזמנה</a> ישירות.</li>
+        </ol>
+        <details class="warning">
+          <summary>⚠️ כתוב שאין הזמנה, או שהיא פגה?</summary>
+          <div class="callout-body">
+            הזמנה פגה אחרי כמה ימים. מלאו את השם ואת שם המשתמש בגיטהאב (או את המייל של חשבון הגיטהאב, מספיק אחד מהם) ולחצו שליחה, ותקבלו הזמנה חדשה.
+            <div class="send-box">
+              <label for="reqName">שם מלא</label>
+              <input id="reqName" type="text" autocomplete="name">
+              <label for="reqId">שם משתמש בגיטהאב, או מייל</label>
+              <input id="reqId" type="text" dir="ltr" autocomplete="off">
+              <button id="reqBtn" type="button" class="send-btn">שליחה</button>
+              <div id="reqStatus" class="send-status" role="status"></div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </details>
+
+    <details class="step">
+      <summary><div class="step-number">2</div><div class="step-title-container"><h2>לבחור את המצב שלכם</h2><div class="duration">דקה</div></div></summary>
+      <div class="step-body">
+        <div class="pick">
+          <div><b>מצב א</b><br>אין עדיין קוד. מתחילים ישר בתוך הארגון. המשיכו לחלק 2, שלב 3.</div>
+          <div><b>מצב ב</b><br>יש כבר תיקייה עם קוד במחשב, או ריפו פרטי בחשבון שלכם. המשיכו לחלק 2, שלב 4.</div>
+        </div>
+      </div>
+    </details>
+  </div>
+</details>
+
+<!-- ================= PART 2 ================= -->
+<details class="major-section">
+  <summary>
+    <span class="section-icon">🚀</span>
+    <div class="section-title-container"><h2>חלק 2 · ריפו בתוך הארגון</h2><div class="section-subtitle">2 שלבים · ~8 דקות</div></div>
+  </summary>
+  <div class="major-body">
+
+    <details class="step">
+      <summary><div class="step-number">3</div><div class="step-title-container"><h2>מצב א: ליצור ריפו חדש בארגון</h2><div class="duration">כ-4 דקות</div></div></summary>
+      <div class="step-body">
+        <ol class="instruction-list">
+          <li>בדף הארגון לחצו <b>New repository</b> (הכפתור הירוק).</li>
+          <li>בשדה <b>Owner</b> ודאו שנבחר <code>Technion-016834</code> ולא השם שלכם.</li>
+          <li>תנו שם לפרויקט באותיות לטיניות וללא רווחים, בחרו <b>Private</b>, וסמנו <b>Add a README file</b>.</li>
+          <li>לחצו <b>Create repository</b>.</li>
+          <li>מורידים את הריפו אליכם: ב-VS Code בחרו <code>Clone Repository</code>, הדביקו את הקישור של הריפו, ופתחו את התיקייה לפני שמתחילים לעבוד.</li>
+        </ol>
+        <details class="warning">
+          <summary>⚠️ הריפו נוצר בחשבון הפרטי במקום בארגון?</summary>
+          <div class="callout-body">
+            ברירת המחדל של גיטהאב היא החשבון הפרטי שלכם, וזו טעות נפוצה. <b>לא מוחקים</b> את הריפו, כי מחיקה לא ניתנת לשחזור. במקום זה:
+            <ol class="instruction-list">
+              <li>פתחו ריפו חדש בארגון, בדיוק כמו בשלב הזה, עם README.</li>
+              <li>ב-README של ריפו הארגון הדביקו קישור לריפו הפרטי שלכם.</li>
+              <li>בריפו הפרטי: <b>Settings</b>, אחר כך <b>Collaborators</b>, <b>Add people</b>, והוסיפו את המשתמש <code>ZacharAdn</code>. לחלופין הפכו אותו ל-<b>Public</b> (<b>Settings</b>, גללו לתחתית, <b>Change visibility</b>).</li>
+            </ol>
+            כשתרצו להעביר את הקוד עצמו לארגון, השתמשו בשלב 4.
+          </div>
+        </details>
+      </div>
+    </details>
+
+    <details class="step">
+      <summary><div class="step-number">4</div><div class="step-title-container"><h2>מצב ב: לדחוף קוד קיים לריפו בארגון</h2><div class="duration">כ-5 דקות</div></div></summary>
+      <div class="step-body">
+        <ol class="instruction-list">
+          <li>צרו ריפו <b>ריק</b> בארגון כמו בשלב 3, אבל <b>בלי</b> לסמן README.</li>
+          <li>פתחו את התיקייה של הפרויקט ב-VS Code, הפעילו קלוד קוד, והדביקו לו את הפרומפט הבא (החליפו את <code>REPO-NAME</code> בשם הריפו):
+            <div class="code-block"><code>I have a local project folder with existing code. Push it to this
+GitHub repo inside the course organization:
+https://github.com/Technion-016834/REPO-NAME
+Set it as the remote (replace any existing remote), make sure
+venv folders and secrets are not committed, commit, and push to main.
+Tell me if anything is missing.</code></div>
+          </li>
+        </ol>
+        <details class="info">
+          <summary>ℹ️ אותו דבר בטרמינל</summary>
+          <div class="callout-body">
+            בתוך תיקיית הפרויקט:
+            <div class="code-block"><code>git remote -v
+git remote set-url origin https://github.com/Technion-016834/REPO-NAME.git
+# אין עדיין remote? במקום השורה הקודמת:
+# git remote add origin https://github.com/Technion-016834/REPO-NAME.git
+git branch -M main
+git push -u origin main</code></div>
+            אם הקוד היה מחובר לריפו בחשבון האישי, <code>set-url</code> מחליף את היעד. הקוד נשאר גם בחשבון האישי, אבל מעכשיו דוחפים רק לארגון.
+          </div>
+        </details>
+        <details class="tip">
+          <summary>💡 הדחיפה נכשלת על קבצים כבדים?</summary>
+          <div class="callout-body">כנראה תיקיית <code>venv</code> נכנסה לקומיט. בקשו מקלוד קוד להוסיף אותה ל-<code>.gitignore</code> ולהסיר אותה מהקומיט.</div>
+        </details>
+      </div>
+    </details>
+  </div>
+</details>
+
+<!-- ================= PART 3 ================= -->
+<details class="major-section">
+  <summary>
+    <span class="section-icon">✅</span>
+    <div class="section-title-container"><h2>חלק 3 · הצוות והאימות</h2><div class="section-subtitle">2 שלבים · ~5 דקות</div></div>
+  </summary>
+  <div class="major-body">
+
+    <details class="step">
+      <summary><div class="step-number">5</div><div class="step-title-container"><h2>להוסיף את חברי הצוות</h2><div class="duration">כ-3 דקות</div></div></summary>
+      <div class="step-body">
+        <p>הרשאת ברירת המחדל בארגון היא קריאה בלבד. מי שיצר את הריפו צריך להוסיף את חבריו כדי שיוכלו לדחוף.</p>
+        <ol class="instruction-list">
+          <li>בריפו פתחו <b>Settings</b>, אחר כך <b>Collaborators</b>, ולחצו <b>Add people</b>.</li>
+          <li>הקלידו את שם המשתמש של חבר הצוות ובחרו הרשאת <b>Write</b>.</li>
+          <li>חבר הצוות מאשר את ההזמנה במייל או בדף ההזמנות שלו.</li>
+        </ol>
+        <details class="warning">
+          <summary>⚠️ שגיאת Permission denied או 403</summary>
+          <div class="callout-body">אתם לא חברים בארגון (שלב 1), או שלא הוספו לכם הרשאת Write (שלב 5).</div>
+        </details>
+      </div>
+    </details>
+
+    <details class="step">
+      <summary><div class="step-number">6</div><div class="step-title-container"><h2>לוודא שזה עבד</h2><div class="duration">כ-2 דקות</div></div></summary>
+      <div class="step-body">
+        <ul class="instruction-list" style="padding-inline-start:22px">
+          <li>הריפו מופיע ברשימה בדף <a href="https://github.com/Technion-016834" target="_blank" rel="noopener">Technion-016834</a>.</li>
+          <li>הקבצים שלכם נראים בו, וה-README מופיע בתחתית העמוד.</li>
+          <li>ליד הקבצים מופיע זמן הקומיט האחרון. לפי הזמן הזה רואים מתי עבדתם.</li>
+          <li>חבר צוות יכול לפתוח את הריפו ולהוריד אותו אליו.</li>
+        </ul>
+        <details class="tip">
+          <summary>💡 החלפתם תפקידים בצוות?</summary>
+          <div class="callout-body">מספיק לעדכן את הסעיף על התפקידים בקובץ ה-README ולדחוף אותו.</div>
+        </details>
+      </div>
+    </details>
+  </div>
+</details>
+
+<div class="success-banner">
+  <h2>🎉 סיימתם, והפרויקט יושב בארגון</h2>
+  <p>מכאן עובדים ודוחפים רק לריפו שבארגון. כך הצוות כולו רואה את אותה גרסה.</p>
+</div>
+
+<div class="prerequisites">
+  <h2>נתקעתם? כאן עוזרים:</h2>
+  <ul>
+    <li>🙋 <span>במפגש: בקשו שיעברו אליכם.</span></li>
+    <li>💬 <span>בכל זמן אחר: כתבו בקבוצת הקורס מה ניסיתם ואיזו הודעת שגיאה הופיעה, עם צילום מסך.</span></li>
+  </ul>
+</div>
+</div>
+
+<footer>הטכניון · קורס 016834</footer>
+
+<script>
+(function(){
+  var r = document.documentElement, k = 'guideTheme';
+  var q = new URLSearchParams(location.search).get('theme');
+  var s = null; try { s = localStorage.getItem(k); } catch(e){}
+  var t = (q === 'light' || q === 'dark') ? q : (s || 'light');
+  r.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').addEventListener('click', function(){
+    t = r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    r.setAttribute('data-theme', t);
+    try { localStorage.setItem(k, t); } catch(e){}
+  });
+  document.querySelectorAll('.code-block').forEach(function(block){
+    var btn = document.createElement('button');
+    btn.className = 'code-copy-btn'; btn.type = 'button'; btn.textContent = '📋 העתק';
+    btn.addEventListener('click', function(){
+      var code = block.querySelector('code'); if (!code) return;
+      navigator.clipboard.writeText(code.textContent).then(function(){
+        btn.textContent = '✓ הועתק'; btn.classList.add('copied');
+        setTimeout(function(){ btn.textContent = '📋 העתק'; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+    block.appendChild(btn);
+  });
+
+  /* invite request: same Apps Script web app the other setup guides post to */
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyobEAsFhw8t80uH-wAWR0XMtbvLRDo0t9SNlCQpG0oIgyY5dDRJWfka3rAHmGkaifT/exec';
+  var reqBtn = document.getElementById('reqBtn'), reqStatus = document.getElementById('reqStatus');
+  reqBtn.addEventListener('click', function(){
+    var nameIn = document.getElementById('reqName'), idIn = document.getElementById('reqId');
+    var name = nameIn.value.trim(), id = idIn.value.trim().replace(/^@/, '');
+    if (!name) { reqStatus.textContent = 'כתבו את השם המלא, ואז שליחה.'; nameIn.focus(); return; }
+    if (!id) { reqStatus.textContent = 'כתבו שם משתמש בגיטהאב או מייל, ואז שליחה.'; idIn.focus(); return; }
+    reqBtn.disabled = true; reqStatus.textContent = 'שולח...';
+    fetch(ENDPOINT, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ name: name + ' · בקשת הזמנה חדשה לארגון · ' + id, steps: [], page: location.href })
+    }).then(function(){
+      reqStatus.textContent = 'נשלח. תודה, ' + name + '. ההזמנה תגיע למייל של הגיטהאב.';
+    }).catch(function(){
+      reqBtn.disabled = false;
+      reqStatus.textContent = 'השליחה נכשלה. כתבו בקבוצת הקורס את השם ושם המשתמש.';
+    });
+  });
+})();
+</script>
+</body>
+</html>
